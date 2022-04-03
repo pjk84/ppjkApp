@@ -1,0 +1,21 @@
+#  base image for build environment
+FROM node:14.5.0-alpine as deps
+
+WORKDIR /app
+COPY package*.json  ./
+RUN npm ci
+
+FROM node:14.5.0-alpine as build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+FROM node:14.5.0-alpine as run
+WORKDIR /usr/src/app
+COPY --from=build --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/node_modules ./node_modules
+
+CMD ["npm", "start"]

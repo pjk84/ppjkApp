@@ -1,0 +1,41 @@
+FROM python:3.9.5-slim-buster as build
+  
+
+
+WORKDIR /usr/src/app
+
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+FROM python:3.9.5-slim-buster
+
+RUN addgroup --system ppjk && adduser --system --group ppjk
+ENV APP_HOME=/home/ppjk/flaskapp
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends netcat
+COPY --from=build /usr/src/app/wheels /wheels
+COPY --from=build /usr/src/app/requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
+
+
+COPY ./build $APP_HOME
+
+RUN chown -R ppjk:ppjk $APP_HOME
+
+USER ppjk
+
+# run entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]

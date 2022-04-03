@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  nextjs:
+    container_name: nextjs
+    build: ./nextjs
+    restart: always
+    expose:
+      - 3000
+    env_file:
+      - ./nextjs/.env
+  flaskapp:
+    build:
+      context: ./flaskapp
+      dockerfile: dockerfile.prod
+    container_name: flask
+    command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
+    expose:
+      - 5000
+    env_file:
+      - ./flaskapp/build/.env.prod
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    volumes:
+      - static_volume:/home/ppjk/flaskapp/project/static
+    ports:
+      - 8080:8080
+    depends_on:
+      - flaskapp
+
+  db:
+    container_name: postgres
+    image: postgres:13-alpine
+    volumes:
+      - ppjkdb_prod:/var/lib/postgresql/data/
+    env_file:
+      - ./flaskapp/db/.env
+    ports:
+      - "5432:5432"
+
+volumes:
+  ppjkdb_prod:
+  static_volume:

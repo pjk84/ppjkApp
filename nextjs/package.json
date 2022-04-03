@@ -1,0 +1,43 @@
+{
+  "name": "ppjkapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/draftjs-to-html": "^0.8.1",
+    "@types/html-to-draftjs": "^1.4.0",
+    "@types/lodash": "^4.14.180",
+    "@types/react-draft-wysiwyg": "^1.13.4",
+    "@types/react-html-parser": "^2.0.2",
+    "@types/styled-components": "^5.1.24",
+    "@types/uuid": "^8.3.4",
+    "axios": "^0.26.0",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "html-to-draftjs": "^1.4.0",
+    "lodash": "^4.17.21",
+    "next": "12.1.0",
+    "random-words": "^1.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-draft-wysiwyg": "^1.14.7",
+    "react-html-parser": "^2.0.2",
+    "react-redux": "^7.2.6",
+    "styled-components": "^5.3.3",
+    "universal-cookie": "^4.0.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.21",
+    "@types/react": "17.0.39",
+    "babel-plugin-styled-components": "^2.0.6",
+    "eslint": "8.10.0",
+    "eslint-config-next": "12.1.0",
+    "typescript": "4.6.2"
+  }
+}

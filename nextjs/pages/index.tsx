@@ -1,0 +1,108 @@
+import type { NextPage } from "next";
+import { ReactElement, useEffect, useRef, useState } from "react";
+import Head from "next/head";
+import { BlogPost } from "../components/blog";
+import Header from "../components/Header";
+import { FlexBoxCentered, Main } from "../styles/containers";
+import { StdButton } from "../components/Buttons";
+import { useSelector, useDispatch } from "react-redux";
+import { string } from "prop-types";
+import { getElementById } from "domutils";
+import { actions } from "../state/actiontypes";
+import { RootState } from "../state";
+import { appTheme } from "../styles";
+// if (focus !== "main") dispatch({ type: actions.SET_FOCUS, focus: "main" });
+
+const Home: NextPage = () => {
+  const dispatch = useDispatch();
+  const focus = useSelector((state: RootState) => state.main.focus);
+  const LEN = 200;
+  const myRef = useRef(null);
+  const [winHeight, setWinHeight] = useState(0);
+  const [elem, addElem] = useState<ReactElement[]>([]);
+
+  useEffect(() => {
+    if (focus !== "main") {
+      dispatch({ type: actions.SET_FOCUS, focus: "main" });
+      addElem([]);
+      return;
+    }
+    const e = document.getElementById("rain");
+    if (e) {
+      // if (winHeight !== e?.offsetHeight) {
+      //   setWinHeight(e?.offsetHeight);
+      // }
+      setTimeout(
+        () => {
+          if (!myRef.current) return;
+          addElem([
+            ...(elem.length === 4 * LEN ? elem.slice(LEN, elem.length) : elem),
+            ...Array(LEN)
+              .fill(0)
+              .map((p, i) => {
+                const r = Math.random();
+                return (
+                  <Char
+                    color={appTheme.green}
+                    key={`${Math.random()}_${i}`}
+                    name={r > 0.5 ? "1" : "0"}
+                    size={Math.floor(Math.random() * 25)}
+                    pos={Math.floor(Math.random() * e.offsetWidth)}
+                    delay={i / 10}
+                  />
+                );
+              }),
+          ]);
+        },
+        elem.length === 0 ? 0 : 10000
+      );
+    }
+  });
+  return (
+    // <div>boingg</div>
+    <div
+      ref={myRef}
+      id="rain"
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        minHeight: `500px`,
+      }}
+    >
+      {elem && elem.map((e) => e)}
+    </div>
+  );
+};
+
+type Item = {
+  color: string;
+  name: string;
+  pos: number;
+  size: number;
+  delay: number;
+};
+
+const Char = ({ name, pos, delay, size, color }: Item) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        opacity: 0,
+        backgroundColor: "transparent",
+        position: "absolute",
+        top: 0,
+        color,
+        fontSize: size,
+        left: pos,
+        animation: `${Math.floor(
+          Math.random() * 10
+        )}s ${delay}s rain forwards linear`,
+      }}
+    >
+      {name}
+    </div>
+  );
+};
+
+export default Home;
