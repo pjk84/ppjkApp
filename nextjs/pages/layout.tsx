@@ -11,7 +11,6 @@ import {
   Wrapper,
 } from "../styles/containers";
 import { StdButton } from "../components/Buttons";
-import { appTheme } from "../styles";
 
 const Home: NextPage = ({ children }) => {
   return (

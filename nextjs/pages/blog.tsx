@@ -56,11 +56,7 @@ const Blog = () => {
   });
 
   if (!posts) {
-    return (
-      <FlexBoxCentered fullWidth>
-        <Loader type={"dots"} text={"loading messages"} />
-      </FlexBoxCentered>
-    );
+    return null;
   }
 
   return (

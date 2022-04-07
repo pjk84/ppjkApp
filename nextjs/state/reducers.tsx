@@ -12,6 +12,7 @@ type Istate = {
   project?: string;
   loggedIn?: boolean;
   focus?: string;
+  theme?: string;
 };
 
 type IblogState = {
@@ -56,6 +57,10 @@ const appReducer = (state = initialState, action: Action) => {
     }
     case actions.SET_LOGGED_IN: {
       return { ...state, loggedIn: action.loggedIn };
+    }
+    case actions.SET_THEME: {
+      console.log(action);
+      return { ...state, theme: action.theme };
     }
     default:
       return state;

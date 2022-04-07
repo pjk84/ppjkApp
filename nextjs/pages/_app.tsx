@@ -5,15 +5,20 @@ import store from "../state";
 import { ThemeProvider } from "styled-components";
 import { appTheme } from "../styles";
 import Layout from "./layout";
+import dynamic from "next/dynamic";
+import ThemeWrapper from "../components/ThemeWrapper";
+import { Outer } from "../styles/containers";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={appTheme}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ThemeProvider>
+      <ThemeWrapper>
+        <Outer>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </Outer>
+      </ThemeWrapper>
     </Provider>
   );
 }

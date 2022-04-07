@@ -12,6 +12,7 @@ export const actions = {
   DELETE_POST: "DELETE_POST",
   IS_DELETING: "IS_DELETING",
   SELECT_PROJECT: "SELECT_PROJECT",
+  SET_THEME: "SET_THEME",
 };
 
 export const blogActions = {

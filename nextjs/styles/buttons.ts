@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { appTheme } from ".";
 
 export const Btn1 = styled.button<{
   color?: "blue" | "green";
@@ -17,17 +16,13 @@ export const Btn1 = styled.button<{
   width: max-content;
   border-radius: 4px;
   color: ${(p) =>
-    p.active
-      ? p.theme.lightGreen
-      : p.color === "blue"
-      ? p.theme.blue
-      : p.theme.green};
+    p.active ? "white" : p.color === "blue" ? p.theme.blue : p.theme.green};
   border-color: ${(props) =>
     props.color === "green"
       ? "#58e087"
       : props.color === "blue"
       ? "#2fb7e0"
-      : props.theme.lightGreen};
+      : "white"};
   font-size: ${(props) =>
     props.size === "small" ? "12px" : props.size === "large" ? "30px" : "15px"};
   border: 1px solid;
@@ -144,7 +139,7 @@ export const Control = styled.div<{
   width: max-content;
   cursor: pointer;
   &:hover {
-    color: ${(props) => (props.color ? null : appTheme.lightGreen)};
+    color: ${(props) => (props.color ? null : "white")};
   }
 `;
 
@@ -153,8 +148,7 @@ export const Btn4 = styled.button<{
   isFirstRender?: boolean;
 }>`
   position: relative;
-  color: ${(props) =>
-    props.active ? props.theme.lightGreen : props.theme.green};
+  color: ${(props) => (props.active ? "white" : props.theme.green)};
   background-color: transparent;
   /* min-width: 150px; */
   font-size: 20px;

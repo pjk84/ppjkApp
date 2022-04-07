@@ -70,13 +70,12 @@ export const Inner = styled.div<{}>`
 `;
 
 export const MessageBodyPreview = styled.div`
-  /* width: max-content; */
-  max-height: 100px;
+  padding: 0;
+  max-height: 5em;
   overflow: hidden;
-  display: -webkit-box
-  -webkit-line-clamp: 5;
-  line-clamp: 5 "… (continued on next page)";
-  -webkit-box-orient: vertical
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 `;
 
 export const ThreadWrapper = styled.div<{ depth?: number }>`
@@ -131,13 +130,9 @@ export const TextEdit = styled.div<{}>`
   align-items: center;
   border-radius: 4px;
 `;
-export const Overlay = styled.span`
-  z-index: 10;
+export const Outer = styled.div`
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${(props) => `${props.theme.darkGray}B2`};
+  background-color: ${(props) => props.theme.backgroundColor};
   left: 0;
   top: 0;
   right: 0;
