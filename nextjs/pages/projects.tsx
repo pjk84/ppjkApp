@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
-import projects from "../data/projects";
-import ProjectDetails from "../components/projects/Details";
-import { FlexBox } from "../styles/containers";
 import ProjectButtons from "../components/projects/Buttons";
-// import LaunchProject from "./launchproject";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../state";
-import { Project } from "../components/projects/types";
 import { actions } from "../state/actiontypes";
 import { useRouter } from "next/router";
 

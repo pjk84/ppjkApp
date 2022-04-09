@@ -9,7 +9,7 @@ const projects: Array<Project> = [
   },
   {
     id: "speed_type",
-    language: "Javascript",
+    language: "Typescript",
     framework: "React",
     repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
     description:
@@ -18,7 +18,7 @@ const projects: Array<Project> = [
   },
   {
     id: "word_hunt",
-    language: "Javascript",
+    language: "Typescript",
     framework: "React",
     repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
     description:

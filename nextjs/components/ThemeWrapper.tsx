@@ -8,6 +8,7 @@ import { appTheme, appThemeDark, appThemeLight } from "../styles";
 
 const ThemeWrapper = ({ children }: { children: ReactElement }) => {
   const theme = useSelector((state: RootState) => state.main.theme);
+  const activeTheme = theme === "light" ? appThemeLight : appThemeDark;
   const dispatch = useDispatch();
   useEffect(() => {
     if (!theme) {
@@ -19,11 +20,7 @@ const ThemeWrapper = ({ children }: { children: ReactElement }) => {
   if (!theme) {
     return null;
   }
-  return (
-    <ThemeProvider theme={theme === "light" ? appThemeLight : appThemeDark}>
-      {children}
-    </ThemeProvider>
-  );
+  return <ThemeProvider theme={activeTheme}>{children}</ThemeProvider>;
 };
 
 export default ThemeWrapper;

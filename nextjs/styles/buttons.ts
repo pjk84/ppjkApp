@@ -1,5 +1,43 @@
 import styled from "styled-components";
 
+export const ButtonBasic = styled.button<{
+  active?: boolean;
+  size: "small" | "medium" | "large";
+  animation?: string;
+  shadow?: boolean;
+}>`
+  position: relative;
+  border-radius: 4px;
+  box-shadow: ${(p) => p.shadow && p.theme.boxShadow};
+  font-size: ${(p) =>
+    p.size === "small" ? "15px" : p.size === "medium" ? "20px" : "30px"};
+  border: 1px solid;
+  border-color: ${(p) =>
+    p.active ? p.theme.button.borderColorActive : p.theme.button.borderColor};
+  padding: ${(p) =>
+    p.size === "small" ? "5px 10px 5px 10px" : "10px 20px 10px 20px"};
+  color: ${(p) =>
+    p.active ? p.theme.button.textColorActive : p.theme.textColor};
+  background-color: ${(p) =>
+    p.active ? p.theme.button.backgroundColorActive : "transparent"};
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+  animation: ${(p) => p.animation === "slideUp" && "0.2s slideUp ease-in"};
+  &:hover {
+    border: ${(p) => !p.active && `1px solid ${p.theme.borderColor}`};
+  }
+  &:before {
+    animation: ${(props) =>
+      props.animation === "sweep" && "0.5s sweep ease-out"};
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 export const Btn1 = styled.button<{
   color?: "blue" | "green";
   size?: "small" | "large" | "medium";
@@ -15,21 +53,16 @@ export const Btn1 = styled.button<{
   background-color: transparent;
   width: max-content;
   border-radius: 4px;
-  color: ${(p) =>
-    p.active ? "white" : p.color === "blue" ? p.theme.blue : p.theme.green};
-  border-color: ${(props) =>
-    props.color === "green"
-      ? "#58e087"
-      : props.color === "blue"
-      ? "#2fb7e0"
-      : "white"};
+  box-shadow: ${(p) => p.theme.boxShadow};
+  color: ${(p) => (p.active ? p.theme.textColor : p.theme.textColorInactive)};
+  border: 1px solid;
+  border-color: ${(p) => p.theme.projectButtonBorder};
   font-size: ${(props) =>
     props.size === "small" ? "12px" : props.size === "large" ? "30px" : "15px"};
-  border: 1px solid;
   z-index: 9;
   padding: ${(props) =>
     props.size === "small" ? "5px 10px 5px 10px" : "10px 20px 10px 20px"};
-  cursor: pointer;
+  cursor: pointer;1
   animation: ${(props) =>
     props.slide
       ? `0.5s slideIn${props.slide} ease-in`
@@ -70,7 +103,7 @@ export const Btn2 = styled.button<{
   background-color: transparent;
   width: ${(props) => (props.active ? "100%" : "max-content")};
   min-width: 150px;
-  border-color: ${(props) => (props.color === "green" ? "#58e087" : "#d8e9eb")};
+  border-color: ${(p) => p.theme.borderColor};
   font-size: 20px;
   border: none;
   padding: 5px 20px 5px 20px;
@@ -126,20 +159,17 @@ export const Control = styled.div<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
 }>`
-  color: ${(props) => (props.active ? props.theme.blue : props.theme.gray)};
   color: ${(props) =>
-    props.color === "red"
-      ? props.theme.red
-      : props.color === "blue"
-      ? props.theme.blue
-      : props.theme.gray};
+    props.active
+      ? props.theme.textColor
+      : props.theme.button.textColorInactive};
   transition: all 0.5s;
   /* background-color: transparent; */
   border: none;
   width: max-content;
   cursor: pointer;
   &:hover {
-    color: ${(props) => (props.color ? null : "white")};
+    color: ${(p) => p.theme.button.textColorHover};
   }
 `;
 
@@ -148,7 +178,10 @@ export const Btn4 = styled.button<{
   isFirstRender?: boolean;
 }>`
   position: relative;
-  color: ${(props) => (props.active ? "white" : props.theme.green)};
+  color: ${(props) =>
+    props.active
+      ? props.theme.textColor
+      : props.theme.button.textColorInactive};
   background-color: transparent;
   /* min-width: 150px; */
   font-size: 20px;
@@ -156,4 +189,8 @@ export const Btn4 = styled.button<{
   padding: 5px 20px 5px 20px;
   cursor: pointer;
   transition: color 0.5s;
+`;
+
+export const HyperLink = styled.a`
+  color: ${(p) => p.theme.textColor};
 `;

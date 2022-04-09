@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Header1 = styled.header`
   position: relative;
+  color: ${(p) => p.theme.textColor};
   background-color: transparent;
   font-size: 25px;
   border: none;
@@ -17,10 +18,11 @@ export const Header2 = styled.header`
   border: none;
   display: flex;
   justify-content: center;
+  color: ${(p) => p.theme.textColor};
 `;
 
 export const BlogMessageTitle = styled.header<{ clickable?: boolean }>`
-  color: ${(props) => props.theme.gray};
+  color: ${(props) => props.theme.posts.titleColor};
   width: max-content;
   font-size: 40px;
   &: hover {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Btn1 } from "../../styles/buttons";
+import { Btn1, ButtonBasic } from "../../styles/buttons";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { actions } from "../../state/actiontypes";
@@ -21,16 +21,17 @@ const LaunchProject = ({ projectId }: Props) => {
   };
 
   return (
-    <Btn1
+    <ButtonBasic
+      animation={launching ? "sweep" : firstRender ? "slideUp" : ""}
+      size={"medium"}
       key={`launch-project-${projectId}`}
-      style={{ marginTop: 30 }}
-      sweep={launching}
-      slideUp={firstRender}
+      // sweep={launching}
+      // slideUp={firstRender}
       color="blue"
       onClick={launchProject}
     >
       open project
-    </Btn1>
+    </ButtonBasic>
   );
 };
 

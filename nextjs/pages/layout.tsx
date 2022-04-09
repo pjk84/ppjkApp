@@ -18,7 +18,7 @@ const Home: NextPage = ({ children }) => {
       <Top className="main-head">
         <Header />
         <FlexBox justify="center" wrap="true" gapSize="small">
-          <StdButton page="about" title="about me" />
+          <StdButton page="about" title="about" />
           <StdButton page="blog" title="blog" />
           <StdButton page="projects" title="projects" />
         </FlexBox>

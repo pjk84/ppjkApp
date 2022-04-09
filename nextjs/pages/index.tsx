@@ -1,13 +1,7 @@
 import type { NextPage } from "next";
 import { ReactElement, useEffect, useRef, useState } from "react";
-import Head from "next/head";
-import { BlogPost } from "../components/blog";
-import Header from "../components/Header";
-import { FlexBoxCentered, Main } from "../styles/containers";
-import { StdButton } from "../components/Buttons";
+import { Drop } from "../styles/containers";
 import { useSelector, useDispatch } from "react-redux";
-import { string } from "prop-types";
-import { getElementById } from "domutils";
 import { actions } from "../state/actiontypes";
 import { RootState } from "../state";
 import { appTheme } from "../styles";
@@ -18,7 +12,6 @@ const Home: NextPage = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
   const LEN = 200;
   const myRef = useRef(null);
-  const [winHeight, setWinHeight] = useState(0);
   const [elem, addElem] = useState<ReactElement[]>([]);
 
   useEffect(() => {
@@ -82,17 +75,10 @@ type Item = {
   delay: number;
 };
 
-const Char = ({ name, pos, delay, size, color }: Item) => {
+const Char = ({ name, pos, delay, size }: Item) => {
   return (
-    <div
+    <Drop
       style={{
-        display: "flex",
-        flexDirection: "column",
-        opacity: 0,
-        backgroundColor: "transparent",
-        position: "absolute",
-        top: 0,
-        color,
         fontSize: size,
         left: pos,
         animation: `${Math.floor(
@@ -101,7 +87,7 @@ const Char = ({ name, pos, delay, size, color }: Item) => {
       }}
     >
       {name}
-    </div>
+    </Drop>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ButtonBox } from "../../styles/containers";
 import projects from "../../data/projects";
-import { Btn1 } from "../../styles/buttons";
+import { Btn1, ButtonBasic } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
@@ -28,14 +28,15 @@ const ProjectMenu = ({ miniaturized }: Props) => {
       miniaturized ? 0 : 500
     );
   };
+  console.log(focus);
 
   return (
     <ButtonBox>
       {projects?.map((p, i) =>
         miniaturized ? (
-          <Btn1
+          <ButtonBasic
+            size={"small"}
             active={focus === p.id}
-            size="small"
             id={p.id}
             key={`projectBtn-${p.id}-miniature`}
             style={{
@@ -44,12 +45,11 @@ const ProjectMenu = ({ miniaturized }: Props) => {
             onClick={selectProject}
           >
             {p.id.split("_").join(" ")}
-          </Btn1>
+          </ButtonBasic>
         ) : (
-          <Btn1
-            breathe={true}
-            size="large"
-            // slideDown={isFirstRender}
+          <ButtonBasic
+            size={"large"}
+            shadow={true}
             active={focus === p.id}
             id={p.id}
             key={`projectBtn-${p.id}`}
@@ -68,7 +68,7 @@ const ProjectMenu = ({ miniaturized }: Props) => {
             onClick={selectProject}
           >
             {p.id.split("_").join(" ")}
-          </Btn1>
+          </ButtonBasic>
         )
       )}
     </ButtonBox>

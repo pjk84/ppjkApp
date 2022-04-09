@@ -7,7 +7,6 @@ import { RootState } from "../state";
 
 const Title = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
   const [tick, tock] = useState(0);
   const title = "<Pjk84_/>";
   useEffect(() => {
@@ -30,7 +29,7 @@ const Title = () => {
             animation:
               1 === 1
                 ? tick > 0
-                  ? `0.1s ${1 + i / 10}s shoot ease-out`
+                  ? undefined
                   : `${i / 6}s 0.5s typeIn ease-in forwards, 10s ${1 + i / 10}`
                 : undefined,
           }}

@@ -1,15 +1,31 @@
 import styled from "styled-components";
-import { appTheme } from ".";
+import { appTheme, color } from ".";
 import device, { size } from "./devices";
 
 export const Wrapper = styled.div`
   /* display: "grid";
   gap: 20;
   gridtemplateareas: "header" "body" "footer"; */
+  position: absolute;
+  height: max-content;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  gap: 50px;
   color: ${(p) => p.theme.green};
+`;
+
+export const Drop = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* background-color: ${(p) => p.theme.drops.backgroundColor}; */
+  color: ${(p) => p.theme.drops.color};
+  border-radius: ${(p) => p.theme.drops.borderRadius};
+  opacity: 0;
+  position: absolute;
+  top: 0;
 `;
 
 export const Top = styled.div<{}>`
@@ -19,6 +35,8 @@ export const Top = styled.div<{}>`
   align-items: center;
   flex-direction: column;
   padding: 15px;
+  background-color: ${(p) => p.theme.backgroundColor2};
+  box-shadow: ${(props) => props.theme.header.boxShadow};
   gap: 50px;
   &:after {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
@@ -26,19 +44,26 @@ export const Top = styled.div<{}>`
     bottom: 0;
     position: absolute;
     height: 1px;
-    background-color: ${(props) => props.theme.mediumGray};
+    background-color: ${(props) => props.theme.dividerColor};
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    height: 10px;
+    top: 0;
+    width: 100%;
+    background-image: ${(p) =>
+      `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
   }
 `;
 
 export const Footer = styled.div`
-  /* border: 1px solid red; */
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
   color: ${(p) => p.theme.mediumGray};
   min-height: 50px;
-  margin-top: 25px;
   width: 100%;
   &:before {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
@@ -46,7 +71,7 @@ export const Footer = styled.div`
     top: 0;
     position: absolute;
     height: 1px;
-    background-color: ${(props) => props.theme.mediumGray};
+    background-color: ${(props) => props.theme.dividerColor};
   }
 `;
 1;
@@ -56,12 +81,13 @@ export const Main = styled.div<{}>`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-top: 50px;
+  padding-bottom: 50px;
 `;
 
 export const Inner = styled.div<{}>`
   width: 95%;
   height: 100%;
-  /* padding: 50px; */
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
   }
@@ -71,7 +97,6 @@ export const Inner = styled.div<{}>`
 
 export const MessageBodyPreview = styled.div`
   padding: 0;
-  max-height: 5em;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -82,37 +107,24 @@ export const ThreadWrapper = styled.div<{ depth?: number }>`
   display: flex;
   flex-direction: column;
   margin-left: ${(p) => `${p.depth}px`};
-  border-left: 1px solid ${appTheme.mediumGray};
-  &:before {
-    opacity: ${(p) => (p.depth && p.depth > 0 ? 1 : 0)};
-    content: "";
-    position: absolute;
-    height: 100%;
-    width: 1px;
-    left: -25px;
-    top: 0;
-    bottom: 0;
-    background-color: ${appTheme.mediumGray};
-  }
+  border-left: 1px solid;
+  gap: 10px;
+  border-color: ${(p) => p.theme.posts.threadColor};
 `;
 
 export const MessageWrapper = styled.div<{
   type?: "new" | "editing" | "deleting" | "thread";
 }>`
   position: relative;
-  display: flex;
-  flex-direction: column;
 
+  display: flex;
+  color: ${(p) => p.theme.textColor};
+  flex-direction: column;
+  box-shadow: ${(p) => p.type !== "thread" && p.theme.posts.boxShadow};
+  background-color: ${(p) => p.theme.posts.backgroundColor};
   justify-content: flex-start;
   gap: 20px;
-  border: ${(p) => p.type !== "thread" && "1px solid"};
-
-  border-color: ${(props) =>
-    props.type === "editing"
-      ? props.theme.blue
-      : props.type === "deleting"
-      ? props.theme.red
-      : props.theme.mediumGray};
+  border: ${(p) => p.theme.messageBorder};
   padding: 20px;
   word-wrap: break-word;
   border-radius: 4px;
@@ -129,14 +141,6 @@ export const TextEdit = styled.div<{}>`
   flex-direction: column;
   align-items: center;
   border-radius: 4px;
-`;
-export const Outer = styled.div`
-  position: absolute;
-  background-color: ${(props) => props.theme.backgroundColor};
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
 `;
 
 export const StdInput = styled.input`

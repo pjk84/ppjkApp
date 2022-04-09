@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../state/actiontypes";
 import { FlexBox } from "../styles/containers";
 import dynamic from "next/dynamic";
-import { appTheme } from "../styles";
+import { appTheme, color, Themes } from "../styles";
 
 const details = {
   Name: "Pieter Kemps",
@@ -40,10 +40,16 @@ const details = {
   ],
 };
 const About = () => {
+  const theme = useSelector((state: RootState) => state.main.theme);
+  const gray = `${theme === Themes.light ? color.darkGray : color.lightGray}`;
   return (
     <FlexBox gapSize="medium" column>
       <div
-      // style={{ animation: `${Math.random()}s slideInRight`, fontSize: 25 }}
+        style={{
+          animation: `${Math.random()}s slideInRight`,
+          fontSize: 25,
+          color: gray,
+        }}
       >{`{`}</div>
       {Object.keys(details).map((d) => {
         let v = details[d as keyof typeof details];
@@ -56,19 +62,30 @@ const About = () => {
               style={{
                 animation: `${Math.random()}s slideInRight`,
                 paddingLeft: 50,
-                color: `${appTheme.lightGray}`,
+                color: gray,
               }}
             >
               {d}:
             </div>
-            <div style={{ animation: `${Math.random()}s slideInLeft` }}>
+            <div
+              style={{
+                animation: `${Math.random()}s slideInLeft`,
+                color: `${
+                  theme === Themes.light ? color.lightGray : color.green
+                }`,
+              }}
+            >
               {v}
             </div>
           </FlexBox>
         );
       })}
       <div
-        style={{ animation: `${Math.random()}s slideInLeft`, fontSize: 25 }}
+        style={{
+          animation: `${Math.random()}s slideInLeft`,
+          fontSize: 25,
+          color: gray,
+        }}
       >{`}`}</div>
     </FlexBox>
   );

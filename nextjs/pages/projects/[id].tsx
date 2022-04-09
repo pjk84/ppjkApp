@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { batch, useDispatch, useSelector } from "react-redux";
 import LaunchProject from "../../components/projects/Launchproject";
 import { actions } from "../../state/actiontypes";
 import ProjectButtons from "../../components/projects/Buttons";
@@ -9,14 +9,21 @@ import projects from "../../data/projects";
 import { useRouter } from "next/router";
 import { RootState } from "../../state";
 import { FlexBox, FlexBoxCentered } from "../../styles/containers";
+import { Themes } from "../../styles";
 
 const Projects = () => {
-  const project = useSelector((state: RootState) => state.main.project);
+  const theme = useSelector((state: RootState) => state.main.theme);
+  const selectedProject = useSelector((state: RootState) => state.main.project);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
   useEffect(() => {
-    // if (project !== id) dispatch({ type: actions.SELECT_PROJECT, id });
+    if (selectedProject !== id) {
+      batch(() => {
+        dispatch({ type: actions.SELECT_PROJECT, id });
+        dispatch({ type: actions.SET_FOCUS, focus: "projects" });
+      });
+    }
   });
 
   const projectDetails = projects.find((p: Project) => p.id === id) as Project;
@@ -24,14 +31,14 @@ const Projects = () => {
   if (!projectDetails) return null;
 
   return (
-    <FlexBox column gapSize="large">
+    <FlexBox column style={{ gap: 50 }}>
       <ProjectButtons miniaturized={true} />
       <ProjectDetails
         key={`projectDetails-${id}`}
-        animation={"jitter"}
+        animation={theme === Themes.light ? "slide" : "jitter"}
         project={projectDetails}
       />
-      <FlexBoxCentered style={{ width: "100%" }}>
+      <FlexBoxCentered>
         {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
       </FlexBoxCentered>
     </FlexBox>
