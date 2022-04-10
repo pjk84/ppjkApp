@@ -28,16 +28,15 @@ export const Drop = styled.div`
   top: 0;
 `;
 
-export const Top = styled.div<{}>`
+export const Header = styled.div<{}>`
   display: flex;
   position: relative;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  flex-direction: column;
   padding: 15px;
   background-color: ${(p) => p.theme.backgroundColor2};
   box-shadow: ${(props) => props.theme.header.boxShadow};
-  gap: 50px;
+  gap: 100px;
   &:after {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
     content: "";
@@ -46,15 +45,15 @@ export const Top = styled.div<{}>`
     height: 1px;
     background-color: ${(props) => props.theme.dividerColor};
   }
-  &:before {
+  /* &:before {
     content: "";
     position: absolute;
     height: 10px;
-    top: 0;
+    bottom: -10px;
     width: 100%;
     background-image: ${(p) =>
-      `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
-  }
+    `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
+  } */
 `;
 
 export const Footer = styled.div`
@@ -95,12 +94,11 @@ export const Inner = styled.div<{}>`
   flex-direction: column;
 `;
 
-export const MessageBodyPreview = styled.div`
-  padding: 0;
-  overflow: hidden;
+export const MessageBodyPreview = styled.p`
   display: -webkit-box;
-  -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
 export const ThreadWrapper = styled.div<{ depth?: number }>`

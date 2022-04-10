@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Header2 } from "../styles/header";
 import { FlexBox } from "../styles/containers";
-import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { RootState } from "../state";
 
 const Title = () => {
   const router = useRouter();

@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Header from "../components/Header";
+import Logo from "../components/Header";
 import {
   FlexBox,
   FlexBoxCentered,
   Footer,
   Inner,
   Main,
-  Top,
+  Header,
   Wrapper,
 } from "../styles/containers";
 import { StdButton } from "../components/Buttons";
@@ -15,14 +15,14 @@ import { StdButton } from "../components/Buttons";
 const Home: NextPage = ({ children }) => {
   return (
     <Wrapper>
-      <Top className="main-head">
-        <Header />
+      <Header className="main-head">
+        <Logo />
         <FlexBox justify="center" wrap="true" gapSize="small">
           <StdButton page="about" title="about" />
           <StdButton page="blog" title="blog" />
           <StdButton page="projects" title="projects" />
         </FlexBox>
-      </Top>
+      </Header>
       <Main className="main-body">
         <Inner>{children}</Inner>
       </Main>

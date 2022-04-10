@@ -18,7 +18,7 @@ export const Header2 = styled.header`
   border: none;
   display: flex;
   justify-content: center;
-  color: ${(p) => p.theme.textColor};
+  color: ${(p) => p.theme.lightGray};
 `;
 
 export const BlogMessageTitle = styled.header<{ clickable?: boolean }>`

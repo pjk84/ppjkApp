@@ -45,7 +45,7 @@ const textBody = (text: string, focused?: boolean) => {
   return focused ? (
     <div>{asHtml}</div>
   ) : (
-    <MessageBodyPreview>{asHtml}</MessageBodyPreview>
+    <MessageBodyPreview>{asHtml[0].props.children[0]}</MessageBodyPreview>
   );
 };
 
