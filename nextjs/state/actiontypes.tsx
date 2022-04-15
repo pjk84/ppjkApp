@@ -22,4 +22,5 @@ export const blogActions = {
   SET_DRAFT: "SET_DRAFT",
   ADD_TAG: "ADD_TAG",
   REMOVE_TAG: "REMOVE_TAG",
+  SET_ALL_TAGS: "SET_ALL_TAGS",
 };

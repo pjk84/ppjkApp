@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "./config";
 import Cookies from "universal-cookie";
-import { Post } from "../../components/blog/types";
+import { Post, Tag } from "../../components/blog/types";
 
 export enum Framework {
   FLASK = "FLASK",
@@ -115,16 +115,36 @@ const apiClient = () => {
     }
   };
 
-  const addBlogMessage = async (args: { title: string; body: string }) => {
+  const addBlogMessage = async (
+    title: string,
+    body: string,
+    tags?: string[]
+  ) => {
     try {
       return await axios.post(
         `${baseUrl}/blog/message`,
-        { title: args.title.replace(/ /g, "_"), body: args.body },
+        {
+          title: title.replace(/ /g, "_"),
+          body,
+          tags,
+        },
         {
           withCredentials: true,
           headers: headers,
         }
       );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getTags = async () => {
+    try {
+      const res = await axios.get<Tag[]>(`${baseUrl}/blog/tags`, {
+        withCredentials: true,
+        headers: headers,
+      });
+      return res.data;
     } catch (err) {
       console.log(err);
     }
@@ -139,6 +159,7 @@ const apiClient = () => {
     fetchBlogMessages,
     deleteBlogMessages,
     getBlogMessageByTitle,
+    getTags,
   };
 };
 

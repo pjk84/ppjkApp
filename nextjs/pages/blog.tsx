@@ -58,15 +58,12 @@ const Blog = () => {
 
     if (focus !== "blog") dispatch({ type: actions.SET_FOCUS, focus: "blog" });
   }, [setLoading, activePost, focus, posts, dispatch]);
-  if (loading) {
+  if (!posts) {
     return (
       <FlexBoxCentered style={{ minHeight: 200 }}>
         <Loader type={"dots"} text={"loading posts"} />
       </FlexBoxCentered>
     );
-  }
-  if (!posts) {
-    return null;
   }
 
   return (

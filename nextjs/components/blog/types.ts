@@ -6,6 +6,7 @@ export type Post = {
   created_at: string;
   has_replies?: boolean;
   replies?: Post[];
+  tags?: Tag[];
 };
 
 export type Tag = {

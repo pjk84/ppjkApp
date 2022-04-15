@@ -67,7 +67,6 @@ const BlogPost = ({ post, focused }: PostProps) => {
     (state: RootState) => state.blog.deletingPost === post.id
   );
   const loggedIn = useSelector((state: RootState) => state.main.loggedIn);
-
   const isPatching =
     useSelector((state: RootState) => state.blog.loader) ===
     blogActions.UPDATING_BLOG_POST;
@@ -79,10 +78,6 @@ const BlogPost = ({ post, focused }: PostProps) => {
     );
   }
 
-  const tags = [
-    { id: "abc", title: "things" },
-    { id: "abc", title: "stuff" },
-  ];
   return (
     <PostWrapper
       type={
@@ -102,8 +97,8 @@ const BlogPost = ({ post, focused }: PostProps) => {
           textBody(post.body, focused)
         )}
         <FlexBox gapSize="small">
-          {tags.map((tag) => (
-            <Tag key={tag.id}>{tag.title}</Tag>
+          {post.tags?.map((tag) => (
+            <Tag key={tag.id}>{tag.name}</Tag>
           ))}
         </FlexBox>
       </BlogPostBody>

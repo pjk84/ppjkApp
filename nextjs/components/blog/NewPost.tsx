@@ -25,6 +25,7 @@ const NewPost = () => {
   const router = useRouter();
   const newPost = useSelector((state: RootState) => state.blog.addingPost);
   const title = useSelector((state: RootState) => state.blog.title);
+  const tags = useSelector((state: RootState) => state.blog.addedTags);
   const warning = useSelector((state: RootState) => state.blog.warning);
   const isPosting = useSelector(
     (state: RootState) => state.blog.loader === "posting"
@@ -59,10 +60,7 @@ const NewPost = () => {
       dispatch({
         type: actions.ADDING_BLOG_POST,
       });
-      await apiClient().addBlogMessage({
-        title: title,
-        body: body,
-      });
+      await apiClient().addBlogMessage(title, body, tags);
       // fetch all messages so we get the new one
       const messages = await client.fetchBlogMessages();
       dispatch({ type: blogActions.SET_POSTS, messages: messages });

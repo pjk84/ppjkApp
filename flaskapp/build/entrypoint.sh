@@ -11,7 +11,7 @@ then
     echo "PostgreSQL started"
 fi
 
-if [ "$FLASK_ENV" = "production" ]
+if [ "$FLASK_ENV" = "development" ]
 then
     echo "Creating the database tables..."
     python wsgi.py create_db

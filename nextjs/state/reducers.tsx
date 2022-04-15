@@ -120,6 +120,9 @@ const blogReducer = (state = initialState, action: Action) => {
     case blogActions.ADD_TAG: {
       return { ...state, addedTags: [...state.addedTags, ...[action.tag]] };
     }
+    case blogActions.SET_ALL_TAGS: {
+      return { ...state, tags: action.tags };
+    }
     case blogActions.REMOVE_TAG: {
       return {
         ...state,
