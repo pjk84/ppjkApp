@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { Post } from "./types";
 import BlogPost, { ThreadItem } from "./Message";
-import { ThreadWrapper } from "../../styles/containers";
+import { ThreadWrapper } from "../../styles/blog";
 
 const getTree = (posts: Post[], depth: number = 0): any => {
   let node: ReactElement[] = [];
@@ -16,11 +16,7 @@ const getTree = (posts: Post[], depth: number = 0): any => {
         {post.title ? (
           <BlogPost key={`thread-post-${post.id}`} post={post} focused={true} />
         ) : (
-          <ThreadItem
-            key={`thread-post-${post.id}`}
-            post={post}
-            depth={depth}
-          />
+          <ThreadItem key={`thread-post-${post.id}`} post={post} />
         )}
         {replies}
       </ThreadWrapper>

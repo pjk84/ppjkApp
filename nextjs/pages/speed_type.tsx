@@ -56,7 +56,7 @@ const SpeedType = () => {
         });
       }
     }
-  });
+  }, [setGameState]);
 
   const getScore = () => {
     console.log(gameState);

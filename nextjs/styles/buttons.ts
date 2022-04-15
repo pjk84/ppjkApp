@@ -8,7 +8,7 @@ export const ButtonBasic = styled.button<{
 }>`
   position: relative;
   border-radius: 4px;
-  box-shadow: ${(p) => p.shadow && p.theme.boxShadow};
+  box-shadow: ${(p) => p.theme.button.boxShadow};
   font-size: ${(p) =>
     p.size === "small" ? "15px" : p.size === "medium" ? "20px" : "30px"};
   border: 1px solid;
@@ -19,12 +19,15 @@ export const ButtonBasic = styled.button<{
   color: ${(p) =>
     p.active ? p.theme.button.textColorActive : p.theme.textColor};
   background-color: ${(p) =>
-    p.active ? p.theme.button.backgroundColorActive : "transparent"};
+    p.active
+      ? p.theme.button.backgroundColorActive
+      : p.theme.button.backgroundColor};
   cursor: pointer;
   transition: all 0.1s ease-out;
   animation: ${(p) => p.animation === "slideUp" && "0.2s slideUp ease-in"};
   &:hover {
-    border: ${(p) => !p.active && `1px solid ${p.theme.borderColor}`};
+    border: ${(p) =>
+      !p.active && `1px solid ${p.theme.button.borderColorHover}`};
   }
   &:before {
     animation: ${(props) =>
@@ -53,7 +56,7 @@ export const Btn1 = styled.button<{
   background-color: transparent;
   width: max-content;
   border-radius: 4px;
-  box-shadow: ${(p) => p.theme.boxShadow};
+  box-shadow: ${(p) => p.theme.button.boxShadow};
   color: ${(p) => (p.active ? p.theme.textColor : p.theme.textColorInactive)};
   border: 1px solid;
   border-color: ${(p) => p.theme.projectButtonBorder};
@@ -166,7 +169,10 @@ export const Control = styled.div<{
   transition: all 0.5s;
   /* background-color: transparent; */
   border: none;
+  padding: 5px;
+  border-radius: 4px;
   width: max-content;
+
   cursor: pointer;
   &:hover {
     color: ${(p) => p.theme.button.textColorHover};

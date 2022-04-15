@@ -8,6 +8,11 @@ export type Post = {
   replies?: Post[];
 };
 
+export type Tag = {
+  id: string;
+  name: string;
+};
+
 export type PostProps = {
   post: Post;
   focused?: boolean;

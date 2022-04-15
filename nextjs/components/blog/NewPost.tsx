@@ -1,4 +1,5 @@
-import { FlexBox, MessageWrapper, TitleBar } from "../../styles/containers";
+import { FlexBox } from "../../styles/containers";
+import { BlogPostBody, BlogPostHeader, PostWrapper } from "../../styles/blog";
 
 import { Control } from "../../styles/buttons";
 import TextEditor from "./editor";
@@ -16,6 +17,7 @@ import {
 import apiClient, { Framework } from "../../pages/api/client";
 import { Post } from "./types";
 import { PostTitle } from "./Message";
+import Tags from "./tags/manageTags";
 import { useRouter } from "next/router";
 
 const NewPost = () => {
@@ -31,9 +33,9 @@ const NewPost = () => {
 
   if (isPosting) {
     return (
-      <MessageWrapper type={"new"} key={`textBox-new-post`}>
+      <PostWrapper type={"new"} key={`textBox-new-post`}>
         <Loader type="dots" text="posting message" />
-      </MessageWrapper>
+      </PostWrapper>
     );
   }
 
@@ -76,19 +78,23 @@ const NewPost = () => {
   };
 
   return (
-    <MessageWrapper type={"new"} key={`textBox-new-post`}>
+    <PostWrapper type={"new"} key={`textBox-new-post`}>
       {warning && <Warning>{warning}</Warning>}
-      <FlexBox key={`new-post-header`} color="gray" justify="between"></FlexBox>
-      <PostTitle title={title} isEditing={true} />
-      <TextEditor
-        getEditorStateAsHtml={(text: string) => setTextBody(text)}
-        post={{ body: body || "", id: "new-post" } as Post}
-      />
-      <FlexBox justify="center" gapSize="large">
-        <Control onClick={submitPost}>submit</Control>
-        <Control onClick={() => router.push("/blog")}>cancel</Control>
-      </FlexBox>
-    </MessageWrapper>
+      <BlogPostHeader>
+        <PostTitle title={title} isEditing={true} />
+      </BlogPostHeader>
+      <BlogPostBody>
+        <TextEditor
+          getEditorStateAsHtml={(text: string) => setTextBody(text)}
+          post={{ body: body || "", id: "new-post" } as Post}
+        />
+        <Tags />
+        <FlexBox justify="center" gapSize="large">
+          <Control onClick={submitPost}>submit</Control>
+          <Control onClick={() => router.push("/blog")}>cancel</Control>
+        </FlexBox>
+      </BlogPostBody>
+    </PostWrapper>
   );
 };
 

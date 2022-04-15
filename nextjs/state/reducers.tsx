@@ -1,4 +1,4 @@
-import { Post } from "../components/blog/types";
+import { Post, Tag } from "../components/blog/types";
 import { combineReducers } from "redux";
 import { actions, blogActions } from "./actiontypes";
 
@@ -28,11 +28,14 @@ type IblogState = {
   body?: string;
   loaded?: boolean;
   draft?: Post;
+  tags?: Array<Tag>;
+  addedTags: Array<string>;
 };
 
 const initialState: Istate & IblogState = {
   active: [],
   posts: undefined,
+  addedTags: [],
 };
 
 const appReducer = (state = initialState, action: Action) => {
@@ -114,7 +117,15 @@ const blogReducer = (state = initialState, action: Action) => {
         posts: [...state.posts.slice(0, i), ...state.posts.slice(i + 1)],
       };
     }
-
+    case blogActions.ADD_TAG: {
+      return { ...state, addedTags: [...state.addedTags, ...[action.tag]] };
+    }
+    case blogActions.REMOVE_TAG: {
+      return {
+        ...state,
+        addedTags: state.addedTags.filter((t) => t !== action.tag),
+      };
+    }
     case actions.SET_WARNING: {
       return { ...state, warning: action.message };
     }

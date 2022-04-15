@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 export const Drop = styled.div`
   display: flex;
   flex-direction: column;
-  /* background-color: ${(p) => p.theme.drops.backgroundColor}; */
+  background-color: ${(p) => p.theme.drops.backgroundColor};
   color: ${(p) => p.theme.drops.color};
   border-radius: ${(p) => p.theme.drops.borderRadius};
   opacity: 0;
@@ -36,7 +36,7 @@ export const Header = styled.div<{}>`
   padding: 15px;
   background-color: ${(p) => p.theme.backgroundColor2};
   box-shadow: ${(props) => props.theme.header.boxShadow};
-  gap: 100px;
+  gap: 20px;
   &:after {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
     content: "";
@@ -45,15 +45,15 @@ export const Header = styled.div<{}>`
     height: 1px;
     background-color: ${(props) => props.theme.dividerColor};
   }
-  /* &:before {
+  &:before {
     content: "";
     position: absolute;
-    height: 10px;
-    bottom: -10px;
+    height: 5px;
+    top: 0px;
     width: 100%;
     background-image: ${(p) =>
-    `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
-  } */
+      `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
+  }
 `;
 
 export const Footer = styled.div`
@@ -80,57 +80,23 @@ export const Main = styled.div<{}>`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  background-color: ${(p) => p.theme.backgroundColor2};
 `;
 
 export const Inner = styled.div<{}>`
   width: 95%;
   height: 100%;
+  padding: 20px;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-color: ${(p) => p.theme.borderColor};
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
   }
   display: flex;
+  background-color: ${(p) => p.theme.backgroundColor};
   flex-direction: column;
-`;
-
-export const MessageBodyPreview = styled.p`
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-`;
-
-export const ThreadWrapper = styled.div<{ depth?: number }>`
-  display: flex;
-  flex-direction: column;
-  margin-left: ${(p) => `${p.depth}px`};
-  border-left: 1px solid;
-  gap: 10px;
-  border-color: ${(p) => p.theme.posts.threadColor};
-`;
-
-export const MessageWrapper = styled.div<{
-  type?: "new" | "editing" | "deleting" | "thread";
-}>`
-  position: relative;
-
-  display: flex;
-  color: ${(p) => p.theme.textColor};
-  flex-direction: column;
-  box-shadow: ${(p) => p.type !== "thread" && p.theme.posts.boxShadow};
-  background-color: ${(p) => p.theme.posts.backgroundColor};
-  justify-content: flex-start;
-  gap: 20px;
-  border: ${(p) => p.theme.messageBorder};
-  padding: 20px;
-  word-wrap: break-word;
-  border-radius: 4px;
-  &:hover {
-    .controls {
-      opacity: 1;
-    }
-  }
 `;
 
 export const TextEdit = styled.div<{}>`
@@ -139,12 +105,6 @@ export const TextEdit = styled.div<{}>`
   flex-direction: column;
   align-items: center;
   border-radius: 4px;
-`;
-
-export const StdInput = styled.input`
-  background: white;
-  border: transparent;
-  color: ${(props) => props.theme.darkGray};
 `;
 
 export const ButtonBox = styled.div<{ column?: boolean }>`
@@ -169,6 +129,7 @@ export const FlexBoxCentered = styled.div<{ fullWidth?: boolean }>`
   width: ${(p) => (p.fullWidth ? "100%" : null)};
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
 `;
 
@@ -186,7 +147,7 @@ export const FlexBox = styled.div<{
       ? appTheme.gray
       : p.color === "blue"
       ? appTheme.blue
-      : appTheme.green};
+      : p.theme.textColor};
   display: Flex;
   gap: ${(props) =>
     props.gapSize === "small"
@@ -196,7 +157,7 @@ export const FlexBox = styled.div<{
       : props.gapSize === "large"
       ? "20px"
       : null};
-  align-items: "${(props) => (props.align === "center" ? "center" : "start")}";
+  align-items: ${(props) => (props.align === "center" ? "center" : "start")};
   flex-direction: ${(props) => (props.column ? "column" : "row")};
   flex-wrap: ${(props) => props.wrap && "wrap"};
   justify-content: ${(props) =>

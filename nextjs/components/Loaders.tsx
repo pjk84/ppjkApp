@@ -1,5 +1,6 @@
 import React from "react";
 import { FlexBox, FlexBoxCentered } from "../styles/containers";
+import { LoaderDiv } from "../styles/loaders";
 import { appTheme } from "../styles";
 
 type Props = {
@@ -20,7 +21,7 @@ const loader = ({ type, text }: Props) => {
     switch (type) {
       case "round":
         return (
-          <FlexBoxCentered style={{ color: appTheme.lightGreen }}>
+          <FlexBoxCentered>
             <div className="lds-ring">
               <div style={{ ...theme }}></div>
               <div style={{ ...theme }}></div>
@@ -44,21 +45,13 @@ const loader = ({ type, text }: Props) => {
         );
       case "dots":
         return (
-          <FlexBox
-            gapSize="small"
-            color="blue"
-            align="center"
-            style={{ height: 25 }}
-          >
-            <div
-              className="bold"
-              style={{ color: appTheme.lightGreen }}
-            >{`${text}`}</div>
+          <FlexBox>
+            <div className="bold">{`${text}`}</div>
             <div className="lds-ellipsis" style={{ height: 25 }}>
-              <div style={{ backgroundColor: appTheme.lightGreen }}></div>
-              <div style={{ backgroundColor: appTheme.lightGreen }}></div>
-              <div style={{ backgroundColor: appTheme.lightGreen }}></div>
-              <div style={{ backgroundColor: appTheme.lightGreen }}></div>
+              <LoaderDiv></LoaderDiv>
+              <LoaderDiv></LoaderDiv>
+              <LoaderDiv></LoaderDiv>
+              <LoaderDiv></LoaderDiv>
             </div>
           </FlexBox>
         );

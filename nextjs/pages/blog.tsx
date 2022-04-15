@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlexBox, FlexBoxCentered } from "../styles/containers";
+import { BlogWrapper } from "../styles/blog";
 import { BlogPost } from "../components/blog";
 import { Post } from "../components/blog/types";
 import { useSelector, useDispatch, batch } from "react-redux";
@@ -34,12 +35,14 @@ export const Wrapper = ({
 const Blog = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const posts = useSelector((state: RootState) => state.blog.posts);
   const activePost = useSelector((state: RootState) => state.blog.activePost);
   const loggedIn = useSelector((state: RootState) => state.main.loggedIn);
   const focus = useSelector((state: RootState) => state.main.focus);
   React.useEffect(() => {
     const fetchMessages = async () => {
+      setLoading(true);
       const posts = await apiClient().fetchBlogMessages();
       batch(() => {
         dispatch({ type: blogActions.SET_POSTS, posts });
@@ -49,12 +52,19 @@ const Blog = () => {
     if (!posts || activePost) {
       console.log("getting posts");
       fetchMessages();
+      setLoading(false);
       return;
     }
 
     if (focus !== "blog") dispatch({ type: actions.SET_FOCUS, focus: "blog" });
-  });
-
+  }, [setLoading, activePost, focus, posts, dispatch]);
+  if (loading) {
+    return (
+      <FlexBoxCentered style={{ minHeight: 200 }}>
+        <Loader type={"dots"} text={"loading posts"} />
+      </FlexBoxCentered>
+    );
+  }
   if (!posts) {
     return null;
   }
@@ -70,11 +80,11 @@ const Blog = () => {
         </Control>,
       ]}
       child={
-        <FlexBox key={"blogPosts"} column gapSize="large">
+        <BlogWrapper>
           {posts?.map((post: Post) => (
             <BlogPost focused={false} key={`blogPost-${post.id}`} post={post} />
           ))}
-        </FlexBox>
+        </BlogWrapper>
       }
     />
   );

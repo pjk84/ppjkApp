@@ -41,13 +41,12 @@ export const color = {
 export const appThemeLight = {
   dropColor: color.orange,
   boxShadow: "0px 1px 5px 1px #aeb3b6",
-  messageBorder: null,
   dividerColor: color.lighterGray,
   textColor: color.mediumGray,
   textColorInactive: color.lightGray,
   backgroundColor2: color.lightestGray,
   backgroundColor: color.offWhite,
-  borderColor: color.lightGray,
+  borderColor: color.lighterGray,
   buttonBorder: color.transparent,
   buttonActiveBorder: color.lightGray,
   buttonActiveBackgroundColor: color.lightestGray,
@@ -67,30 +66,45 @@ export const appThemeLight = {
   },
   posts: {
     titleColor: color.darkGray,
-    boxShadow: `0px 1px 5px 1px ${color.lightGray}`,
+    boxShadow: `0px 2px 5px 1px ${color.lightestGray}`,
     threadColor: color.lightGray,
+    borderColor: color.lighterGray,
+    backgroundColor: color.white,
+    header: {
+      backgroundColor: color.offWhite,
+    },
   },
   button: {
     textColorHover: color.mediumGray,
     textColorActive: color.lightestGray,
     backgroundColorActive: color.mediumGray,
+    backgroundColor: color.white,
     boxShadowActive: null,
     textColorInactive: color.lightGray,
     borderColor: color.lighterGray,
     borderColorActive: color.mediumGray,
+    borderColorHover: color.lightGray,
+    boxShadow: `0px 1px 1px 0px ${color.lighterGray}`,
   },
   header: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
   },
   drops: {
     backgroundColor: color.lighterGray,
-    color: color.darkerGray,
+    color: color.darkGray,
     borderRadius: "10px",
     borderColor: color.lightGray,
   },
   ribbon: {
     color1: color.lightestGray,
     color2: color.green,
+  },
+  tag: {
+    backgroundColor: color.lighterGray,
+  },
+  controls: {
+    backgroundColor: color.lightestGray,
+    boxShadow: color.lightGray,
   },
 };
 

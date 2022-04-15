@@ -30,7 +30,6 @@ const PostByTitle = () => {
     }
 
     if (!activePost) {
-      console.log("get active post");
       if (title === "new_post") return; // nothing to fetch here
       getPostByTitle(title as string)
         .then((post: Post) => {

@@ -1,10 +1,10 @@
+import { FlexBox, TitleBar } from "../../styles/containers";
 import {
-  FlexBox,
-  MessageWrapper,
+  PostWrapper,
   MessageBodyPreview,
-  TitleBar,
-  Wrapper,
-} from "../../styles/containers";
+  BlogPostBody,
+  Tag,
+} from "../../styles/blog";
 import Title from "./Title";
 import TextEditor from "./editor";
 import { Post, PostProps } from "./types";
@@ -14,6 +14,7 @@ import { RootState } from "../../state";
 import ReactHtmlParser from "react-html-parser";
 import Loader from "../Loaders";
 import Controls from "./MessageControls";
+import PostHeader from "../../components/blog/PostHeader";
 
 type ControlProps = {
   messageId: string;
@@ -43,26 +44,18 @@ export const PostTitle = ({ title, isEditing }: TitleProps) => {
 const textBody = (text: string, focused?: boolean) => {
   const asHtml = ReactHtmlParser(text);
   return focused ? (
-    <div>{asHtml}</div>
+    <BlogPostBody>{asHtml}</BlogPostBody>
   ) : (
     <MessageBodyPreview>{asHtml[0].props.children[0]}</MessageBodyPreview>
   );
 };
 
-export const ThreadItem = ({ post, depth }: { post: Post; depth: number }) => {
+export const ThreadItem = ({ post }: { post: Post }) => {
   return (
-    <MessageWrapper type={"thread"}>
-      <FlexBox
-        style={{ opacity: 0.7 }}
-        color="gray"
-        gapSize="large"
-        wrap={"true"}
-      >
-        <div>{post.created_at}</div>
-        <div>{post.author}</div>
-      </FlexBox>
+    <PostWrapper type={"thread"}>
+      <PostHeader post={post} />
       {textBody(post.body, true)}
-    </MessageWrapper>
+    </PostWrapper>
   );
 };
 
@@ -80,14 +73,18 @@ const BlogPost = ({ post, focused }: PostProps) => {
     blogActions.UPDATING_BLOG_POST;
   if (isPatching) {
     return (
-      <MessageWrapper type={"editing"}>
+      <PostWrapper type={"editing"}>
         <Loader type="dots" text="updating message"></Loader>
-      </MessageWrapper>
+      </PostWrapper>
     );
   }
 
+  const tags = [
+    { id: "abc", title: "things" },
+    { id: "abc", title: "stuff" },
+  ];
   return (
-    <MessageWrapper
+    <PostWrapper
       type={
         editDraft?.id === post.id
           ? "editing"
@@ -97,25 +94,20 @@ const BlogPost = ({ post, focused }: PostProps) => {
       }
       key={`textBox-${post.id}`}
     >
-      <FlexBox key={`${post.id}-header`} justify="between">
-        <FlexBox
-          style={{ opacity: 0.7 }}
-          color="gray"
-          gapSize="large"
-          wrap={"true"}
-        >
-          <div>{post.created_at}</div>
-          <div>{post.author}</div>
+      <PostHeader loggedIn={loggedIn} focused={focused} post={post} />
+      <BlogPostBody>
+        {editDraft?.id === post.id ? (
+          <TextEditor post={post} isEditing={true} />
+        ) : (
+          textBody(post.body, focused)
+        )}
+        <FlexBox gapSize="small">
+          {tags.map((tag) => (
+            <Tag key={tag.id}>{tag.title}</Tag>
+          ))}
         </FlexBox>
-        {!loggedIn && focused && <Controls message={post} />}
-      </FlexBox>
-      {post.title && <PostTitle isEditing={false} title={post.title} />}
-      {editDraft?.id === post.id ? (
-        <TextEditor post={post} isEditing={true} />
-      ) : (
-        textBody(post.body, focused)
-      )}
-    </MessageWrapper>
+      </BlogPostBody>
+    </PostWrapper>
   );
 };
 

@@ -6,13 +6,25 @@ input {
   outline: none;
 }
 
-.main-head {
+#app {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: 100px auto 50px;
+  grid-template-areas: 'header' 'main' 'footer';
+}
+
+#app > header {
   grid-area: header;
 }
-.main-body {
+#app > body {
   grid-area: body;
 }
-.main-footer {
+#app > footer {
   grid-area: footer;
 }
 
