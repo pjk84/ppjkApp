@@ -13,11 +13,7 @@ const getTree = (posts: Post[], depth: number = 0): any => {
 
     node.push(
       <ThreadWrapper depth={depth * 25}>
-        {post.title ? (
-          <BlogPost key={`thread-post-${post.id}`} post={post} focused={true} />
-        ) : (
-          <ThreadItem key={`thread-post-${post.id}`} post={post} />
-        )}
+        <ThreadItem key={`thread-post-${post.id}`} post={post} />
         {replies}
       </ThreadWrapper>
     );
@@ -26,7 +22,12 @@ const getTree = (posts: Post[], depth: number = 0): any => {
 };
 
 const Thread = ({ post }: { post: Post }) => {
-  return getTree([post]);
+  return (
+    <>
+      <BlogPost key={`thread-post-${post.id}`} post={post} focused={true} />
+      {post.replies && getTree(post.replies)}
+    </>
+  );
 };
 
 export default Thread;

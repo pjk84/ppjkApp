@@ -31,7 +31,10 @@ export const PostTitle = ({ title, isEditing }: TitleProps) => {
     <TitleBar
       newMessage={!title}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        dispatch({ type: actions.SET_TITLE, title: e.target.value })
+        dispatch({
+          type: blogActions.SET_DRAFT,
+          draft: { title: e.target.value },
+        })
       }
       defaultValue={title}
       placeholder="add title here..."
@@ -44,7 +47,7 @@ export const PostTitle = ({ title, isEditing }: TitleProps) => {
 const textBody = (text: string, focused?: boolean) => {
   const asHtml = ReactHtmlParser(text);
   return focused ? (
-    <BlogPostBody>{asHtml}</BlogPostBody>
+    <div>{asHtml}</div>
   ) : (
     <MessageBodyPreview>{asHtml[0].props.children[0]}</MessageBodyPreview>
   );
@@ -54,19 +57,17 @@ export const ThreadItem = ({ post }: { post: Post }) => {
   return (
     <PostWrapper type={"thread"}>
       <PostHeader post={post} />
-      {textBody(post.body, true)}
+      <BlogPostBody>{textBody(post.body, true)}</BlogPostBody>
     </PostWrapper>
   );
 };
 
 const BlogPost = ({ post, focused }: PostProps) => {
-  const editDraft: Post | null = useSelector(
+  const draft: Post | null = useSelector(
     (state: RootState) => state.blog.draft
   );
-  const deleting = useSelector(
-    (state: RootState) => state.blog.deletingPost === post.id
-  );
-  const loggedIn = useSelector((state: RootState) => state.main.loggedIn);
+  const deleting = useSelector((state: RootState) => state.blog.deletingPost);
+
   const isPatching =
     useSelector((state: RootState) => state.blog.loader) ===
     blogActions.UPDATING_BLOG_POST;
@@ -81,21 +82,17 @@ const BlogPost = ({ post, focused }: PostProps) => {
   return (
     <PostWrapper
       type={
-        editDraft?.id === post.id
-          ? "editing"
-          : deleting
+        deleting
           ? "deleting"
+          : draft && draft.id === post.id
+          ? "editing"
           : undefined
       }
       key={`textBox-${post.id}`}
     >
-      <PostHeader loggedIn={loggedIn} focused={focused} post={post} />
+      <PostHeader focused={focused} post={post} />
       <BlogPostBody>
-        {editDraft?.id === post.id ? (
-          <TextEditor post={post} isEditing={true} />
-        ) : (
-          textBody(post.body, focused)
-        )}
+        {draft?.id === post.id ? <TextEditor /> : textBody(post.body, focused)}
         <FlexBox gapSize="small">
           {post.tags?.map((tag) => (
             <Tag key={tag.id}>{tag.name}</Tag>

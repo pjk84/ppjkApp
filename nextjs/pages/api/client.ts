@@ -115,36 +115,21 @@ const apiClient = () => {
     }
   };
 
-  const addBlogMessage = async (
-    title: string,
-    body: string,
-    tags?: string[]
-  ) => {
+  const addBlogMessage = async (post: Post) => {
+    console.log(post);
     try {
       return await axios.post(
         `${baseUrl}/blog/message`,
         {
-          title: title.replace(/ /g, "_"),
-          body,
-          tags,
+          ...post,
+          title: post.title!.replace(/ /g, "_"),
+          tags: post.tags || [],
         },
         {
           withCredentials: true,
           headers: headers,
         }
       );
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getTags = async () => {
-    try {
-      const res = await axios.get<Tag[]>(`${baseUrl}/blog/tags`, {
-        withCredentials: true,
-        headers: headers,
-      });
-      return res.data;
     } catch (err) {
       console.log(err);
     }
@@ -159,7 +144,6 @@ const apiClient = () => {
     fetchBlogMessages,
     deleteBlogMessages,
     getBlogMessageByTitle,
-    getTags,
   };
 };
 

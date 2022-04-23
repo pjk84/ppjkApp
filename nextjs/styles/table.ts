@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const TableCell = styled.td<{ width: string; index: number }>`
+  position: relative;
   background-color: ${(p) =>
     p.index % 2 === 0 ? p.theme.table.rowLight : p.theme.table.rowDark};
   padding: 10px;

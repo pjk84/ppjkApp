@@ -1,6 +1,6 @@
 import React from "react";
 import { RootState } from "../../state";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, batch } from "react-redux";
 import { actions, blogActions } from "../../state/actiontypes";
 import apiClient from "../../pages/api/client";
 import { Control } from "../../styles/buttons";
@@ -8,37 +8,34 @@ import { FlexBox } from "../../styles/containers";
 import { useRouter } from "next/router";
 import { Post } from "./types";
 
-const Controls = ({ message }: { message: Post }) => {
+const Controls = ({ post }: { post: Post }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const editDraft = useSelector((state: RootState) => state.blog.draft);
-  const deleting = useSelector(
-    (state: RootState) => state.blog.deletingPost === message.id
-  );
+  const draft = useSelector((state: RootState) => state.blog.draft);
+  const deleting = useSelector((state: RootState) => state.blog.deletingPost);
 
   const deletePost = async () => {
-    await apiClient().deleteBlogMessages(message.id);
-    dispatch({ type: actions.DELETE_POST, id: message.id });
+    await apiClient().deleteBlogMessages(post.id);
+    batch(() => {
+      dispatch({ type: blogActions.DELETE_POST, id: post.id });
+    });
     router.push("/blog");
   };
 
   if (deleting) {
     return (
       <FlexBox justify="center" gapSize="large">
-        <Control onClick={deletePost} color="red">
-          delete now
+        <Control color="red" onClick={deletePost}>
+          permanently delete post
         </Control>
-        <Control
-          color="gray"
-          onClick={() => dispatch({ type: actions.IS_DELETING, id: null })}
-        >
+        <Control onClick={() => dispatch({ type: blogActions.IS_DELETING })}>
           cancel
         </Control>
       </FlexBox>
     );
   }
 
-  if (editDraft) {
+  if (draft) {
     const submitEdit = async () => {
       try {
         dispatch({
@@ -46,16 +43,12 @@ const Controls = ({ message }: { message: Post }) => {
           action: blogActions.UPDATING_BLOG_POST,
         });
         await apiClient().editBlogMessage({
-          id: editDraft.id,
-          body: editDraft.body,
+          id: draft.id,
+          body: draft.body,
         } as Post);
-        // re-fetch the updated message
-        const updated = await apiClient().getBlogMessageByTitle(
-          editDraft.title
-        );
         dispatch({
-          type: blogActions.SET_DRAFT,
-          draft: null,
+          type: blogActions.SET_POSTS,
+          posts: [draft],
         });
       } catch (err) {
         console.log(err);
@@ -82,14 +75,15 @@ const Controls = ({ message }: { message: Post }) => {
     <FlexBox gapSize="small">
       <Control
         onClick={() =>
-          dispatch({ type: blogActions.SET_DRAFT, draft: message })
+          batch(() => {
+            dispatch({ type: blogActions.SET_DRAFT, draft: post });
+            dispatch({ type: blogActions.IS_EDITING });
+          })
         }
       >
         edit
       </Control>
-      <Control
-        onClick={() => dispatch({ type: actions.IS_DELETING, id: message.id })}
-      >
+      <Control onClick={() => dispatch({ type: blogActions.IS_DELETING })}>
         delete
       </Control>
     </FlexBox>

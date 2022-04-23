@@ -14,15 +14,15 @@ input {
   right: 0;
   display: grid;
   min-height: 100vh;
-  grid-template-rows: 100px auto 50px;
-  grid-template-areas: 'header' 'main' 'footer';
+  grid-template-rows: max-content auto 50px;
+  grid-template-areas: "header" "main" "footer";
 }
 
 #app > header {
   grid-area: header;
 }
-#app > body {
-  grid-area: body;
+#app > main {
+  grid-area: main;
 }
 #app > footer {
   grid-area: footer;
@@ -141,17 +141,6 @@ a {
     transform: translateY(0px);
   }
 }
-@keyframes slideDown {
-  0% {
-    transform: translateY(-75px);
-  }
-  20% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
 
 @keyframes rain {
   0% {
@@ -170,6 +159,7 @@ a {
     opacity: 0;
     transform: translateY(-50px) translateX(50px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -456,13 +446,16 @@ input {
   }
 }
 
-@keyframes slideDown {
+@keyframes slideRight2 {
   0% {
     opacity: 0;
-    transform: translateY(-50px);
+    transform: translateX(-50px);
+  }
+  50% {
+    opacity: 0;
   }
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 }
 @keyframes slideUp {
@@ -594,4 +587,13 @@ input {
   100% {
     transform: translate(19px, 0);
   }
+}
+
+.devicon-devicon-plain {
+  max-width: 2em;
+}
+
+/* if you want to change the original color */
+.devicon-devicon-plain path {
+  fill: #4691f6;
 }

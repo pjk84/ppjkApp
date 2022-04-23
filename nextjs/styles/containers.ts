@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 export const Drop = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${(p) => p.theme.drops.backgroundColor};
+  /* background-color: ${(p) => p.theme.drops.backgroundColor}; */
   color: ${(p) => p.theme.drops.color};
   border-radius: ${(p) => p.theme.drops.borderRadius};
   opacity: 0;
@@ -28,13 +28,14 @@ export const Drop = styled.div`
   top: 0;
 `;
 
-export const Header = styled.div<{}>`
+export const Header = styled.header<{}>`
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-  background-color: ${(p) => p.theme.backgroundColor2};
+  padding: 25px;
+  flex-wrap: wrap;
+  background-color: ${(p) => p.theme.backgroundColor};
   box-shadow: ${(props) => props.theme.header.boxShadow};
   gap: 20px;
   &:after {
@@ -56,7 +57,7 @@ export const Header = styled.div<{}>`
   }
 `;
 
-export const Footer = styled.div`
+export const Footer = styled.footer`
   display: flex;
   position: relative;
   justify-content: center;
@@ -75,23 +76,22 @@ export const Footer = styled.div`
 `;
 1;
 
-export const Main = styled.div<{}>`
+export const Main = styled.main<{}>`
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  flex-direction: column;
   background-color: ${(p) => p.theme.backgroundColor2};
 `;
 
 export const Inner = styled.div<{}>`
-  width: 95%;
-  height: 100%;
-  padding: 20px;
+  /* width: 95%; */
+  padding: 5px;
   border-left: 1px solid;
   border-right: 1px solid;
   border-color: ${(p) => p.theme.borderColor};
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
+    padding: 20px;
   }
   display: flex;
   background-color: ${(p) => p.theme.backgroundColor};
@@ -99,11 +99,13 @@ export const Inner = styled.div<{}>`
   overflow: hidden;
 `;
 
-export const TextEdit = styled.div<{}>`
+export const TextEdit = styled.span`
+  width: 100%;
   display: flex;
   position: relative;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
+  color: ${(p) => p.theme.textColor};
   border-radius: 4px;
 `;
 
@@ -121,16 +123,20 @@ export const TitleBar = styled.input<{ newMessage?: boolean }>`
   background: transparent;
   border: transparent;
   font-size: 30px;
-  color: ${(props) => props.theme.lightGray};
+  color: ${(props) => props.theme.textColor};
   opacity: ${(props) => (props.newMessage ? 0.4 : 1)};
 `;
 
-export const FlexBoxCentered = styled.div<{ fullWidth?: boolean }>`
+export const FlexBoxCentered = styled.div<{
+  fullWidth?: boolean;
+  gap?: number;
+}>`
   width: ${(p) => (p.fullWidth ? "100%" : null)};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  gap: ${(p) => p.gap && `${p.gap}px`};
 `;
 
 export const FlexBox = styled.div<{

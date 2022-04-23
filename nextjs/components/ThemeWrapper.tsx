@@ -13,7 +13,8 @@ const ThemeWrapper = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     if (!theme) {
       const theme =
-        typeof window !== "undefined" && localStorage.getItem("appTheme");
+        (typeof window !== "undefined" && localStorage.getItem("appTheme")) ||
+        "light";
       dispatch({ type: actions.SET_THEME, theme });
     }
   });

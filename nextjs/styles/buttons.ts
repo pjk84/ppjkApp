@@ -65,7 +65,7 @@ export const Btn1 = styled.button<{
   z-index: 9;
   padding: ${(props) =>
     props.size === "small" ? "5px 10px 5px 10px" : "10px 20px 10px 20px"};
-  cursor: pointer;1
+  cursor: pointer;
   animation: ${(props) =>
     props.slide
       ? `0.5s slideIn${props.slide} ease-in`
@@ -158,24 +158,25 @@ export const Btn3 = styled.button<{ color?: string }>`
   transition: all 0.5s;
 `;
 
-export const Control = styled.div<{
+export const Control = styled.button<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
 }>`
-  color: ${(props) =>
-    props.active
-      ? props.theme.textColor
-      : props.theme.button.textColorInactive};
-  transition: all 0.5s;
-  /* background-color: transparent; */
+  background-color: ${(p) =>
+    p.active ? p.theme.control.backgroundColor : "transparent"};
+  text-align: left;
+  transition: all 0.1s;
   border: none;
-  padding: 5px;
+  color: ${(p) =>
+    p.color
+      ? p.theme[p.color]
+      : p.active
+      ? p.theme.textColor
+      : p.theme.button.textColorInactive};
   border-radius: 4px;
-  width: max-content;
-
   cursor: pointer;
   &:hover {
-    color: ${(p) => p.theme.button.textColorHover};
+    color: ${(p) => !p.color && p.theme.button.textColorHover};
   }
 `;
 

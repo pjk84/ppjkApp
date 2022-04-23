@@ -31,7 +31,7 @@ const Projects = () => {
   if (!projectDetails) return null;
 
   return (
-    <FlexBox column style={{ gap: 50 }}>
+    <FlexBoxCentered gap={50}>
       <ProjectButtons miniaturized={true} />
       <ProjectDetails
         key={`projectDetails-${id}`}
@@ -41,7 +41,7 @@ const Projects = () => {
       <FlexBoxCentered>
         {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
       </FlexBoxCentered>
-    </FlexBox>
+    </FlexBoxCentered>
   );
 };
 

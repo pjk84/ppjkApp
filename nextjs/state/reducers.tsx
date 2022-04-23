@@ -18,9 +18,10 @@ type Istate = {
 type IblogState = {
   addingPost?: boolean;
   activePost?: Post;
-  posts?: Array<Post>;
-  editingPost?: string;
-  deletingPost?: string;
+  posts: Array<Post>;
+  focussedPost?: Post;
+  editingPost?: boolean;
+  deletingPost?: boolean;
   title?: string;
   warning?: string;
   isPosting?: boolean;
@@ -28,14 +29,16 @@ type IblogState = {
   body?: string;
   loaded?: boolean;
   draft?: Post;
-  tags?: Array<Tag>;
   addedTags: Array<string>;
+  reload?: boolean;
+  selectedTags: Array<string>;
 };
 
 const initialState: Istate & IblogState = {
   active: [],
-  posts: undefined,
+  posts: [],
   addedTags: [],
+  selectedTags: [],
 };
 
 const appReducer = (state = initialState, action: Action) => {
@@ -76,16 +79,13 @@ const blogReducer = (state = initialState, action: Action) => {
       return {
         ...state,
         posts: action.posts,
-        activePost: action.activePost,
         loader: undefined,
         editingPost: undefined,
         loaded: true,
-      };
-    }
-    case blogActions.SET_ACTIVE_POST: {
-      return {
-        ...state,
-        activePost: action.title,
+        draft: undefined,
+        deletingPost: undefined,
+        focussedPost: undefined,
+        reload: false,
       };
     }
     case actions.ADDING_BLOG_POST: {
@@ -98,30 +98,45 @@ const blogReducer = (state = initialState, action: Action) => {
         loader: "posting",
       };
     }
-    case actions.IS_EDITING: {
-      return { ...state, editingPost: action.id };
+    case blogActions.FOCUS_POST: {
+      return { ...state, reload: true, focussedPost: action.post };
     }
-    case blogActions.SET_DRAFT: {
-      return { ...state, draft: action.draft };
-    }
-    case actions.IS_DELETING: {
-      return { ...state, deletingPost: action.id };
-    }
-    case actions.DELETE_POST: {
-      if (!state.posts) {
-        return { ...state };
-      }
-      const i = state.posts?.findIndex((m) => m.id === action.id);
+    case blogActions.RELOAD_REQUIRED: {
       return {
         ...state,
-        posts: [...state.posts.slice(0, i), ...state.posts.slice(i + 1)],
+        reload: true,
       };
     }
-    case blogActions.ADD_TAG: {
-      return { ...state, addedTags: [...state.addedTags, ...[action.tag]] };
+    case actions.IS_EDITING: {
+      return { ...state, editingPost: !state.editingPost };
     }
-    case blogActions.SET_ALL_TAGS: {
-      return { ...state, tags: action.tags };
+    case blogActions.DELETE_POST: {
+      return {
+        ...state,
+        deletingPost: false,
+        posts: state.posts.filter((p) => p.id !== action.id),
+      };
+    }
+    case blogActions.SET_DRAFT: {
+      if (action.draft === null) {
+        return { ...state, draft: null };
+      }
+      if (!state.draft) {
+        return { ...state, draft: action.draft };
+      }
+      return { ...state, draft: { ...state.draft, ...action.draft } };
+    }
+    case blogActions.IS_DELETING: {
+      return { ...state, deletingPost: !state.deletingPost };
+    }
+    case blogActions.RESET_POST: {
+      return {
+        ...state,
+        addedTags: [],
+        draft: undefined,
+        editingPost: undefined,
+        deletingPost: undefined,
+      };
     }
     case blogActions.REMOVE_TAG: {
       return {
@@ -129,11 +144,11 @@ const blogReducer = (state = initialState, action: Action) => {
         addedTags: state.addedTags.filter((t) => t !== action.tag),
       };
     }
+    case blogActions.SET_SELECTED_TAGS: {
+      return { ...state, selectedTags: action.tags };
+    }
     case actions.SET_WARNING: {
       return { ...state, warning: action.message };
-    }
-    case actions.SET_TITLE: {
-      return { ...state, title: action.title };
     }
     case actions.SET_LOADER: {
       return { ...state, loader: action.action };

@@ -15,16 +15,16 @@ import { StdButton } from "../components/Buttons";
 const Home: NextPage = ({ children }) => {
   return (
     <div id="app">
-      <Header className="main-head">
+      <Header>
         <Logo />
         <StdButton page="about" title="about" />
         <StdButton page="blog" title="blog" />
         <StdButton page="projects" title="projects" />
       </Header>
-      <Main className="main-body">
+      <Main>
         <Inner>{children}</Inner>
       </Main>
-      <Footer className="main-footer">ppjk 2022</Footer>
+      <Footer>ppjk 2022</Footer>
     </div>
   );
 };

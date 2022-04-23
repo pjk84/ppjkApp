@@ -39,6 +39,7 @@ export const color = {
 };
 
 export const appThemeLight = {
+  ...color,
   dropColor: color.orange,
   boxShadow: "0px 1px 5px 1px #aeb3b6",
   dividerColor: color.lighterGray,
@@ -50,16 +51,6 @@ export const appThemeLight = {
   buttonBorder: color.transparent,
   buttonActiveBorder: color.lightGray,
   buttonActiveBackgroundColor: color.lightestGray,
-  green: "red",
-  lightGreen: "red",
-  blue: "red",
-  darkGray: "white",
-  darkerGray: "#131314",
-  gray: "#6d7275",
-  mediumGray: "#3b3e40",
-  red: "#ff5d52",
-  lightGray: "#8f9599",
-  orange: "#ff6a00",
   table: {
     rowLight: color.lightestGray,
     rowDark: color.lighterGray,
@@ -67,7 +58,7 @@ export const appThemeLight = {
   posts: {
     titleColor: color.darkGray,
     boxShadow: `0px 2px 5px 1px ${color.lightestGray}`,
-    threadColor: color.lightGray,
+    threadColor: color.lighterGray,
     borderColor: color.lighterGray,
     backgroundColor: color.white,
     header: {
@@ -102,9 +93,12 @@ export const appThemeLight = {
   tag: {
     backgroundColor: color.lighterGray,
   },
-  controls: {
-    backgroundColor: color.lightestGray,
+  control: {
+    backgroundColor: color.lighterGray,
     boxShadow: color.lightGray,
+  },
+  input: {
+    placeholderColor: color.lighterGray,
   },
 };
 
