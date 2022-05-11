@@ -20,8 +20,7 @@ export const Wrapper = styled.div`
 export const Drop = styled.div`
   display: flex;
   flex-direction: column;
-  /* background-color: ${(p) => p.theme.drops.backgroundColor}; */
-  color: ${(p) => p.theme.drops.color};
+  background-color: transparent;
   border-radius: ${(p) => p.theme.drops.borderRadius};
   opacity: 0;
   position: absolute;
@@ -77,6 +76,7 @@ export const Footer = styled.footer`
 1;
 
 export const Main = styled.main<{}>`
+  position: relative;
   display: flex;
   /* align-items: center; */
   justify-content: center;

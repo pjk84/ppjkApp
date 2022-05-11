@@ -29,8 +29,12 @@ def patch_message():
 def post_message():
     with session_scope() as session:
         payload = json.loads(request.data)
-        print(payload)
-        post = BlogPost(title=payload['title'], body=payload['body'])
+        title = payload.get("title")
+        body = payload.get('body')
+        if not title or not body: 
+            return jsonify('missing required parameters'), 400
+        title = title.strip()
+        post = BlogPost(title, body=payload['body'])
         session.add(post)
         if(payload['tags']):
             session.flush()

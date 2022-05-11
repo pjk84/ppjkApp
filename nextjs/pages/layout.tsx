@@ -11,6 +11,7 @@ import {
   Wrapper,
 } from "../styles/containers";
 import { StdButton } from "../components/Buttons";
+import Drops from "../components/drops";
 
 const Home: NextPage = ({ children }) => {
   return (

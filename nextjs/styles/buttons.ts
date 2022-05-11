@@ -162,6 +162,7 @@ export const Control = styled.button<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
 }>`
+  padding: 0px;
   background-color: ${(p) =>
     p.active ? p.theme.control.backgroundColor : "transparent"};
   text-align: left;

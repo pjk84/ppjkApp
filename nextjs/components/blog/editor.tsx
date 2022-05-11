@@ -24,6 +24,7 @@ type Props = {
 
 const TextEditor = () => {
   let draft = useSelector((state: RootState) => state.blog.draft);
+  const [color, setColor] = useState<string>("black");
 
   const getEditorState = (body: string) => {
     if (!body) return EditorState.createEmpty();
@@ -37,7 +38,7 @@ const TextEditor = () => {
   };
   const dispatch = useDispatch();
   const [editorState, setEditorState] = useState(getEditorState(draft?.body));
-  const handleChange = (e: any) => {
+  const handleState = (e: any) => {
     setEditorState(e);
 
     dispatch({
@@ -49,7 +50,7 @@ const TextEditor = () => {
     });
   };
 
-  const debounced = _.debounce((e) => handleChange(e), 300);
+  const debounced = _.debounce((e) => handleState(e), 300);
 
   const Editor = useMemo(() => {
     return dynamic<EditorProps>(
@@ -68,6 +69,7 @@ const TextEditor = () => {
           margin: 0,
           border: "none",
         }}
+        editorStyle={{ color: color }}
         toolbar={{
           options: ["inline", "fontSize", "colorPicker", "link", "emoji"],
           inline: {
