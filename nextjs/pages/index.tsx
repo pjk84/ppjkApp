@@ -59,7 +59,7 @@ const Home: NextPage = () => {
       style={{
         position: "relative",
         overflow: "hidden",
-        minHeight: `500px`,
+        height: "100%",
       }}
     >
       {elem && elem.map((e) => e)}

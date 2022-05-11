@@ -8,7 +8,7 @@ export const ButtonBasic = styled.button<{
 }>`
   position: relative;
   border-radius: 4px;
-  box-shadow: ${(p) => p.shadow && p.theme.boxShadow};
+  box-shadow: ${(p) => p.theme.button.boxShadow};
   font-size: ${(p) =>
     p.size === "small" ? "15px" : p.size === "medium" ? "20px" : "30px"};
   border: 1px solid;
@@ -19,12 +19,15 @@ export const ButtonBasic = styled.button<{
   color: ${(p) =>
     p.active ? p.theme.button.textColorActive : p.theme.textColor};
   background-color: ${(p) =>
-    p.active ? p.theme.button.backgroundColorActive : "transparent"};
+    p.active
+      ? p.theme.button.backgroundColorActive
+      : p.theme.button.backgroundColor};
   cursor: pointer;
   transition: all 0.1s ease-out;
   animation: ${(p) => p.animation === "slideUp" && "0.2s slideUp ease-in"};
   &:hover {
-    border: ${(p) => !p.active && `1px solid ${p.theme.borderColor}`};
+    border: ${(p) =>
+      !p.active && `1px solid ${p.theme.button.borderColorHover}`};
   }
   &:before {
     animation: ${(props) =>
@@ -53,7 +56,7 @@ export const Btn1 = styled.button<{
   background-color: transparent;
   width: max-content;
   border-radius: 4px;
-  box-shadow: ${(p) => p.theme.boxShadow};
+  box-shadow: ${(p) => p.theme.button.boxShadow};
   color: ${(p) => (p.active ? p.theme.textColor : p.theme.textColorInactive)};
   border: 1px solid;
   border-color: ${(p) => p.theme.projectButtonBorder};
@@ -62,7 +65,7 @@ export const Btn1 = styled.button<{
   z-index: 9;
   padding: ${(props) =>
     props.size === "small" ? "5px 10px 5px 10px" : "10px 20px 10px 20px"};
-  cursor: pointer;1
+  cursor: pointer;
   animation: ${(props) =>
     props.slide
       ? `0.5s slideIn${props.slide} ease-in`
@@ -155,21 +158,25 @@ export const Btn3 = styled.button<{ color?: string }>`
   transition: all 0.5s;
 `;
 
-export const Control = styled.div<{
+export const Control = styled.button<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
 }>`
-  color: ${(props) =>
-    props.active
-      ? props.theme.textColor
-      : props.theme.button.textColorInactive};
-  transition: all 0.5s;
-  /* background-color: transparent; */
+  background-color: ${(p) =>
+    p.active ? p.theme.control.backgroundColor : "transparent"};
+  text-align: left;
+  transition: all 0.1s;
   border: none;
-  width: max-content;
+  color: ${(p) =>
+    p.color
+      ? p.theme[p.color]
+      : p.active
+      ? p.theme.textColor
+      : p.theme.button.textColorInactive};
+  border-radius: 4px;
   cursor: pointer;
   &:hover {
-    color: ${(p) => p.theme.button.textColorHover};
+    color: ${(p) => !p.color && p.theme.button.textColorHover};
   }
 `;
 

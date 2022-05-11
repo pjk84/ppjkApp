@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
 import { useRouter } from "next/router";
+import { min } from "lodash";
 
 interface Props {
   miniaturized?: boolean;
@@ -17,8 +18,7 @@ const ProjectMenu = ({ miniaturized }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const focus = useSelector((state: RootState) => state.main.project);
-  const selectProject = (e: any) => {
-    const id = e.target.id;
+  const selectProject = (id: string) => {
     setClicked(true);
     setTimeout(
       () => {
@@ -28,7 +28,36 @@ const ProjectMenu = ({ miniaturized }: Props) => {
       miniaturized ? 0 : 500
     );
   };
-  console.log(focus);
+
+  const handleKeyDown = (e: any) => {
+    if (!focus) return;
+    let current = projects.findIndex((p) => p.id === focus);
+    let next = 0;
+    if (e.key === "ArrowLeft") {
+      next = current - 1;
+      if (current === 0) {
+        next = projects.length - 1;
+      }
+    }
+    if (e.key === "ArrowRight") {
+      next = current + 1;
+      if (current === projects.length - 1) {
+        next = 0;
+      }
+    }
+    selectProject(projects[next].id);
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+
+  useEffect(() => {
+    if (miniaturized) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return function cleanup() {
+      // cleanup
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 
   return (
     <ButtonBox>
@@ -40,9 +69,11 @@ const ProjectMenu = ({ miniaturized }: Props) => {
             id={p.id}
             key={`projectBtn-${p.id}-miniature`}
             style={{
-              animation: `${0 + i / 5}s slideDown ease-out`,
+              animation: `${
+                projects.length > 10 ? Math.random() / 2 : 0 + i / 5
+              }s slideRight2 linear`,
             }}
-            onClick={selectProject}
+            onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
           >
             {p.id.split("_").join(" ")}
           </ButtonBasic>
@@ -65,7 +96,7 @@ const ProjectMenu = ({ miniaturized }: Props) => {
                   } ease-out`
                 : undefined,
             }}
-            onClick={selectProject}
+            onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
           >
             {p.id.split("_").join(" ")}
           </ButtonBasic>

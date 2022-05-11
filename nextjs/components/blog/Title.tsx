@@ -15,7 +15,7 @@ const Title = ({ title }: { title: string }) => {
   }
 
   const loadPost = () => {
-    router.push(`blog/${title}`);
+    router.push(`/blog/post/${title}`);
   };
 
   return (

@@ -42,6 +42,7 @@ services:
     ports:
       - "5432:5432"
 
+
 volumes:
   ppjkdb_prod:
   static_volume:

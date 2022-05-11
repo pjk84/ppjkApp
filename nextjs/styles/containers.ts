@@ -28,15 +28,16 @@ export const Drop = styled.div`
   top: 0;
 `;
 
-export const Header = styled.div<{}>`
+export const Header = styled.header<{}>`
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-  background-color: ${(p) => p.theme.backgroundColor2};
+  padding: 25px;
+  flex-wrap: wrap;
+  background-color: ${(p) => p.theme.backgroundColor};
   box-shadow: ${(props) => props.theme.header.boxShadow};
-  gap: 100px;
+  gap: 20px;
   &:after {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
     content: "";
@@ -45,18 +46,18 @@ export const Header = styled.div<{}>`
     height: 1px;
     background-color: ${(props) => props.theme.dividerColor};
   }
-  /* &:before {
+  &:before {
     content: "";
     position: absolute;
-    height: 10px;
-    bottom: -10px;
+    height: 5px;
+    top: 0px;
     width: 100%;
     background-image: ${(p) =>
-    `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
-  } */
+      `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
+  }
 `;
 
-export const Footer = styled.div`
+export const Footer = styled.footer`
   display: flex;
   position: relative;
   justify-content: center;
@@ -75,76 +76,37 @@ export const Footer = styled.div`
 `;
 1;
 
-export const Main = styled.div<{}>`
+export const Main = styled.main<{}>`
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  flex-direction: column;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  background-color: ${(p) => p.theme.backgroundColor2};
 `;
 
 export const Inner = styled.div<{}>`
-  width: 95%;
-  height: 100%;
+  /* width: 95%; */
+  padding: 5px;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-color: ${(p) => p.theme.borderColor};
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
+    padding: 20px;
   }
   display: flex;
+  background-color: ${(p) => p.theme.backgroundColor};
   flex-direction: column;
-`;
-
-export const MessageBodyPreview = styled.p`
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   overflow: hidden;
 `;
 
-export const ThreadWrapper = styled.div<{ depth?: number }>`
+export const TextEdit = styled.span`
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  margin-left: ${(p) => `${p.depth}px`};
-  border-left: 1px solid;
-  gap: 10px;
-  border-color: ${(p) => p.theme.posts.threadColor};
-`;
-
-export const MessageWrapper = styled.div<{
-  type?: "new" | "editing" | "deleting" | "thread";
-}>`
   position: relative;
-
-  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
   color: ${(p) => p.theme.textColor};
-  flex-direction: column;
-  box-shadow: ${(p) => p.type !== "thread" && p.theme.posts.boxShadow};
-  background-color: ${(p) => p.theme.posts.backgroundColor};
-  justify-content: flex-start;
-  gap: 20px;
-  border: ${(p) => p.theme.messageBorder};
-  padding: 20px;
-  word-wrap: break-word;
   border-radius: 4px;
-  &:hover {
-    .controls {
-      opacity: 1;
-    }
-  }
-`;
-
-export const TextEdit = styled.div<{}>`
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 4px;
-`;
-
-export const StdInput = styled.input`
-  background: white;
-  border: transparent;
-  color: ${(props) => props.theme.darkGray};
 `;
 
 export const ButtonBox = styled.div<{ column?: boolean }>`
@@ -161,15 +123,20 @@ export const TitleBar = styled.input<{ newMessage?: boolean }>`
   background: transparent;
   border: transparent;
   font-size: 30px;
-  color: ${(props) => props.theme.lightGray};
+  color: ${(props) => props.theme.textColor};
   opacity: ${(props) => (props.newMessage ? 0.4 : 1)};
 `;
 
-export const FlexBoxCentered = styled.div<{ fullWidth?: boolean }>`
+export const FlexBoxCentered = styled.div<{
+  fullWidth?: boolean;
+  gap?: number;
+}>`
   width: ${(p) => (p.fullWidth ? "100%" : null)};
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
+  gap: ${(p) => p.gap && `${p.gap}px`};
 `;
 
 export const FlexBox = styled.div<{
@@ -186,7 +153,7 @@ export const FlexBox = styled.div<{
       ? appTheme.gray
       : p.color === "blue"
       ? appTheme.blue
-      : appTheme.green};
+      : p.theme.textColor};
   display: Flex;
   gap: ${(props) =>
     props.gapSize === "small"
@@ -196,7 +163,7 @@ export const FlexBox = styled.div<{
       : props.gapSize === "large"
       ? "20px"
       : null};
-  align-items: "${(props) => (props.align === "center" ? "center" : "start")}";
+  align-items: ${(props) => (props.align === "center" ? "center" : "start")};
   flex-direction: ${(props) => (props.column ? "column" : "row")};
   flex-wrap: ${(props) => props.wrap && "wrap"};
   justify-content: ${(props) =>

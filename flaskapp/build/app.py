@@ -21,6 +21,5 @@ jwt = JWTManager(my_app)
 CORS(my_app, origins="*", supports_credentials=True)
 
 
-
 if __name__ == '__main__':
     my_app.run(host='0.0.0.0', port=PORT)

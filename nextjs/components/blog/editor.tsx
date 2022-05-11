@@ -8,11 +8,12 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import htmlToDraft from "html-to-draftjs";
 import { TextEdit, FlexBox } from "../../styles/containers";
 import { Control } from "../../styles/buttons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { blogActions } from "../../state/actiontypes";
 import { appTheme } from "../../styles";
 import { Post } from "./types";
 import Controls from "./MessageControls";
+import { RootState } from "../../state";
 import _ from "lodash";
 
 type Props = {
@@ -21,9 +22,12 @@ type Props = {
   getEditorStateAsHtml?: (text: string) => void;
 };
 
-const TextEditor = ({ post, getEditorStateAsHtml }: Props) => {
-  const getEditorState = () => {
-    const blocksFromHtml = htmlToDraft(post.body);
+const TextEditor = () => {
+  let draft = useSelector((state: RootState) => state.blog.draft);
+
+  const getEditorState = (body: string) => {
+    if (!body) return EditorState.createEmpty();
+    const blocksFromHtml = htmlToDraft(body);
     const { contentBlocks, entityMap } = blocksFromHtml;
     const contentState = ContentState.createFromBlockArray(
       contentBlocks,
@@ -32,25 +36,18 @@ const TextEditor = ({ post, getEditorStateAsHtml }: Props) => {
     return EditorState.createWithContent(contentState);
   };
   const dispatch = useDispatch();
-  const [editorState, setEditorState] = useState(getEditorState());
-  const [showTools, toggleTools] = useState(false);
+  const [editorState, setEditorState] = useState(getEditorState(draft?.body));
   const handleChange = (e: any) => {
-    const contentAsHtml = draftToHtml(
-      convertToRaw(editorState.getCurrentContent())
-    );
     setEditorState(e);
+
     dispatch({
       type: blogActions.SET_DRAFT,
-      draft: { ...post, body: contentAsHtml },
+      draft: {
+        ...draft,
+        body: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      },
     });
   };
-
-  useEffect(() => {
-    if (getEditorStateAsHtml)
-      getEditorStateAsHtml(
-        draftToHtml(convertToRaw(editorState.getCurrentContent()))
-      );
-  });
 
   const debounced = _.debounce((e) => handleChange(e), 300);
 
@@ -63,33 +60,28 @@ const TextEditor = ({ post, getEditorStateAsHtml }: Props) => {
 
   return (
     <TextEdit>
-      <div style={{ width: "100%" }}>
-        <Control onClick={() => toggleTools(!showTools)}>{`${
-          showTools ? "hide" : "show"
-        } toolbar`}</Control>
-        <Editor
-          stripPastedStyles={true}
-          placeholder="add message here.."
-          toolbarStyle={{
-            backgroundColor: appTheme.gray,
-            border: "none",
-            display: !showTools && "none",
-          }}
-          toolbar={{
-            options: ["inline", "fontSize", "colorPicker", "link", "emoji"],
-            inline: {
-              inDropdown: false,
-              className: "test",
-              component: undefined,
-              dropdownClassName: undefined,
-              options: ["bold", "italic", "underline"],
-            },
-          }}
-          onBlur={debounced.flush}
-          defaultEditorState={editorState}
-          onEditorStateChange={debounced}
-        />
-      </div>
+      <Editor
+        stripPastedStyles={true}
+        placeholder="add message here.."
+        toolbarStyle={{
+          padding: 0,
+          margin: 0,
+          border: "none",
+        }}
+        toolbar={{
+          options: ["inline", "fontSize", "colorPicker", "link", "emoji"],
+          inline: {
+            inDropdown: false,
+            className: "test",
+            component: undefined,
+            dropdownClassName: undefined,
+            options: ["bold", "italic", "underline"],
+          },
+        }}
+        onBlur={debounced.flush}
+        defaultEditorState={editorState}
+        onEditorStateChange={debounced}
+      />
     </TextEdit>
   );
 };

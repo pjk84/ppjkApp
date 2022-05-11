@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { Post } from "./types";
 import BlogPost, { ThreadItem } from "./Message";
-import { ThreadWrapper } from "../../styles/containers";
+import { ThreadWrapper } from "../../styles/blog";
 
 const getTree = (posts: Post[], depth: number = 0): any => {
   let node: ReactElement[] = [];
@@ -13,15 +13,7 @@ const getTree = (posts: Post[], depth: number = 0): any => {
 
     node.push(
       <ThreadWrapper depth={depth * 25}>
-        {post.title ? (
-          <BlogPost key={`thread-post-${post.id}`} post={post} focused={true} />
-        ) : (
-          <ThreadItem
-            key={`thread-post-${post.id}`}
-            post={post}
-            depth={depth}
-          />
-        )}
+        <ThreadItem key={`thread-post-${post.id}`} post={post} />
         {replies}
       </ThreadWrapper>
     );
@@ -30,7 +22,12 @@ const getTree = (posts: Post[], depth: number = 0): any => {
 };
 
 const Thread = ({ post }: { post: Post }) => {
-  return getTree([post]);
+  return (
+    <>
+      <BlogPost key={`thread-post-${post.id}`} post={post} focused={true} />
+      {post.replies && getTree(post.replies)}
+    </>
+  );
 };
 
 export default Thread;

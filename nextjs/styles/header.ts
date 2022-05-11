@@ -25,7 +25,7 @@ export const BlogMessageTitle = styled.header<{ clickable?: boolean }>`
   color: ${(props) => props.theme.posts.titleColor};
   width: max-content;
   font-size: 40px;
-  &: hover {
+  &:hover {
     text-decoration: ${(p) => p.clickable && "underline"};
     cursor: ${(p) => p.clickable && "pointer"};
   }
