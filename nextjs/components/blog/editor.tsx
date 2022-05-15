@@ -38,18 +38,22 @@ const TextEditor = () => {
   };
   const dispatch = useDispatch();
   const [editorState, setEditorState] = useState(getEditorState(draft?.body));
-  const handleState = (e: any) => {
+  const handleState = (e: EditorState) => {
+    console.log(e);
     setEditorState(e);
 
     dispatch({
       type: blogActions.SET_DRAFT,
       draft: {
         ...draft,
-        body: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+        body: draftToHtml(convertToRaw(e.getCurrentContent())),
       },
     });
   };
-
+  const flush = () => {
+    console.log("flush");
+    debounced.flush;
+  };
   const debounced = _.debounce((e) => handleState(e), 300);
 
   const Editor = useMemo(() => {
@@ -80,7 +84,7 @@ const TextEditor = () => {
             options: ["bold", "italic", "underline"],
           },
         }}
-        onBlur={debounced.flush}
+        onBlur={flush}
         defaultEditorState={editorState}
         onEditorStateChange={debounced}
       />

@@ -46,7 +46,7 @@ const Blog = ({ tags }: { tags: string[] }) => {
         dispatch({ type: blogActions.SET_POSTS, posts, activePost: undefined });
       });
     };
-    if (posts.length === 0 || reload) {
+    if (posts?.length === 0 || reload) {
       fetchMessages();
       setLoading(false);
       return;

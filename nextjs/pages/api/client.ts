@@ -10,7 +10,7 @@ export enum Framework {
 
 const apiClient = () => {
   const baseUrl =
-    process.env["API"] === Framework.DOTNET
+    process.env.NEXT_PUBLIC_API === Framework.DOTNET
       ? config.dotnetBaseUrl
       : config.flaskBaseUrl;
   const cookie = new Cookies();
@@ -52,7 +52,7 @@ const apiClient = () => {
   const editBlogMessage = async (post: Post) => {
     try {
       return await axios.patch(
-        `${baseUrl}/blog/message`,
+        `${baseUrl}/blog/posts`,
         { id: post.id, title: post.title, body: post.body },
         {
           withCredentials: true,
@@ -66,7 +66,10 @@ const apiClient = () => {
 
   const fetchBlogMessages = async () => {
     try {
-      const messages = await axios.get(`${baseUrl}/blog/messages`, {
+      console.log(process.env);
+      if (process.env.API == "DOTNET") {
+      }
+      const messages = await axios.get(`${baseUrl}/blog/posts`, {
         withCredentials: true,
         headers: headers,
       });
@@ -78,7 +81,7 @@ const apiClient = () => {
 
   const getBlogMessageByTitle = async (title: string) => {
     try {
-      const messages = await axios.get(`${baseUrl}/blog/message/${title}`, {
+      const messages = await axios.get(`${baseUrl}/blog/posts/${title}`, {
         withCredentials: true,
         headers: headers,
       });
@@ -91,7 +94,7 @@ const apiClient = () => {
   const getBlogRepliesByParentId = async (parentId: string) => {
     try {
       const messages = await axios.get(
-        `${baseUrl}/blog/message/${parentId}/replies`,
+        `${baseUrl}/blog/posts/${parentId}/replies`,
         {
           withCredentials: true,
           headers: headers,
@@ -105,7 +108,7 @@ const apiClient = () => {
 
   const deleteBlogMessages = async (id: string) => {
     try {
-      const messages = await axios.delete(`${baseUrl}/blog/message/${id}`, {
+      const messages = await axios.delete(`${baseUrl}/blog/posts/${id}`, {
         withCredentials: true,
         headers: headers,
       });
@@ -116,14 +119,16 @@ const apiClient = () => {
   };
 
   const addBlogMessage = async (post: Post) => {
-    console.log(post);
     try {
       return await axios.post(
-        `${baseUrl}/blog/message`,
+        `${baseUrl}/blog/posts`,
         {
           ...post,
-          title: post.title!.replace(/ /g, "_"),
-          tags: post.tags || [],
+          title: post.title!.trim().replace(/ /g, "_"),
+          tags:
+            post.tags?.map((t) => {
+              return { name: t };
+            }) || [],
         },
         {
           withCredentials: true,

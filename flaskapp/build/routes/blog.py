@@ -16,7 +16,7 @@ blog_routes = Blueprint('blog_routes', __name__)
 
 
 
-@blog_routes.route('/blog/message', methods=['PATCH'])
+@blog_routes.route('/blog/post', methods=['PATCH'])
 # @jwt_required()
 def patch_message():
     with session_scope() as session:
@@ -24,7 +24,7 @@ def patch_message():
         session.query(BlogPost).filter(BlogPost.id == payload['id']).update({"body": payload['body']})
     return jsonify({"message": "message_updated"})
     
-@blog_routes.route('/blog/message', methods=['POST'])
+@blog_routes.route('/blog/post', methods=['POST'])
 # @jwt_required()
 def post_message():
     with session_scope() as session:
@@ -46,7 +46,7 @@ def post_message():
 
 
 
-@blog_routes.route('/blog/messages', methods=['GET'])
+@blog_routes.route('/blog/posts', methods=['GET'])
 def get_messages():
     with session_scope() as session:
         res = []
@@ -58,7 +58,7 @@ def get_messages():
         res.sort(key=get_created_at, reverse=True)
         return jsonify(res)
 
-@blog_routes.route('/blog/message/<title>', methods=['GET'])
+@blog_routes.route('/blog/posts/<title>', methods=['GET'])
 def get_post_by_title(title):
     with session_scope() as session:
         post: BlogPost = session.query(BlogPost).filter(BlogPost.title == title).first()
@@ -72,7 +72,7 @@ def get_post_by_title(title):
 #     replies = db.session.query(BlogPost).filter(BlogPost.parent_id == id).all()
 #     return jsonify([postToDict(reply) for reply in replies])
 
-@blog_routes.route('/blog/message/<post_id>', methods=['DELETE'])
+@blog_routes.route('/blog/posts/<post_id>', methods=['DELETE'])
 # @jwt_required()
 def delete_messages(post_id):
     with session_scope() as session:

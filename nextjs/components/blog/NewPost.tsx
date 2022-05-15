@@ -23,14 +23,11 @@ import { useRouter } from "next/router";
 const NewPost = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const newPost = useSelector((state: RootState) => state.blog.addingPost);
   const draft = useSelector((state: RootState) => state.blog.draft);
-  const tags = useSelector((state: RootState) => state.blog.addedTags);
   const warning = useSelector((state: RootState) => state.blog.warning);
   const isPosting = useSelector(
     (state: RootState) => state.blog.loader === "posting"
   );
-
   if (isPosting) {
     return (
       <LoaderWrapper key={`textBox-new-post`}>

@@ -29,7 +29,6 @@ const Tags = () => {
       .split(",")
       .filter((t) => !tags.includes(t))
       .map((t) => t.replace(/\s/g, ""));
-    console.log(newTags);
     dispatch({
       type: blogActions.SET_DRAFT,
       draft: { tags: [...tags, ...newTags] },
