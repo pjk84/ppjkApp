@@ -1,8 +1,9 @@
 import { Project } from "../projects/types";
 const projects: Array<Project> = [
   {
-    id: "this_web_app",
+    id: "ppjk84",
     languages: ["Javascript", "Typescript", "python"],
+    category: "web app",
     frameworks_and_tools: "Nextjs, Flask, Docker, Postgres, Sqlalchemy",
     repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
     description: "personal sandbox and project showcase",
@@ -10,6 +11,7 @@ const projects: Array<Project> = [
   {
     id: "speed_type",
     languages: ["Typescript"],
+    category: "game",
     framework: "React",
     repo: "https://github.co[m/pjk84/]ppjksandbox/tree/master/speedtype",
     description:
@@ -19,6 +21,7 @@ const projects: Array<Project> = [
   {
     id: "word_hunt",
     languages: ["Typescript"],
+    category: "game",
     framework: "React",
     repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
     description:
@@ -28,6 +31,7 @@ const projects: Array<Project> = [
   {
     id: "pong",
     languages: ["Python"],
+    category: "game",
     libraries: "ncurses",
     repo: "https://github.com/pjk84/python_games/blob/master/pong.py",
     description: "pong for the command line",
@@ -35,6 +39,7 @@ const projects: Array<Project> = [
   {
     id: "snake",
     languages: ["Python"],
+    category: "game",
     libraries: "ncurses",
     repo: "https://github.com/pjk84/python_games/blob/master/snake.py",
     description: "Snake for the command line",
@@ -42,6 +47,7 @@ const projects: Array<Project> = [
   {
     id: "tetris",
     languages: ["cplusplus"],
+    category: "game",
     repo: "https://github.com/pjk84/cpp_tetris",
     libraries: ["ncurses"],
     description: "command line Tetris using ncurses",

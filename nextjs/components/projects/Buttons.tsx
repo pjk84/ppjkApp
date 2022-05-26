@@ -7,6 +7,8 @@ import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
 import { useRouter } from "next/router";
 import { min } from "lodash";
+import { route } from "next/dist/server/router";
+import { HtmlProps } from "next/dist/shared/lib/utils";
 
 interface Props {
   miniaturized?: boolean;
@@ -29,8 +31,15 @@ const ProjectMenu = ({ miniaturized }: Props) => {
     );
   };
 
-  const handleKeyDown = (e: any) => {
-    if (!focus) return;
+  const handleKeyDown = (e: KeyboardEvent): void => {
+    e.preventDefault();
+    if (e.key === "Enter") {
+      if (!projects.find((p) => p.id === focus)?.demo) return;
+
+      router.push(`
+      /${focus}`);
+      return;
+    }
     let current = projects.findIndex((p) => p.id === focus);
     let next = 0;
     if (e.key === "ArrowLeft") {
@@ -46,7 +55,6 @@ const ProjectMenu = ({ miniaturized }: Props) => {
       }
     }
     selectProject(projects[next].id);
-    window.removeEventListener("keydown", handleKeyDown);
   };
 
   useEffect(() => {

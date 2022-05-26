@@ -24,6 +24,7 @@ type Props = {
 
 const TextEditor = () => {
   let draft = useSelector((state: RootState) => state.blog.draft);
+  const [color, setColor] = useState<string>("black");
 
   const getEditorState = (body: string) => {
     if (!body) return EditorState.createEmpty();
@@ -37,19 +38,23 @@ const TextEditor = () => {
   };
   const dispatch = useDispatch();
   const [editorState, setEditorState] = useState(getEditorState(draft?.body));
-  const handleChange = (e: any) => {
+  const handleState = (e: EditorState) => {
+    console.log(e);
     setEditorState(e);
 
     dispatch({
       type: blogActions.SET_DRAFT,
       draft: {
         ...draft,
-        body: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+        body: draftToHtml(convertToRaw(e.getCurrentContent())),
       },
     });
   };
-
-  const debounced = _.debounce((e) => handleChange(e), 300);
+  const flush = () => {
+    console.log("flush");
+    debounced.flush;
+  };
+  const debounced = _.debounce((e) => handleState(e), 300);
 
   const Editor = useMemo(() => {
     return dynamic<EditorProps>(
@@ -68,6 +73,7 @@ const TextEditor = () => {
           margin: 0,
           border: "none",
         }}
+        editorStyle={{ color: color }}
         toolbar={{
           options: ["inline", "fontSize", "colorPicker", "link", "emoji"],
           inline: {
@@ -78,7 +84,7 @@ const TextEditor = () => {
             options: ["bold", "italic", "underline"],
           },
         }}
-        onBlur={debounced.flush}
+        onBlur={flush}
         defaultEditorState={editorState}
         onEditorStateChange={debounced}
       />

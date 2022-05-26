@@ -31,6 +31,7 @@ const LaunchProject = ({ projectId }: Props) => {
       onClick={launchProject}
     >
       open project
+      <div style={{ fontSize: 10, opacity: "0.5" }}>(press enter)</div>
     </ButtonBasic>
   );
 };

@@ -10,13 +10,7 @@ const T = ({ details, animation }) => {
   const getSliding = (d, i) => {
     const key = d.replaceAll("_", " ");
     return (
-      <tr
-        key={`section-row-slide-${d}-${i}`}
-        style={{
-          position: "relative",
-          animation: `0.${i + 1}s slideOverRight ease-in`,
-        }}
-      >
+      <tr key={`section-row-slide-${d}-${i}`}>
         <TableCell
           key={`tablecell-left-${i}`}
           index={i}
