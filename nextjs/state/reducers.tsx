@@ -30,11 +30,12 @@ type IblogState = {
   loaded?: boolean;
   draft?: Post;
   addedTags: Array<string>;
-  reload?: boolean;
+  reload: boolean;
   selectedTags: Array<string>;
 };
 
 const initialState: Istate & IblogState = {
+  reload: true,
   active: [],
   posts: [],
   addedTags: [],

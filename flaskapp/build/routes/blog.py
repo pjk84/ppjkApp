@@ -38,10 +38,8 @@ def post_message():
         session.add(post)
         if(payload['tags']):
             session.flush()
-            for tag_name in payload['tags']:
-                tag_name = tag_name.replace(" ", "_")
-                tag = Tag(name=tag_name, post_id=post.id)
-                session.add(tag)
+            for t in payload['tags']:
+                session.add(Tag(name=t['name'].replace(" ", "_"), post_id=post.id))
     return jsonify({"message": "message_created"})
 
 

@@ -13,35 +13,10 @@ import { actions, blogActions } from "../../state/actiontypes";
 import { RootState } from "../../state";
 import ReactHtmlParser from "react-html-parser";
 import Loader from "../Loaders";
-import Controls from "./MessageControls";
-import PostHeader from "../../components/blog/PostHeader";
+import PostHeader from "./PostHeader";
 
 type ControlProps = {
   messageId: string;
-};
-
-type TitleProps = {
-  title: string;
-  isEditing: boolean;
-};
-
-export const PostTitle = ({ title, isEditing }: TitleProps) => {
-  const dispatch = useDispatch();
-  return isEditing ? (
-    <TitleBar
-      newMessage={!title}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        dispatch({
-          type: blogActions.SET_DRAFT,
-          draft: { title: e.target.value },
-        })
-      }
-      defaultValue={title}
-      placeholder="add title here..."
-    />
-  ) : (
-    <Title title={title} />
-  );
 };
 
 const textBody = (text: string, focused?: boolean) => {

@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { Post } from "./types";
-import BlogPost, { ThreadItem } from "./Message";
+import BlogPost, { ThreadItem } from "./Post";
 import { ThreadWrapper } from "../../styles/blog";
 
 const getTree = (posts: Post[], depth: number = 0): any => {

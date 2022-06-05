@@ -1,26 +1,17 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Logo from "../components/Header";
-import {
-  FlexBox,
-  FlexBoxCentered,
-  Footer,
-  Inner,
-  Main,
-  Header,
-  Wrapper,
-} from "../styles/containers";
-import { StdButton } from "../components/Buttons";
-import Drops from "../components/drops";
+import Login from "../components/login";
+import { Footer, Inner, Main, Header } from "../styles/containers";
+
+import Nav from "../components/Nav";
 
 const Home: NextPage = ({ children }) => {
   return (
     <div id="app">
       <Header>
+        <Login />
         <Logo />
-        <StdButton page="about" title="about" />
-        <StdButton page="blog" title="blog" />
-        <StdButton page="projects" title="projects" />
+        <Nav />
       </Header>
       <Main>
         <Inner>{children}</Inner>

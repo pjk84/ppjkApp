@@ -6,3 +6,9 @@ export const InputBorderless = styled.input`
   height: 1em;
   color: ${(p) => p.theme.textColor};
 `;
+
+export const StdInput = styled.input`
+  border: none;
+  width: fit-content;
+  color: ${(p) => p.theme.textColor};
+`;

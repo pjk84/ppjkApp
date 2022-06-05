@@ -2,9 +2,10 @@ import { Project } from "../projects/types";
 const projects: Array<Project> = [
   {
     id: "ppjk84",
-    languages: ["Javascript", "Typescript", "python"],
+    languages: ["Javascript", "Typescript", "python", "csharp"],
     category: "web app",
-    frameworks_and_tools: "Nextjs, Flask, Docker, Postgres, Sqlalchemy",
+    frameworks_and_tools:
+      "Nextjs, Flask, Docker, Postgres, Sqlalchemy, .NET core 6, entity framework",
     repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
     description: "personal sandbox and project showcase",
   },

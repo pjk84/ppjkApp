@@ -1,18 +1,17 @@
 import axios from "axios";
 import config from "./config";
 import Cookies from "universal-cookie";
-import { Post, Tag } from "../../components/blog/types";
+import bcrypt from "bcryptjs";
+import { Post } from "../components/blog/types";
 
 export enum Framework {
-  FLASK = "FLASK",
-  DOTNET = "DOTNET",
+  Flask = "FLASK",
+  Dotnet = "DOTNET",
 }
 
 const apiClient = () => {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API === Framework.DOTNET
-      ? config.dotnetBaseUrl
-      : config.flaskBaseUrl;
+  const api = process.env.API || process.env.NEXT_PUBLIC_API;
+  const baseUrl = config[api as Framework]?.toLowerCase();
   const cookie = new Cookies();
   const token = cookie.get("access_token");
 
@@ -24,7 +23,7 @@ const apiClient = () => {
     try {
       return await axios.post(
         `${baseUrl}/login`,
-        { password: password },
+        { password: await bcrypt.hashSync(password) },
         { withCredentials: true }
       );
     } catch (err) {
@@ -66,7 +65,7 @@ const apiClient = () => {
 
   const fetchBlogMessages = async () => {
     try {
-      console.log(process.env);
+      console.log(process.env, headers);
       if (process.env.API == "DOTNET") {
       }
       const messages = await axios.get(`${baseUrl}/blog/posts`, {
@@ -75,7 +74,7 @@ const apiClient = () => {
       });
       return messages.data;
     } catch (err) {
-      console.log(err);
+      return [];
     }
   };
 
@@ -121,7 +120,7 @@ const apiClient = () => {
   const addBlogMessage = async (post: Post) => {
     try {
       return await axios.post(
-        `${baseUrl}/blog/posts`,
+        `${baseUrl}/blog/post`,
         {
           ...post,
           title: post.title!.trim().replace(/ /g, "_"),

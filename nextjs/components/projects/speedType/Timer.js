@@ -45,7 +45,7 @@ const Timer = ({ isPlaying, minutes, endGame }) => {
         justifyContent: "center",
         alignItems: "center",
         animation: "0.3s fadeIn ease-in",
-        fontSize: 50,
+        fontSize: 25,
       }}
     >{`${time.minutes}:${time.seconds}`}</div>
   );

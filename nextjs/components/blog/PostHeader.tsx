@@ -1,7 +1,7 @@
 import React from "react";
 import { FlexBox } from "../../styles/containers";
 import { Post } from "./types";
-import { PostTitle } from "./Message";
+import { Title } from "./Title";
 import Controls from "./MessageControls";
 import { BlogPostHeader } from "../../styles/blog";
 import { useSelector } from "react-redux";
@@ -16,9 +16,11 @@ const PostHeader = ({ post, focused }: { post: Post; focused?: boolean }) => {
           <div>{post.created_at}</div>
           <div>{post.author}</div>
         </div>
-        {!loggedIn && focused && <Controls post={post} />}
+        {loggedIn && focused && <Controls post={post} />}
       </FlexBox>
-      {post.title && <PostTitle isEditing={false} title={post.title} />}
+      {post.title && (
+        <Title clickable={!focused} isEditing={false} title={post.title} />
+      )}
     </BlogPostHeader>
   );
 };

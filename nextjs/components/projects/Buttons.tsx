@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ButtonBox } from "../../styles/containers";
 import projects from "../../data/projects";
-import { Btn1, ButtonBasic } from "../../styles/buttons";
+import { Btn1, StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
@@ -71,8 +71,8 @@ const ProjectMenu = ({ miniaturized }: Props) => {
     <ButtonBox>
       {projects?.map((p, i) =>
         miniaturized ? (
-          <ButtonBasic
-            size={"small"}
+          <StdButton
+            size="small"
             active={focus === p.id}
             id={p.id}
             key={`projectBtn-${p.id}-miniature`}
@@ -84,10 +84,10 @@ const ProjectMenu = ({ miniaturized }: Props) => {
             onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
           >
             {p.id.split("_").join(" ")}
-          </ButtonBasic>
+          </StdButton>
         ) : (
-          <ButtonBasic
-            size={"large"}
+          <StdButton
+            size="large"
             shadow={true}
             active={focus === p.id}
             id={p.id}
@@ -107,7 +107,7 @@ const ProjectMenu = ({ miniaturized }: Props) => {
             onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
           >
             {p.id.split("_").join(" ")}
-          </ButtonBasic>
+          </StdButton>
         )
       )}
     </ButtonBox>

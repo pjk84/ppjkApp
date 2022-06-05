@@ -84,7 +84,7 @@ export const Main = styled.main<{}>`
 `;
 
 export const Inner = styled.div<{}>`
-  /* width: 95%; */
+  width: 95%;
   padding: 5px;
   border-left: 1px solid;
   border-right: 1px solid;
@@ -101,7 +101,7 @@ export const Inner = styled.div<{}>`
 
 export const TextEdit = styled.span`
   width: 100%;
-  display: flex;
+  /* display: flex; */
   position: relative;
   flex-direction: column;
   /* align-items: center; */

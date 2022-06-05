@@ -64,7 +64,7 @@ export const BlogPostBody = styled.span`
 export const BlogWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 `;
 
 export const Tag = styled.div`

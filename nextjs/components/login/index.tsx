@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FlexBox, StdInput } from "../../styles/containers";
-import { Btn3 } from "../../styles/buttons";
+import { FlexBox } from "../../styles/containers";
+import { StdInput } from "../../styles/input";
+import { Btn3, StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
-import apiClient from "../../api";
+import apiClient from "../../api/client";
 import { useTheme } from "styled-components";
 import Cookies from "universal-cookie";
-import { actions } from "state/actiontypes";
-import { RootState } from "state";
+import { actions } from "../../state/actiontypes";
+import { RootState } from "../../state";
 
 const cookie = new Cookies();
 
@@ -57,16 +58,13 @@ const Login = () => {
 
   const login = (
     <FlexBox
+      justify="center"
       gapSize="small"
       style={{ position: "absolute", left: 10, top: 10 }}
     >
-      <Btn3
-        color={active ? "blue" : undefined}
-        style={{ zIndex: 2 }}
-        onClick={toggle}
-      >
+      <StdButton size="tiny" style={{ zIndex: 2 }} onClick={toggle}>
         login
-      </Btn3>
+      </StdButton>
 
       {active && (
         <form onSubmit={handleLogin}>
@@ -86,10 +84,10 @@ const Login = () => {
             onChange={(e) => setInput(e.target.value)}
           />
           {active && input && (
-            <Btn3
+            <StdButton
+              size="tiny"
               type="submit"
               onClick={handleLogin}
-              color={active && "blue"}
               style={{
                 marginLeft: 10,
                 animation:
@@ -97,7 +95,7 @@ const Login = () => {
               }}
             >
               {">"}
-            </Btn3>
+            </StdButton>
           )}
         </form>
       )}
@@ -106,17 +104,18 @@ const Login = () => {
 
   const logOut = (
     <FlexBox
+      align="center"
       gapSize="small"
       style={{ position: "absolute", left: 10, top: 10 }}
     >
       <Btn3 style={{ zIndex: 2 }} onClick={handleLogOut}>
         logout
       </Btn3>
-      <div style={{ color: theme.blue }}>logged in</div>
+      <div style={{ color: theme.green }}>logged in</div>
     </FlexBox>
   );
 
   return loggedIn ? logOut : login;
 };
 
-export { Login };
+export default Login;

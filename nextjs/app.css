@@ -77,6 +77,14 @@ a {
     transform: translateY(0px);
   }
 }
+@keyframes scroll {
+  0% {
+    transform: translateY(100px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
 
 @keyframes widen {
   0% {
@@ -407,11 +415,6 @@ input:focus {
 
 input {
   color: #dde6ed;
-}
-
-#speedTypeWords {
-  font-size: 40px;
-  width: 100%;
 }
 
 .speedTypeInput {

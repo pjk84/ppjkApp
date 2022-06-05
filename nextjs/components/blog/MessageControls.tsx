@@ -2,7 +2,7 @@ import React from "react";
 import { RootState } from "../../state";
 import { useSelector, useDispatch, batch } from "react-redux";
 import { actions, blogActions } from "../../state/actiontypes";
-import apiClient from "../../pages/api/client";
+import apiClient from "../../api/client";
 import { Control } from "../../styles/buttons";
 import { FlexBox } from "../../styles/containers";
 import { useRouter } from "next/router";

@@ -14,9 +14,9 @@ import { RootState } from "../../state";
 import { Warning } from "../../styles/notifications";
 import Loader from "../Loaders";
 import { useState } from "react";
-import apiClient, { Framework } from "../../pages/api/client";
+import apiClient, { Framework } from "../../api/client";
 import { Post } from "./types";
-import { PostTitle } from "./Message";
+import { Title } from "./Title";
 import Tags from "./tags/manageTags";
 import { useRouter } from "next/router";
 
@@ -28,6 +28,7 @@ const NewPost = () => {
   const isPosting = useSelector(
     (state: RootState) => state.blog.loader === "posting"
   );
+
   if (isPosting) {
     return (
       <LoaderWrapper key={`textBox-new-post`}>
@@ -70,7 +71,7 @@ const NewPost = () => {
     <PostWrapper type={"new"} key={`textBox-new-post`}>
       <BlogPostHeader>
         {warning && <Warning>{warning}</Warning>}
-        <PostTitle title={draft?.title} isEditing={true} />
+        <Title title={draft?.title} isEditing={true} />
       </BlogPostHeader>
       <BlogPostBody>
         <TextEditor />

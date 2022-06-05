@@ -8,7 +8,7 @@ import { Tag as TagStyle, AddTagWrapper } from "../../../styles/blog";
 import { useDispatch } from "react-redux";
 import { blogActions } from "../../../state/actiontypes";
 import { Tag } from "../types";
-import apiClient from "../../../pages/api/client";
+import apiClient from "../../../api/client";
 import { create } from "lodash";
 
 const Tags = () => {
@@ -73,11 +73,7 @@ const Tags = () => {
             ) : null}
           </AddTagWrapper>
         )}
-        {tag.isAdding && (
-          <Control active={tag.isAdding} onClick={toggleAddTag}>
-            ✖
-          </Control>
-        )}
+        {tag.isAdding && <Control onClick={toggleAddTag}>x</Control>}
       </FlexBox>
       <FlexBox gapSize="small">
         {tags?.map((tag) => (

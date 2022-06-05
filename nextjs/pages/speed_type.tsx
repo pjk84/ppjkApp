@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import RestartButton from "../components/projects/speedType/Restartbutton";
+import React, { useState, useEffect, useRef } from "react";
 import Score from "../components/projects/speedType/Score";
 import Timer from "../components/projects/speedType/Timer";
-import { appTheme } from "../styles";
+import { appTheme, appThemeLight } from "../styles";
+import { StdButton } from "../styles/buttons";
 
 // import "./speedtype.css";
-import { FlexBox } from "../styles/containers";
+import { FlexBox, FlexBoxCentered } from "../styles/containers";
 
 type Props = {
   isPlaying: boolean;
@@ -15,51 +15,76 @@ type Props = {
 const SpeedType = () => {
   const random = require("random-words");
 
+  const ref1 = useRef<HTMLDivElement>(null);
+  const ref2 = useRef<HTMLDivElement>(null);
+
   const [gameState, setGameState] = useState<{
     isPlaying: boolean;
     timesUp: boolean;
-    words: string[];
+    words: string[][];
     input: string;
+    scroll: boolean;
     cursor: number;
     roundResult: boolean[];
     totalResult: boolean[];
+    line: number;
+    height: number;
   }>({
     isPlaying: false,
     timesUp: false,
-    words: random(10),
+    words: Array(2)
+      .fill([])
+      .map((w) => random(10)),
     input: "",
     cursor: 0,
+    scroll: false,
     roundResult: [],
     totalResult: [],
+    line: 0,
+    height: 0,
   });
   const [focus, setFocus] = useState(false);
 
-  const col = {
-    animation: "0.2s fadeIn ease-in",
-    display: "grid",
-    gridTemplateRows: "60% 40%",
-    // border: "1px solid #b3dadf",
-    borderRadius: 8,
-  };
-
   useEffect(() => {
+    let h: number = 0;
+    const getHeight = (c: HTMLCollection) => {
+      const h =
+        c[gameState.line].clientHeight + c[gameState.line + 1].clientHeight;
+      return h;
+    };
+    if (ref1.current && gameState.height === 0) {
+      setGameState({ ...gameState, height: getHeight(ref1.current.children) });
+    }
     if (gameState.isPlaying) {
-      if (gameState.words.length === gameState.roundResult.length) {
-        setGameState({
-          ...gameState,
-          ...{
-            words: random(10),
-            cursor: 0,
-            roundResult: [],
-            totalResult: [...gameState.totalResult, ...gameState.roundResult],
-          },
-        });
+      if (
+        gameState.words[gameState.line].length === gameState.roundResult.length
+      ) {
+        if (ref1.current) {
+          const children: { clientHeight: number }[] = [].slice.call(
+            ref1.current.children
+          );
+          let h: number = 0;
+          for (const c of children.slice(0, gameState.line + 1)) {
+            h += c.clientHeight;
+          }
+          ref1.current.style.transform = `translateY(-${h}px)`;
+          setGameState({
+            ...gameState,
+            ...{
+              cursor: 0,
+              words: [...gameState.words, random(10)],
+              line: gameState.line + 1,
+              height: getHeight(ref1.current.children),
+              roundResult: [],
+              totalResult: [...gameState.totalResult, ...gameState.roundResult],
+            },
+          });
+        }
       }
     }
   }, [setGameState, gameState]);
 
   const getScore = () => {
-    console.log(gameState);
     return <Score score={gameState.totalResult} />;
   };
 
@@ -77,29 +102,34 @@ const SpeedType = () => {
     });
   };
 
-  const getWord = (word: string, index: number) => {
+  const wordstyle = {
+    display: "flex",
+    alignItems: "center",
+    borderRadius: 8,
+    padding: 10,
+    // animation: result[index] === true && "0.5s evaporate ease-in",
+
+    color: `${appTheme.darkGray}`,
+  };
+
+  const getWord = (line: number, word: string, index: number) => {
     return (
       <div
         key={`${word}-${index}-${gameState.roundResult[index] === true}`}
         style={{
-          display: "flex",
-          alignItems: "center",
-          borderRadius: 8,
-          padding: 10,
-          // animation: result[index] === true && "0.5s evaporate ease-in",
-          animation: !gameState.isPlaying
-            ? `${(Math.random() * 5) / 10}s slideDown ease-out`
-            : undefined,
-          color:
-            gameState.roundResult[index] === true
-              ? `${appTheme.green}`
-              : gameState.roundResult[index] === false
-              ? "#ff4f38"
-              : `white`,
-          backgroundColor:
-            gameState.isPlaying && index === gameState.cursor
-              ? "#2b2d30"
-              : undefined,
+          ...wordstyle,
+          ...(line === gameState.line && {
+            color:
+              gameState.roundResult[index] === true
+                ? `${appTheme.green}`
+                : gameState.roundResult[index] === false
+                ? "#ff4f38"
+                : `${appTheme.darkGray}`,
+            backgroundColor:
+              gameState.isPlaying && index === gameState.cursor
+                ? `${appThemeLight.lighterGray}`
+                : undefined,
+          }),
         }}
       >
         {word}
@@ -114,105 +144,114 @@ const SpeedType = () => {
     });
   };
 
+  const input = (
+    <input
+      key="speedTypeInp"
+      style={{
+        overflow: "hidden",
+        animation: !gameState.isPlaying ? "1s breathe infinite" : undefined,
+        position: "relative",
+        backgroundColor: "transparent",
+        border: "none",
+        fontSize: 20,
+        marginTop: 25,
+        color: `${appTheme.darkGray}`,
+        boxSizing: "border-box",
+        textAlign: "center",
+      }}
+      onKeyDown={(e) => {
+        if (e.code === "Space") {
+          const res =
+            gameState.input.trim().toLowerCase() ===
+            gameState.words[gameState.line][gameState.cursor]
+              .trim()
+              .toLowerCase();
+          const roundResult = [...gameState.roundResult, ...[res]];
+          setGameState({
+            ...gameState,
+            ...{ roundResult, cursor: gameState.cursor + 1, input: "" },
+          });
+        }
+      }}
+      placeholder={focus ? "" : "type here to start timer"}
+      onFocus={(e) => setFocus(true)}
+      onBlur={(e) => setFocus(false)}
+      value={gameState.input}
+      onChange={handleChange}
+    />
+  );
+
+  const words = (
+    <FlexBox
+      ref={ref1}
+      column
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        fontSize: 40,
+        height: gameState.height,
+        transition: "0.5s all ease-out",
+      }}
+    >
+      {gameState.words.map((w, line) => (
+        <FlexBox
+          id={`words-line-${line}`}
+          key={`words-line-${line}`}
+          justify="center"
+          wrap="true"
+        >
+          {w.map((word: string, index: number) => getWord(line, word, index))}
+        </FlexBox>
+      ))}
+    </FlexBox>
+  );
+
   const main = gameState.timesUp ? (
     <>
       {getScore()}
-      <RestartButton restart={restart} />
+      <StdButton size="small" onClick={restart}>
+        restart
+      </StdButton>
     </>
   ) : (
-    <div style={col}>
-      <>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            borderRadius: 8,
-            padding: 10,
-          }}
-        >
-          <div
-            id="speedTypeWords"
-            style={{
-              justifyContent: "center",
-              flexWrap: "wrap",
-              display: "flex",
-              gap: "5px",
-            }}
-          >
-            {gameState.words.map((word: string, index: number) =>
-              getWord(word, index)
-            )}
-          </div>
-        </div>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <input
-            className="speedTypeInput"
-            key="speedTypeInp"
-            style={{
-              overflow: "hidden",
-              animation: !gameState.isPlaying
-                ? "1s breathe infinite"
-                : undefined,
-              position: "relative",
-              backgroundColor: "transparent",
-              border: "none",
-              color: `${appTheme.lightGray}`,
-              boxSizing: "border-box",
-              textAlign: "center",
-            }}
-            onKeyDown={(e) => {
-              if (e.code === "Space") {
-                const res =
-                  gameState.input.trim().toLowerCase() ===
-                  gameState.words[gameState.cursor].trim().toLowerCase();
-                const roundResult = [...gameState.roundResult, ...[res]];
-                setGameState({
-                  ...gameState,
-                  ...{ roundResult, cursor: gameState.cursor + 1, input: "" },
-                });
-              }
-            }}
-            placeholder={focus ? "" : "type here to start timer"}
-            onFocus={(e) => setFocus(true)}
-            onBlur={(e) => setFocus(false)}
-            value={gameState.input}
-            onChange={handleChange}
-          />
-        </div>
-      </>
-    </div>
+    <FlexBoxCentered style={{ width: "100%" }}>
+      <div
+        style={{
+          position: "relative",
+          borderRadius: 8,
+          width: "100%",
+          height: gameState.height,
+          overflow: "hidden",
+        }}
+      >
+        {words}
+      </div>
+      {input}
+    </FlexBoxCentered>
   );
 
   return (
-    <FlexBox align="center" justify="center" style={{ height: "100%" }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateRows: "80% 20%",
-          minHeight: 500,
-        }}
-      >
-        {main}
-        {!gameState.timesUp && (
-          <Timer
-            isPlaying={gameState.isPlaying}
-            minutes={1}
-            endGame={() =>
-              setGameState({
-                ...gameState,
-                ...{ timesUp: true, isPlaying: false },
-              })
-            }
-          />
-        )}
-      </div>
+    <FlexBox
+      align="center"
+      justify="center"
+      column
+      gapSize="large"
+      style={{ height: "100%" }}
+    >
+      {main}
+      {!gameState.timesUp && (
+        <Timer
+          isPlaying={gameState.isPlaying}
+          minutes={1}
+          endGame={() =>
+            setGameState({
+              ...gameState,
+              ...{ timesUp: true, isPlaying: false },
+            })
+          }
+        />
+      )}
     </FlexBox>
   );
 };

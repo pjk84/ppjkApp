@@ -46,22 +46,22 @@ public class Tag
 
 public class BlogPostDto
 {
-    public Guid id { get; set; }
-    public string title { get; set; }
-    public string body { get; set; }
+    public Guid Id { get; set; }
+    public string Title { get; set; }
+    public string Body { get; set; }
 
-    public bool has_replies { get; set; }
+    public bool HasReplies { get; set; }
 
-    public Guid? parent_id { get; set; }
+    public Guid? ParentId { get; set; }
 
-    public List<TagDto> tags { get; set; }
+    public List<TagDto> Tags { get; set; }
 }
 
 public class TagDto
 {
-    public Guid id { get; set; }
-    public string name { get; set; }
-    public string post_id { get; set; }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string PostId { get; set; }
 
 }
 

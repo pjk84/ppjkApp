@@ -96,6 +96,9 @@ export const appThemeLight = {
   control: {
     backgroundColor: color.lighterGray,
     boxShadow: color.lightGray,
+    hover: color.darkGray,
+    active: color.darkGray,
+    inactive: color.lightGray,
   },
   input: {
     placeholderColor: color.lighterGray,

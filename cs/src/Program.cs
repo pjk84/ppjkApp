@@ -1,20 +1,45 @@
 
-
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
 
 var startup = new Startup();
 startup.ConfigureServices(builder.Services);
 
+
+//auth
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opts =>
+    {
+        opts.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RequireExpirationTime = false,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+                )
+            )
+        };
+    });
+
 builder.Services.AddDbContext<AppDBContext>(ctx =>
 {
-    var connString = builder.Configuration.GetConnectionString("default");
+
+    var connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTIONP_STRING");
     ctx.UseNpgsql(connString)
-    .UseSnakeCaseNamingConvention();
+        .UseSnakeCaseNamingConvention();
 });
 
 builder.Services.AddCors(options =>
@@ -29,18 +54,27 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(swaggerGenOptions =>
+builder.Services.AddSwaggerGen(opts =>
 {
-    swaggerGenOptions.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "my api", Version = "v1" });
+    opts.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "",
+    });
+
+    opts.OperationFilter<SecurityRequirementsOperationFilter>();
+    opts.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "my api", Version = "v1" });
 });
 
 var app = builder.Build();
 app.UseCors();
 
-// Configure the HTTP request pipeline.
-
+app.UseSwagger();
 app.UseSwaggerUI(swaggerUiOptions =>
 {
     swaggerUiOptions.DocumentTitle = "ppjk api";
@@ -53,30 +87,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.UseAuthentication();
+app.UsePathBase(new PathString("/api/dotnet/"));
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-// app.MapGet("/posts", async () => await PostRepository.GetPosts()).WithTags("get all posts");
-// app.MapGet("/post/{postId}", async (Guid postId) =>
-// {
-//     Post post = await PostRepository.GetPost(postId);
-//     List<Post> relations = await PostRepository.GetRelations(postId);
 
-//     if (post != null)
-//     {
-//         return Results.Ok(post);
-//     }
-//     return Results.BadRequest();
-// }).WithTags("get one post");
-// app.MapPost("/post", async (string title, string content, string parentId) =>
-// {
-//     bool res = await PostRepository.createPost(title, content, parentId);
-//     if (res)
-//     {
-//         return Results.Ok("post created");
-//     }
-//     return Results.BadRequest();
-// }).WithTags("create a single post");
-app.UsePathBase(new PathString("/api/dotnet/"));
-app.UseRouting();
 app.Run();

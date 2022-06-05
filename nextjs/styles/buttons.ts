@@ -1,21 +1,32 @@
 import styled from "styled-components";
 
-export const ButtonBasic = styled.button<{
+export const StdButton = styled.button<{
   active?: boolean;
-  size: "small" | "medium" | "large";
+  size?: "tiny" | "small" | "medium" | "large";
   animation?: string;
   shadow?: boolean;
 }>`
   position: relative;
   border-radius: 4px;
+  height: max-content;
   box-shadow: ${(p) => p.theme.button.boxShadow};
   font-size: ${(p) =>
-    p.size === "small" ? "15px" : p.size === "medium" ? "20px" : "30px"};
+    p.size === "tiny"
+      ? "10px"
+      : p.size === "small"
+      ? "15px"
+      : p.size === "medium"
+      ? "20px"
+      : "30px"};
   border: 1px solid;
   border-color: ${(p) =>
     p.active ? p.theme.button.borderColorActive : p.theme.button.borderColor};
   padding: ${(p) =>
-    p.size === "small" ? "5px 10px 5px 10px" : "10px 20px 10px 20px"};
+    p.size === "tiny"
+      ? "5px 5px 5px 5px"
+      : p.size === "small"
+      ? "5px 10px 5px 10px"
+      : "10px 20px 10px 20px"};
   color: ${(p) =>
     p.active ? p.theme.button.textColorActive : p.theme.textColor};
   background-color: ${(p) =>
@@ -163,8 +174,7 @@ export const Control = styled.button<{
   color?: "red" | "blue" | "gray";
 }>`
   padding: 0px;
-  background-color: ${(p) =>
-    p.active ? p.theme.control.backgroundColor : "transparent"};
+  background-color: transparent;
   text-align: left;
   transition: all 0.1s;
   border: none;
@@ -172,12 +182,12 @@ export const Control = styled.button<{
     p.color
       ? p.theme[p.color]
       : p.active
-      ? p.theme.textColor
-      : p.theme.button.textColorInactive};
+      ? p.theme.control.active
+      : p.theme.control.inactive};
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    color: ${(p) => !p.color && p.theme.button.textColorHover};
+    color: ${(p) => !p.color && p.theme.control.hover};
   }
 `;
 

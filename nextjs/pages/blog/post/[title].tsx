@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { RootState } from "../../../state";
 import { BlogPost } from "../../../components/blog";
 import { Post } from "../../../components/blog/types";
-import apiClient from "../../api/client";
+import apiClient from "../../../api/client";
 import { actions, blogActions } from "../../../state/actiontypes";
 import { NewPost } from "../../../components/blog";
 import { Control } from "../../../styles/buttons";

@@ -1,10 +1,12 @@
 using AutoMapper;
-
+using dotenv.net;
 
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        // env vars
+        DotEnv.Load();
         // .... Ignore code before this
 
         // Auto Mapper Configurations
@@ -17,6 +19,9 @@ public class Startup
         .AddJsonFile("appsettings.json")
         .AddEnvironmentVariables()
         .Build();
+
+        Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_CONNECTIONP_STRING"));
+        Console.WriteLine("ASDSDAS!@#!@#");
 
         services.AddSingleton(config);
 

@@ -22,11 +22,11 @@ export const Header2 = styled.header`
 `;
 
 export const BlogMessageTitle = styled.header<{ clickable?: boolean }>`
-  color: ${(props) => props.theme.posts.titleColor};
+  color: ${(props) => props.theme.textColorInactive};
   width: max-content;
   font-size: 40px;
   &:hover {
-    text-decoration: ${(p) => p.clickable && "underline"};
+    color: ${(props) => props.theme.textColor};
     cursor: ${(p) => p.clickable && "pointer"};
   }
 `;

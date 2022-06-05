@@ -1,5 +1,4 @@
 import React from "react";
-import RestartButton from "./Restartbutton";
 
 export const Score = ({ score }) => {
   console.log(score);
