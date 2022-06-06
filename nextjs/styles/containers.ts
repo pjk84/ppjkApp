@@ -115,6 +115,7 @@ export const ButtonBox = styled.div<{ column?: boolean }>`
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
+  width: 80%;
   margin-top: 30px;
   flex-direction: ${(props) => props.column && "column"};
 `;

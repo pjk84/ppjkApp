@@ -1,7 +1,6 @@
 import React from "react";
 
 export const Score = ({ score }) => {
-  console.log(score);
   return (
     <div
       style={{

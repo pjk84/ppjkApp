@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ButtonBox } from "../../styles/containers";
+import { ButtonBox, FlexBox, FlexBoxCentered } from "../../styles/containers";
 import projects from "../../data/projects";
 import { Btn1, StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,49 +68,51 @@ const ProjectMenu = ({ miniaturized }: Props) => {
   });
 
   return (
-    <ButtonBox>
-      {projects?.map((p, i) =>
-        miniaturized ? (
-          <StdButton
-            size="small"
-            active={focus === p.id}
-            id={p.id}
-            key={`projectBtn-${p.id}-miniature`}
-            style={{
-              animation: `${
-                projects.length > 10 ? Math.random() / 2 : 0 + i / 5
-              }s slideRight2 linear`,
-            }}
-            onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
-          >
-            {p.id.split("_").join(" ")}
-          </StdButton>
-        ) : (
-          <StdButton
-            size="large"
-            shadow={true}
-            active={focus === p.id}
-            id={p.id}
-            key={`projectBtn-${p.id}`}
-            //   slideLeft={i % 2 === 0}
-            style={{
-              animation: clicked
-                ? i % 2 === 0
-                  ? `0.5s slideOutRight ease-out`
-                  : `0.5s slideOutLeft ease-out`
-                : isFirstRender
-                ? `${0.2}s slideDownDiagonal${
-                    i % 2 === 0 ? "Left" : "Right"
-                  } ease-out`
-                : undefined,
-            }}
-            onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
-          >
-            {p.id.split("_").join(" ")}
-          </StdButton>
-        )
-      )}
-    </ButtonBox>
+    <FlexBox justify="center" style={{ width: "100%" }}>
+      <ButtonBox>
+        {projects?.map((p, i) =>
+          miniaturized ? (
+            <StdButton
+              size="small"
+              active={focus === p.id}
+              id={p.id}
+              key={`projectBtn-${p.id}-miniature`}
+              style={{
+                animation: `${
+                  projects.length > 10 ? Math.random() / 2 : 0 + i / 5
+                }s slideRight2 linear`,
+              }}
+              onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
+            >
+              {p.id.split("_").join(" ")}
+            </StdButton>
+          ) : (
+            <StdButton
+              size="large"
+              shadow={true}
+              active={focus === p.id}
+              id={p.id}
+              key={`projectBtn-${p.id}`}
+              //   slideLeft={i % 2 === 0}
+              style={{
+                animation: clicked
+                  ? i % 2 === 0
+                    ? `0.5s slideOutRight ease-out`
+                    : `0.5s slideOutLeft ease-out`
+                  : isFirstRender
+                  ? `${0.2}s slideDownDiagonal${
+                      i % 2 === 0 ? "Left" : "Right"
+                    } ease-out`
+                  : undefined,
+              }}
+              onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
+            >
+              {p.id.split("_").join(" ")}
+            </StdButton>
+          )
+        )}
+      </ButtonBox>
+    </FlexBox>
   );
 };
 

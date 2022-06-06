@@ -197,23 +197,29 @@ const WordInvader = ({ interval }: Props) => {
   }, [random, words, playing, timer, crashing, interval, score]);
 
   return (
-    <FlexBox key="outer" gapSize="large" column>
-      {/* <button onClick={test}>test</button> */}
-      <div
+    <FlexBox column gapSize="large" align="center">
+      <FlexBoxCentered
+        key="outer"
         style={{
-          border: "30px solid",
-          borderImage: "linear-gradient( to bottom right,#242424, #1d1d1d) 1",
           borderRadius: 10,
+          position: "relative",
+          background: "radial-gradient(#ffffff, #47443f 98%)",
+          height: fieldHeight + 100,
+          width: "100%",
         }}
       >
+        {/* <button onClick={test}>test</button> */}
         <div
           key="wordspace"
           id="wordSpace"
           style={{
             overflow: "hidden",
-            height: fieldHeight,
-            position: "relative",
-
+            // height: fieldHeight,
+            position: "absolute",
+            left: 25,
+            top: 25,
+            right: 25,
+            bottom: 25,
             background: "radial-gradient(#6b816b, #1d201e 95%)",
             boxShadow: "inset 10px 0 50px #171a19",
             animation: !playing ? "0.2s jitterIn ease-in" : undefined,
@@ -245,6 +251,7 @@ const WordInvader = ({ interval }: Props) => {
                 padding: 100,
                 opacity: 0.5,
                 fontSize: 60,
+                color: `${appTheme.green}`,
               }}
             >
               {words.length === 0 ? (
@@ -265,9 +272,10 @@ const WordInvader = ({ interval }: Props) => {
             </>
           )}
         </div>
-      </div>
+      </FlexBoxCentered>
       <input
         style={{
+          width: "100%",
           fontSize: 25,
           color: `${appTheme.green}`,
           backgroundColor: "transparent",
