@@ -86,15 +86,13 @@ export const Main = styled.main<{}>`
 export const Inner = styled.div<{}>`
   width: 95%;
   padding: 5px;
-  border-left: 1px solid;
-  border-right: 1px solid;
-  border-color: ${(p) => p.theme.borderColor};
+
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
     padding: 20px;
   }
   display: flex;
-  background-color: ${(p) => p.theme.backgroundColor};
+  background-color: ${(p) => p.theme.backgroundColor2};
   flex-direction: column;
   overflow: hidden;
 `;

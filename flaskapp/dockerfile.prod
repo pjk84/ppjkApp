@@ -19,7 +19,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 FROM python:3.9.5-slim-buster
 
 RUN addgroup --system ppjk && adduser --system --group ppjk
-ENV APP_HOME=/home/ppjk/flaskapp
+ENV APP_HOME=/usr/src/flaskapp
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 

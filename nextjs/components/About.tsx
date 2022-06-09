@@ -1,14 +1,8 @@
-import type { NextPage } from "next";
-// import Section from "../components/Section";
-import Table from "../components/Table";
-import Header from "../components/Header";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { RootState } from "../state";
-import { useDispatch, useSelector } from "react-redux";
-import { actions } from "../state/actiontypes";
+import { useSelector } from "react-redux";
 import { FlexBox } from "../styles/containers";
-import dynamic from "next/dynamic";
-import { appTheme, color, Themes } from "../styles";
+import { color, Themes } from "../styles";
 
 const details = {
   Name: "Pieter Kemps",

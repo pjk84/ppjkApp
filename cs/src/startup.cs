@@ -1,5 +1,6 @@
 using AutoMapper;
 using dotenv.net;
+using System.Collections;
 
 public class Startup
 {
@@ -16,13 +17,14 @@ public class Startup
         });
 
         IConfiguration config = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json")
         .AddEnvironmentVariables()
         .Build();
 
-        Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_CONNECTIONP_STRING"));
-        Console.WriteLine("ASDSDAS!@#!@#");
+        foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+        {
+            Console.WriteLine($"{de.Key} = {de.Value}");
 
+        }
         services.AddSingleton(config);
 
         IMapper mapper = mapperConfig.CreateMapper();

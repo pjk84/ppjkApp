@@ -3,12 +3,13 @@ import { FlexBox, FlexBoxCentered } from "../styles/containers";
 import { Header1, Header2 } from "../styles/header";
 import { v4 } from "uuid";
 import { appTheme } from "../styles";
+import { StdButton } from "../styles/buttons";
+import { time } from "console";
 // import "./wordhunt.css";
 
 type WordItem = {
   id: string;
   name: string;
-  fontSize: number;
   opacity: number;
   coords: Array<number>;
   velocity: number;
@@ -22,16 +23,18 @@ type Props = {
 
 const WordInvader = ({ interval }: Props) => {
   interval = 5;
-  const fieldHeight = 500;
+  const fieldHeight = 600;
   const fieldWidth = 800;
-  const wordHeight = 30;
+  const wordHeight = 40;
   const buffer = 120;
+  const borderWidth = 25;
   const random = require("random-words");
   const [words, setWords] = useState<WordItem[]>([]);
   const [crashing, setCrashing] = useState<WordItem[]>([]);
   const [playing, setPlaying] = useState(false);
   const [input, setInput] = useState("");
   const [timer, manageTimer] = useState({
+    paused: false,
     ticks: 0,
     remainder: 0,
     interval: interval,
@@ -53,7 +56,10 @@ const WordInvader = ({ interval }: Props) => {
         id={wordItem.id}
         key={wordItem.id}
         style={{
-          fontSize: `${wordItem.fontSize}px`,
+          display: "flex",
+          alignItems: "center",
+          fontSize: 25,
+          height: wordHeight,
           backgroundColor: "transparent",
           position: "absolute",
           transition: "all 0.1s linear",
@@ -73,15 +79,19 @@ const WordInvader = ({ interval }: Props) => {
         id={wordItem.id}
         key={wordItem.id}
         style={{
-          fontSize: `${wordItem.fontSize}px`,
+          display: "flex",
+          alignItems: "center",
+          fontSize: 25,
+          height: wordHeight,
           backgroundColor: "transparent",
           position: "absolute",
+          opacity: wordItem.opacity,
           transition: `all ${
-            (fieldHeight - wordItem.fallHeight!) / fieldHeight
+            (fieldHeight - wordItem.fallHeight!) / (fieldHeight + borderWidth)
           }s linear`,
           top: wordItem.coords[1],
           left: wordItem.coords[0],
-          opacity: 0.1,
+          color: "white",
         }}
       >
         {wordItem.name}
@@ -91,7 +101,8 @@ const WordInvader = ({ interval }: Props) => {
   const myRef = useRef(null);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value.trim();
+    if (timer.paused) return;
+    const input = e.target.value.trim().toLowerCase();
     if (!playing) {
       if (input === "start") {
         setPlaying(true);
@@ -116,6 +127,7 @@ const WordInvader = ({ interval }: Props) => {
           {
             ...words[i],
             fallHeight: words[i].coords[1],
+            opacity: 1,
             lifeSpan: Math.ceil(10 - (words[i].coords[1] / fieldHeight) * 10),
           },
         ],
@@ -125,6 +137,7 @@ const WordInvader = ({ interval }: Props) => {
   };
 
   useEffect(() => {
+    if (timer.paused) return;
     if (!playing) return;
     const addWord = (words: WordItem[]): WordItem[] => {
       return [
@@ -133,8 +146,13 @@ const WordInvader = ({ interval }: Props) => {
           return {
             id: v4(),
             name: random(1)[0],
-            fontSize: getRandomNumber(30, 50),
-            coords: [0, getRandomNumber(0, fieldHeight - wordHeight)],
+            coords: [
+              0 + borderWidth,
+              getRandomNumber(
+                borderWidth,
+                fieldHeight - (wordHeight + borderWidth)
+              ),
+            ],
             velocity: getRandomNumber(3, 10),
             opacity: 0.4,
           };
@@ -162,7 +180,11 @@ const WordInvader = ({ interval }: Props) => {
           return {
             ...crashingWord,
             lifeSpan: crashingWord.lifeSpan! - 1,
-            coords: [crashingWord.coords[0], fieldHeight],
+            opacity: 0,
+            coords: [
+              crashingWord.coords[0],
+              fieldHeight - (borderWidth + wordHeight),
+            ],
           };
         })
         .filter((m) => m.lifeSpan > 0);
@@ -198,14 +220,34 @@ const WordInvader = ({ interval }: Props) => {
 
   return (
     <FlexBox column gapSize="large" align="center">
+      <FlexBox style={{ width: "100%" }} align="center" gapSize="large">
+        <Header1
+          style={{
+            color: `${appTheme.darkGray}`,
+            opacity: 0.5,
+            width: "max-content",
+          }}
+        >
+          score: {score.total}
+        </Header1>
+        {playing && (
+          <StdButton
+            size="small"
+            onClick={() => manageTimer({ ...timer, paused: !timer.paused })}
+          >
+            {`${timer.paused ? "resume" : "pause"} game`}
+          </StdButton>
+        )}
+      </FlexBox>
       <FlexBoxCentered
         key="outer"
         style={{
           borderRadius: 10,
           position: "relative",
           background: "radial-gradient(#ffffff, #47443f 98%)",
-          height: fieldHeight + 100,
+          height: fieldHeight,
           width: "100%",
+          overflow: "hidden",
         }}
       >
         {/* <button onClick={test}>test</button> */}
@@ -213,31 +255,18 @@ const WordInvader = ({ interval }: Props) => {
           key="wordspace"
           id="wordSpace"
           style={{
-            overflow: "hidden",
             // height: fieldHeight,
             position: "absolute",
-            left: 25,
-            top: 25,
-            right: 25,
-            bottom: 25,
+            left: borderWidth,
+            top: borderWidth,
+            right: borderWidth,
+            bottom: borderWidth,
             background: "radial-gradient(#6b816b, #1d201e 95%)",
             boxShadow: "inset 10px 0 50px #171a19",
             animation: !playing ? "0.2s jitterIn ease-in" : undefined,
           }}
         >
-          <Header1
-            style={{
-              color: `${appTheme.green}`,
-              opacity: 0.5,
-              width: "max-content",
-              position: "absolute",
-              left: 5,
-              top: 5,
-            }}
-          >
-            score: {score.total}
-          </Header1>
-          {!playing ? (
+          {!playing && (
             <div
               style={{
                 position: "absolute",
@@ -256,22 +285,19 @@ const WordInvader = ({ interval }: Props) => {
             >
               {words.length === 0 ? (
                 <div style={{ fontSize: 30 }}>
-                  Random words will enter the screen from the left. Pop them by
-                  typing them correctly before they reach the opposite end of
-                  the screen. The volume and frequency of words will increase as
-                  you accumulate points.
+                  Random words enter the screen from the left. Pop them by
+                  typing them correctly before they reach the opposite side of
+                  the screen. The volume and frequency of words increases as you
+                  accumulate points.
                 </div>
               ) : (
                 <div>GAME OVER</div>
               )}
             </div>
-          ) : (
-            <>
-              {allWords}
-              {crashingWords}
-            </>
           )}
         </div>
+        {allWords}
+        {crashingWords}
       </FlexBoxCentered>
       <input
         style={{

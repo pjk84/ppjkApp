@@ -9,8 +9,12 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
-
 builder.Services.AddControllers();
+
+builder.WebHost.ConfigureKestrel(opts =>
+{
+    opts.ListenAnyIP(5002);
+});
 
 var startup = new Startup();
 startup.ConfigureServices(builder.Services);
@@ -37,7 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<AppDBContext>(ctx =>
 {
 
-    var connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTIONP_STRING");
+    var connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
     ctx.UseNpgsql(connString)
         .UseSnakeCaseNamingConvention();
 });

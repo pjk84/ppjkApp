@@ -10,8 +10,8 @@ export enum Framework {
 }
 
 const apiClient = () => {
-  const api = process.env.API || process.env.NEXT_PUBLIC_API;
-  const baseUrl = config[api as Framework]?.toLowerCase();
+  const api = localStorage.getItem("API") || "FLASK";
+  const baseUrl = config[api as Framework];
   const cookie = new Cookies();
   const token = cookie.get("access_token");
 

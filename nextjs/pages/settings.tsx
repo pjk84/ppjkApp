@@ -10,8 +10,9 @@ const Settings = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
 
   useEffect(() => {
-    if (!process.env.API) {
-      process.env.API = process.env["NEXT_PUBLIC_API"] || "DOTNET";
+    if (!localStorage.getItem("API")) {
+      const v = process.env["NEXT_PUBLIC_API"] || "DOTNET";
+      setApi(v);
     }
     if (focus !== "settings")
       dispatch({ type: actions.SET_FOCUS, focus: "settings" });
@@ -26,6 +27,12 @@ const Settings = () => {
     );
   };
 
+  const setApi = (api: string) => {
+    localStorage.setItem("API", api);
+  };
+
+  const api = localStorage.getItem("API");
+
   return (
     <FlexBox column>
       <Section
@@ -35,8 +42,8 @@ const Settings = () => {
             <label>
               <input
                 key="config_api_dotnet"
-                defaultChecked={process.env.API === "DOTNET"}
-                onChange={() => (process.env.API = "DOTNET")}
+                defaultChecked={api === "DOTNET"}
+                onChange={() => setApi("DOTNET")}
                 type="radio"
                 name="api"
               />
@@ -45,8 +52,8 @@ const Settings = () => {
             <label>
               <input
                 key="config_api_flask"
-                defaultChecked={process.env.API === "FLASK"}
-                onChange={() => (process.env.API = "FLASK")}
+                defaultChecked={api === "FLASK"}
+                onChange={() => setApi("FLASK")}
                 type="radio"
                 name="api"
               />
