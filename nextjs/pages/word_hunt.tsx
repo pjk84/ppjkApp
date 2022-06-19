@@ -287,7 +287,7 @@ const WordInvader = ({ interval }: Props) => {
                 <div style={{ fontSize: 30 }}>
                   Random words enter the screen from the left. Pop them by
                   typing them correctly before they reach the opposite side of
-                  the screen. The volume and frequency of words increases as you
+                  the screen. The volume and frequency of words increase as you
                   accumulate points.
                 </div>
               ) : (

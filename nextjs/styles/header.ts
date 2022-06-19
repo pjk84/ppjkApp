@@ -12,21 +12,14 @@ export const Header1 = styled.header`
   justify-content: center;
 `;
 
-export const Header2 = styled.header`
+export const Header2 = styled.h1`
+  margin: 0;
+  padding: 0;
   background-color: transparent;
   font-size: 40px;
   border: none;
   display: flex;
-  justify-content: center;
+  font-weight: normal;
+  /* justify-content: center; */
   color: ${(p) => p.theme.lightGray};
-`;
-
-export const BlogMessageTitle = styled.header<{ clickable?: boolean }>`
-  color: ${(props) => props.theme.textColorInactive};
-  width: max-content;
-  font-size: 40px;
-  &:hover {
-    color: ${(props) => props.theme.textColor};
-    cursor: ${(p) => p.clickable && "pointer"};
-  }
 `;

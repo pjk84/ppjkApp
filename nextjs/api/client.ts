@@ -21,11 +21,13 @@ const apiClient = () => {
 
   const login = async (password: string) => {
     try {
-      return await axios.post(
-        `${baseUrl}/login`,
-        { password: await bcrypt.hashSync(password) },
-        { withCredentials: true }
-      );
+      return (
+        await axios.post<string>(
+          `${baseUrl}/login`,
+          { password: await bcrypt.hashSync(password) },
+          { withCredentials: true }
+        )
+      ).data;
     } catch (err) {
       console.log(err);
     }
@@ -65,7 +67,6 @@ const apiClient = () => {
 
   const fetchBlogMessages = async () => {
     try {
-      console.log(process.env, headers);
       if (process.env.API == "DOTNET") {
       }
       const messages = await axios.get(`${baseUrl}/blog/posts`, {
@@ -123,7 +124,7 @@ const apiClient = () => {
         `${baseUrl}/blog/post`,
         {
           ...post,
-          title: post.title!.trim().replace(/ /g, "_"),
+          title: post.title!.trim(),
           tags:
             post.tags?.map((t) => {
               return { name: t };

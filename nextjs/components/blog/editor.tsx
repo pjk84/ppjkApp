@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import "draft-js/dist/Draft.css";
 import { EditorProps } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertToRaw } from "draft-js";
@@ -6,13 +6,10 @@ import draftToHtml from "draftjs-to-html";
 import dynamic from "next/dynamic";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import htmlToDraft from "html-to-draftjs";
-import { TextEdit, FlexBox } from "../../styles/containers";
-import { Control } from "../../styles/buttons";
+import { TextEdit } from "../../styles/containers";
 import { useDispatch, useSelector } from "react-redux";
 import { blogActions } from "../../state/actiontypes";
-import { appTheme } from "../../styles";
 import { Post } from "./types";
-import Controls from "./MessageControls";
 import { RootState } from "../../state";
 import _ from "lodash";
 
@@ -39,19 +36,21 @@ const TextEditor = () => {
   const dispatch = useDispatch();
   const [editorState, setEditorState] = useState(getEditorState(draft?.body));
   const handleState = (e: EditorState) => {
-    console.log(e);
+    const body = draftToHtml(convertToRaw(e.getCurrentContent()));
+    if (draft && body.length === draft.body?.length) {
+      // this prevents setting draft on input blur when submit is clicked
+      return;
+    }
     setEditorState(e);
-
     dispatch({
       type: blogActions.SET_DRAFT,
       draft: {
         ...draft,
-        body: draftToHtml(convertToRaw(e.getCurrentContent())),
+        body,
       },
     });
   };
   const flush = () => {
-    console.log("flush");
     debounced.flush;
   };
   const debounced = _.debounce((e) => handleState(e), 300);
@@ -66,8 +65,7 @@ const TextEditor = () => {
   return (
     <TextEdit>
       <Editor
-        stripPastedStyles={true}
-        placeholder="add message here.."
+        placeholder="add post"
         toolbarStyle={{
           padding: 0,
           margin: 0,
@@ -75,13 +73,27 @@ const TextEditor = () => {
         }}
         editorStyle={{ color: color }}
         toolbar={{
-          options: ["inline", "fontSize", "colorPicker", "link", "emoji"],
+          options: [
+            "inline",
+            "blockType",
+            "fontSize",
+            "colorPicker",
+            "link",
+            "emoji",
+          ],
           inline: {
             inDropdown: false,
             className: "test",
             component: undefined,
             dropdownClassName: undefined,
             options: ["bold", "italic", "underline"],
+          },
+          blockType: {
+            inDropdown: false,
+            options: ["Code", "Blockquote"],
+            className: undefined,
+            component: undefined,
+            dropdownClassName: undefined,
           },
         }}
         onBlur={flush}

@@ -11,8 +11,14 @@ import { Control } from "../../styles/buttons";
 import { useRouter } from "next/router";
 import Loader from "../Loaders";
 import NavBar from "./navbar";
-import { FlexBoxCentered } from "../../styles/containers";
+import {
+  FlexBoxCentered,
+  PostList,
+  PostListItem,
+} from "../../styles/containers";
 import { Header1 } from "../../styles/header";
+import Link from "next/link";
+
 export const Wrapper = ({
   child,
   controls,
@@ -41,7 +47,7 @@ const Blog = ({ tags }: { tags: string[] }) => {
     setLoading(true);
     posts = await apiClient().fetchBlogMessages();
     batch(() => {
-      dispatch({ type: blogActions.SET_POSTS, posts, activePost: undefined });
+      dispatch({ type: blogActions.SET_POSTS, posts });
     });
   };
   React.useEffect(() => {
@@ -49,7 +55,7 @@ const Blog = ({ tags }: { tags: string[] }) => {
       fetchMessages().then(() => setLoading(false));
     }
     if (focus !== "blog") dispatch({ type: actions.SET_FOCUS, focus: "blog" });
-  }, [setLoading, focus, posts, dispatch]);
+  }, [setLoading, focus, posts, dispatch, reload]);
   if (loading) {
     return (
       <LoaderWrapper>
@@ -84,24 +90,23 @@ const Blog = ({ tags }: { tags: string[] }) => {
       <Wrapper
         controls={
           loggedIn && [
-            <Control
-              key="add_new_post"
-              onClick={() => router.push("/blog/post/new_post")}
-            >
-              add new post
-            </Control>,
+            <Link href="/blog/post/new_post">
+              <Control key="add_new_post">add new post</Control>
+            </Link>,
           ]
         }
         child={
-          <>
+          <PostList>
             {elems.map((post: Post) => (
-              <BlogPost
-                focused={false}
-                key={`blogPost-${post.id}`}
-                post={post}
-              />
+              <PostListItem key={`blogPost-${post.id}`}>
+                <Link href={`/blog/post/${post.title}`}>
+                  <span>
+                    <BlogPost focused={false} post={post} />
+                  </span>
+                </Link>
+              </PostListItem>
             ))}
-          </>
+          </PostList>
         }
       />
     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FlexBox } from "../../styles/containers";
 import { StdInput } from "../../styles/input";
-import { Btn3, StdButton } from "../../styles/buttons";
+import { StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import apiClient from "../../api/client";
 import { useTheme } from "styled-components";
@@ -29,15 +29,16 @@ const Login = () => {
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    const res = await apiClient().login(input);
-    if (res) {
+    const token = await apiClient().login(input);
+    if (token) {
+      cookie.set("access_token", token);
       return dispatch({ type: actions.SET_LOGGED_IN, loggedIn: true });
     }
     setAttempts(attempts + 1);
   };
 
   const handleLogOut = () => {
-    cookie.remove("access_token");
+    cookie.remove("access_token", { path: "/" });
     setIsActive(false);
     dispatch({ type: actions.SET_LOGGED_IN, loggedIn: false });
   };
@@ -108,9 +109,9 @@ const Login = () => {
       gapSize="small"
       style={{ position: "absolute", left: 10, top: 10 }}
     >
-      <Btn3 style={{ zIndex: 2 }} onClick={handleLogOut}>
+      <StdButton size="tiny" onClick={handleLogOut}>
         logout
-      </Btn3>
+      </StdButton>
       <div style={{ color: theme.green }}>logged in</div>
     </FlexBox>
   );

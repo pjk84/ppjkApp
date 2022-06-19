@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { isNumberObject } from "util/types";
 import Score from "../components/projects/speedType/Score";
 import Timer from "../components/projects/speedType/Timer";
 import { appTheme, appThemeLight } from "../styles";
@@ -8,6 +9,12 @@ import { FlexBox, FlexBoxCentered } from "../styles/containers";
 const SpeedType = () => {
   const random = require("random-words");
   const ref1 = useRef<HTMLDivElement>(null);
+  const [showCursor, setShowCursor] = useState(
+    localStorage.getItem("speedtype_show_cursor") === "true"
+  );
+  const [showErrors, setShowErrors] = useState(
+    localStorage.getItem("speedtype_show_errors") === "true"
+  );
   const wordsPerLine = 10;
 
   const initialState = {
@@ -39,7 +46,15 @@ const SpeedType = () => {
   }>(initialState);
   const [focus, setFocus] = useState(false);
 
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === "r") {
+      setGameState(initialState);
+    }
+  };
+
   useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress, true);
+
     const getHeight = (c: HTMLCollection) => {
       const h =
         c[gameState.set].clientHeight + c[gameState.set + 1].clientHeight;
@@ -72,7 +87,11 @@ const SpeedType = () => {
         }
       }
     }
-  }, [setGameState, gameState]);
+    return () => {
+      // cleanup
+      window.removeEventListener("keydown", handleKeyPress, true);
+    };
+  }, [setGameState, gameState, handleKeyPress]);
 
   const getScore = () => {
     return <Score score={gameState.totalResult} />;
@@ -86,9 +105,73 @@ const SpeedType = () => {
     color: `${appTheme.darkGray}`,
   };
 
-  const getWord = (set: number, word: string, index: number) => {
+  const handleCursor = () => {
+    localStorage.setItem("speedtype_show_cursor", String(!showCursor));
+    setShowCursor(!showCursor);
+  };
+  const handleShowErrors = () => {
+    localStorage.setItem("speedtype_show_errors", String(!showErrors));
+    setShowErrors(!showErrors);
+  };
+
+  const getLetters = (word: string) => {
+    const input = gameState.input.toLowerCase().trim().split("");
+
+    let w = word.split("");
+    if (showErrors) {
+      w = [...w, ...input.slice(word.length)];
+    }
+
     return (
-      <div
+      <>
+        {w.map((letter, i) => {
+          const overFlow = i > word.length - 1;
+          return (
+            <div
+              key={`letter_${i}_word`}
+              style={{
+                position: "relative",
+                ...(showErrors && {
+                  textDecoration: overFlow ? "line-through" : "normal",
+                  color: overFlow
+                    ? "red"
+                    : i < input.length
+                    ? letter === input[i]
+                      ? "green"
+                      : "red"
+                    : undefined,
+                }),
+              }}
+            >
+              {letter}
+              {
+                // show overflow
+              }
+              {showCursor && i === input.length && (
+                <div
+                  style={{
+                    height: 2,
+                    backgroundColor: "black",
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                  }}
+                ></div>
+              )}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
+  const getWord = (set: number, word: string, index: number) => {
+    const activeWord =
+      set === Math.floor(gameState.totalResult.length / wordsPerLine) &&
+      index === gameState.cursor;
+    return (
+      <FlexBox
         key={`${word}-${index}-${gameState.roundResult[index] === true}`}
         style={{
           ...wordstyle,
@@ -106,8 +189,8 @@ const SpeedType = () => {
           }),
         }}
       >
-        {word}
-      </div>
+        {activeWord ? getLetters(word) : word}
+      </FlexBox>
     );
   };
 
@@ -135,6 +218,29 @@ const SpeedType = () => {
     });
   };
 
+  const settings = (
+    <FlexBox column gapSize="small" key="show_cursor">
+      <FlexBox>
+        <input
+          key="config_api_dotnet"
+          defaultChecked={showCursor}
+          onChange={handleCursor}
+          type="checkbox"
+        />
+        <label>show cursor</label>
+      </FlexBox>
+      <FlexBox>
+        <input
+          key="config_api_dotnet"
+          defaultChecked={showErrors}
+          onChange={handleShowErrors}
+          type="checkbox"
+        />
+        <label>show errors</label>
+      </FlexBox>
+    </FlexBox>
+  );
+
   const input = (
     <input
       key="speedTypeInp"
@@ -149,13 +255,16 @@ const SpeedType = () => {
         color: `${appTheme.darkGray}`,
         boxSizing: "border-box",
         textAlign: "center",
+        width: "100%",
       }}
       onKeyDown={(e) => {
         if (e.code === "Space" || e.code === "Enter") {
           handlekey();
         }
       }}
-      placeholder={focus ? "" : "type here to start timer"}
+      placeholder={
+        focus ? "" : "type here to start timer. (press ctrl+r to restart)"
+      }
       onFocus={(e) => setFocus(true)}
       onBlur={(e) => setFocus(false)}
       value={gameState.input}
@@ -229,6 +338,7 @@ const SpeedType = () => {
           }
         />
       )}
+      {settings}
     </FlexBoxCentered>
   );
 };

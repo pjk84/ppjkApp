@@ -26,31 +26,35 @@ export const NavBar = ({ posts }: { posts: Post[] }) => {
     }
     router.push(`/blog/tag/${tags.join("&")}`);
   };
+
+  const distinctTags = Array.from(
+    new Set(posts.map((p) => p.tags && p.tags.map((t) => t.name)).flat())
+  );
+
   return (
     <FlexBox column>
       <FlexBox column gapSize="small">
         <h3>posts</h3>
         {posts.map((p) => (
-          <Control onClick={() => router.push(`/blog/post/${p.title}`)}>
+          <Control
+            key={`post-${p.id}`}
+            onClick={() => router.push(`/blog/post/${p.title}`)}
+          >
             {p.title?.replace(/_/g, " ")}
           </Control>
         ))}
       </FlexBox>
       <FlexBox column gapSize="small">
         <h3>tags</h3>
-        {posts.map(
-          (p) =>
-            p.tags &&
-            p.tags.map((t) => (
-              <Control
-                active={selectedTags?.includes(t.name)}
-                onClick={() => setSelectedTags(t.name)}
-                key={`tag-${t.name}`}
-              >
-                {t.name.replace(/_/g, " ")}
-              </Control>
-            ))
-        )}
+        {distinctTags.map((t) => (
+          <Control
+            active={selectedTags?.includes(t)}
+            onClick={() => setSelectedTags(t)}
+            key={`tag-${t}`}
+          >
+            {t.replace(/_/g, " ")}
+          </Control>
+        ))}
       </FlexBox>
     </FlexBox>
   );

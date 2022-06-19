@@ -87,6 +87,8 @@ const blogReducer = (state = initialState, action: Action) => {
         deletingPost: undefined,
         focussedPost: undefined,
         reload: false,
+        warning: undefined,
+        selectedTags: [],
       };
     }
     case actions.ADDING_BLOG_POST: {

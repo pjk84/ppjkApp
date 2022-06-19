@@ -1,9 +1,32 @@
 body {
   -webkit-tap-highlight-color: transparent;
+  /* font-family: arial; */
 }
 
 input {
   outline: none;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  cursor: pointer;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.codeBlock {
+  background-color: rgb(241, 241, 241);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+::placeholder {
+  opacity: 0.5;
 }
 
 #app {

@@ -1,10 +1,5 @@
 import { FlexBox } from "../../styles/containers";
-import {
-  BlogPostBody,
-  BlogPostHeader,
-  LoaderWrapper,
-  PostWrapper,
-} from "../../styles/blog";
+import { LoaderWrapper, PostWrapper, PostBlock } from "../../styles/blog";
 
 import { Control } from "../../styles/buttons";
 import TextEditor from "./editor";
@@ -13,9 +8,7 @@ import { actions, blogActions } from "../../state/actiontypes";
 import { RootState } from "../../state";
 import { Warning } from "../../styles/notifications";
 import Loader from "../Loaders";
-import { useState } from "react";
-import apiClient, { Framework } from "../../api/client";
-import { Post } from "./types";
+import apiClient from "../../api/client";
 import { Title } from "./Title";
 import Tags from "./tags/manageTags";
 import { useRouter } from "next/router";
@@ -24,7 +17,7 @@ const NewPost = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const draft = useSelector((state: RootState) => state.blog.draft);
-  const warning = useSelector((state: RootState) => state.blog.warning);
+  const warnings = useSelector((state: RootState) => state.blog.warning);
   const isPosting = useSelector(
     (state: RootState) => state.blog.loader === "posting"
   );
@@ -37,51 +30,69 @@ const NewPost = () => {
     );
   }
 
-  const cancel = () => {
-    dispatch({ type: blogActions.SET_DRAFT, draft: null });
+  const backToList = () => {
+    dispatch({ type: blogActions.RELOAD_REQUIRED });
     router.push("/blog");
   };
 
   const submitPost = async () => {
-    if (!draft.title) {
-      dispatch({
-        type: actions.SET_WARNING,
-        message: "Please add a title",
-      });
-      return;
-    }
-    if (!draft.body) {
-      dispatch({
-        type: actions.SET_WARNING,
-        message: "Please add a message",
-      });
-      return;
-    }
+    let err: string[] = [];
     try {
+      if (!draft?.title) {
+        err.push("no title");
+      }
+      if (!draft?.body) {
+        err.push("no content");
+      }
+      if (err.length > 0) {
+        throw Error(err.join(","));
+      }
       await apiClient().addBlogMessage(draft);
+      backToList();
     } catch (err) {
-      console.log(err);
-    } finally {
-      dispatch({ type: blogActions.RELOAD_REQUIRED });
-      router.push("/blog");
+      dispatch({
+        type: actions.SET_WARNING,
+        message: (err as Error).message.split(","),
+      });
     }
   };
 
   return (
-    <PostWrapper type={"new"} key={`textBox-new-post`}>
-      <BlogPostHeader>
-        {warning && <Warning>{warning}</Warning>}
-        <Title title={draft?.title} isEditing={true} />
-      </BlogPostHeader>
-      <BlogPostBody>
-        <TextEditor />
-        <Tags />
-        <FlexBox justify="center" gapSize="large">
-          <Control onClick={submitPost}>submit</Control>
-          <Control onClick={cancel}>cancel</Control>
+    <>
+      {warnings && (
+        <FlexBox gapSize="small">
+          {warnings.map((w: string) => (
+            <Warning>{w}</Warning>
+          ))}
         </FlexBox>
-      </BlogPostBody>
-    </PostWrapper>
+      )}
+      <PostWrapper type={"new"} key={`textBox-new-post`}>
+        <FlexBox column gapSize="small">
+          Title:
+          <PostBlock border>
+            {" "}
+            <Title title={draft?.title} newPost={true} />
+          </PostBlock>
+        </FlexBox>
+        <FlexBox column gapSize="small">
+          Tags:
+          <PostBlock border>
+            <Tags />
+          </PostBlock>
+        </FlexBox>
+
+        <FlexBox column gapSize="small">
+          Body:
+          <PostBlock border>
+            <TextEditor />
+            <FlexBox justify="center" gapSize="large">
+              <Control onClick={submitPost}>submit</Control>
+              <Control onClick={backToList}>cancel</Control>
+            </FlexBox>
+          </PostBlock>
+        </FlexBox>
+      </PostWrapper>
+    </>
   );
 };
 

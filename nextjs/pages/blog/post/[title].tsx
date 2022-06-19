@@ -11,6 +11,7 @@ import { Control } from "../../../styles/buttons";
 import { Wrapper } from "../../../components/blog/main";
 import { FlexBox } from "../../../styles/containers";
 import Thread from "../../../components/blog/Thread";
+import Link from "next/link";
 
 const PostByTitle = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,6 @@ const PostByTitle = () => {
       return await apiClient().getBlogMessageByTitle(postTitle);
     }
     async function getReplies(parentId: string) {
-      console.log("getting replies");
       // return await apiClient().getBlogRepliesByParentId(parentId);
     }
     if (title === "new_post") {
@@ -131,16 +131,12 @@ const PostByTitle = () => {
     post = mock; //todo: delete
   }
 
-  const backToPosts = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    router.push("/blog");
-  };
   return (
     <Wrapper
       controls={[
-        <Control key="back_to_posts" onClick={backToPosts}>
-          back to all posts
-        </Control>,
+        <Link href="/blog">
+          <Control key="back_to_posts">back to all posts</Control>
+        </Link>,
       ]}
       child={
         post.replies ? (

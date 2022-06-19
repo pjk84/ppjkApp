@@ -40,7 +40,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddDbContext<AppDBContext>(ctx =>
 {
-
     var connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
     ctx.UseNpgsql(connString)
         .UseSnakeCaseNamingConvention();

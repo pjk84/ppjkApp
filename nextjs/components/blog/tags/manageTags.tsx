@@ -4,7 +4,7 @@ import { RootState } from "../../../state";
 import { Control } from "../../../styles/buttons";
 import { FlexBox } from "../../../styles/containers";
 import { InputBorderless } from "../../../styles/input";
-import { Tag as TagStyle, AddTagWrapper } from "../../../styles/blog";
+import { Tag as TagStyle, TagBox } from "../../../styles/blog";
 import { useDispatch } from "react-redux";
 import { blogActions } from "../../../state/actiontypes";
 import { Tag } from "../types";
@@ -15,25 +15,27 @@ const Tags = () => {
   const dispatch = useDispatch();
   const tags: string[] =
     useSelector((state: RootState) => state.blog.draft?.tags) || [];
-  const [tag, setTag] = useState<{
+  const [newTags, setTags] = useState<{
     input: string;
     isAdding: boolean;
   }>({ input: "", isAdding: false });
 
-  const toggleAddTag = async () => {
-    setTag({ ...tag, isAdding: !tag.isAdding });
-  };
+  const addTag = (e: React.SyntheticEvent) => {
+    e.preventDefault();
 
-  const addTag = () => {
-    const newTags = tag.input
-      .split(",")
-      .filter((t) => !tags.includes(t))
-      .map((t) => t.replace(/\s/g, ""));
     dispatch({
       type: blogActions.SET_DRAFT,
-      draft: { tags: [...tags, ...newTags] },
+      draft: {
+        tags: [
+          ...tags,
+          ...newTags.input
+            .split(",")
+            .map((t) => t.trim())
+            .filter((t) => t && !tags.includes(t)),
+        ],
+      },
     });
-    setTag({ ...tag, input: "" });
+    setTags({ ...newTags, input: "" });
   };
 
   const removeTag = (tagName: string) => {
@@ -43,45 +45,55 @@ const Tags = () => {
     });
   };
 
-  return (
-    <FlexBox column gapSize="medium">
-      <FlexBox gapSize="small" align="center">
-        {!tag.isAdding && (
-          <Control active={tag.isAdding} onClick={toggleAddTag}>
-            {tags.length > 0 ? "add more tags" : "add tags"}
-          </Control>
-        )}
+  const handleKey = () => {
+    if (!newTags.input) {
+      setTags({ ...newTags, isAdding: false });
+    }
+  };
 
-        {tag.isAdding && (
-          <AddTagWrapper>
-            <InputBorderless
-              value={tag.input}
-              placeholder="type here..."
-              onChange={(e) => setTag({ ...tag, input: e.target.value })}
-            />
-            {tag.input ? (
-              <FlexBox gapSize="small">
-                {!tags.includes(tag.input) && (
-                  <Control
-                    onClick={addTag}
-                    title={`create new tag for '${tag.input}'`}
-                  >
-                    {tag.input.includes(",") ? "create tags" : "create tag"}
-                  </Control>
-                )}
-              </FlexBox>
-            ) : null}
-          </AddTagWrapper>
+  const allTags = tags.concat(
+    Array.from(
+      new Set(
+        newTags.input
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((t) => t && !tags.includes(t))
+      )
+    )
+  );
+
+  return (
+    <FlexBox column>
+      <form onSubmit={addTag}>
+        <InputBorderless
+          value={newTags.input}
+          placeholder="add tags"
+          onChange={(e) => setTags({ ...newTags, input: e.target.value })}
+          onKeyDown={(e) => {
+            if (e.code == "Backspace") {
+              handleKey();
+            }
+          }}
+        />
+      </form>
+      <TagBox style={{ marginTop: tags.length > 0 || newTags.input ? 20 : 0 }}>
+        {allTags.length > 0 && (
+          <FlexBox gapSize="small" wrap={"true"} align="center">
+            {allTags?.map((tag, i) => (
+              <TagStyle
+                onClick={() => removeTag(tag)}
+                key={`tag_${tag}`}
+                style={{ opacity: i >= tags.length ? 0.4 : 1 }}
+              >
+                {tag}
+              </TagStyle>
+            ))}
+            {newTags.input && (
+              <span style={{ opacity: 0.4 }}>press enter to add new tags</span>
+            )}
+          </FlexBox>
         )}
-        {tag.isAdding && <Control onClick={toggleAddTag}>x</Control>}
-      </FlexBox>
-      <FlexBox gapSize="small">
-        {tags?.map((tag) => (
-          <TagStyle onClick={() => removeTag(tag)} key={`added_tag_${tag}`}>
-            {tag}
-          </TagStyle>
-        ))}
-      </FlexBox>
+      </TagBox>
     </FlexBox>
   );
 };

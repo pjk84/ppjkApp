@@ -40,7 +40,14 @@ export const color = {
 
 export const appThemeLight = {
   ...color,
-  dropColor: color.orange,
+
+  nav: {
+    navItem: {
+      backgroundColor: color.lightestGray,
+      borderColor: color.lighterGray,
+    },
+  },
+
   boxShadow: "0px 1px 5px 1px #aeb3b6",
   dividerColor: color.lighterGray,
   textColor: color.mediumGray,

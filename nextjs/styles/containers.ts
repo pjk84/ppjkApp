@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled, { StyledComponent } from "styled-components";
+import { Style } from "util";
 import { appTheme, color } from ".";
 import device, { size } from "./devices";
 
@@ -121,9 +122,8 @@ export const ButtonBox = styled.div<{ column?: boolean }>`
 export const TitleBar = styled.input<{ newMessage?: boolean }>`
   background: transparent;
   border: transparent;
-  font-size: 30px;
+  /* font-size: 30px; */
   color: ${(props) => props.theme.textColor};
-  opacity: ${(props) => (props.newMessage ? 0.4 : 1)};
 `;
 
 export const FlexBoxCentered = styled.div<{
@@ -162,7 +162,12 @@ export const FlexBox = styled.div<{
       : props.gapSize === "large"
       ? "20px"
       : null};
-  align-items: ${(props) => (props.align === "center" ? "center" : "start")};
+  align-items: ${(props) =>
+    props.align === "center"
+      ? "center"
+      : props.align === "start"
+      ? "start"
+      : null};
   flex-direction: ${(props) => (props.column ? "column" : "row")};
   flex-wrap: ${(props) => props.wrap && "wrap"};
   justify-content: ${(props) =>
@@ -206,4 +211,21 @@ export const Box1 = styled.div<{
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
+`;
+
+export const PostList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const PostListItem = styled.li`
+  transition: all 0.5s;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 1px solid;
+  border-color: transparent;
+  &:hover {
+    border-color: ${(p) => p.theme.lightGray};
+  }
 `;

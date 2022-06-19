@@ -1,12 +1,12 @@
 export type Post = {
   id: string;
-  title?: string;
+  title: string;
   author: string;
   body: string;
   created_at: string;
   has_replies?: boolean;
   replies?: Post[];
-  tags?: Tag[];
+  tags: Tag[];
 };
 
 export type Tag = {

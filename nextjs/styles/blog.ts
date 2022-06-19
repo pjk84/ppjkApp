@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { FlexBox } from "./containers";
 
 export const MessageBodyPreview = styled.p`
+  margin: 0px;
+  padding: 0px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -18,15 +20,14 @@ export const ThreadWrapper = styled.div<{ depth?: number }>`
   border-color: ${(p) => p.theme.posts.threadColor};
 `;
 
-export const PostWrapper = styled.div<{
+export const PostWrapper = styled.span<{
   type?: "new" | "editing" | "deleting" | "thread";
 }>`
   position: relative;
   display: flex;
+  gap: ${(p) => p.type === "new" && "20px"};
   color: ${(p) => p.theme.textColor};
   flex-direction: column;
-  box-shadow: ${(p) => p.type !== "thread" && p.theme.posts.boxShadow};
-  background-color: ${(p) => p.theme.posts.backgroundColor};
   justify-content: flex-start;
   border: ${(p) => p.type !== "thread" && "1px solid"};
   border-color: ${(p) =>
@@ -34,6 +35,8 @@ export const PostWrapper = styled.div<{
       ? p.theme.red
       : p.type === "editing"
       ? p.theme.blue
+      : p.type === "new"
+      ? "transparent"
       : p.theme.posts.borderColor};
   word-wrap: break-word;
   border-radius: 8px;
@@ -45,20 +48,16 @@ export const PostWrapper = styled.div<{
   }
 `;
 
-export const BlogPostHeader = styled.div`
+export const PostBlock = styled.span<{ border?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  border-radius: 8px;
+  background-color: ${(p) => p.theme.posts.backgroundColor};
   padding: 20px;
   color: ${(p) => p.theme.textColor};
-`;
-
-export const BlogPostBody = styled.span`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  padding-top: 0px;
+  border: ${(p) => p.border && "1px solid"};
+  border-color: ${(p) => p.theme.posts.borderColor};
 `;
 
 export const BlogWrapper = styled.div`
@@ -72,20 +71,8 @@ export const Tag = styled.div`
   cursor: pointer;
   padding-left: 10px;
   padding-right: 10px;
-  border-radius: 10px;
-  background-color: red;
-  background-color: ${(p) => p.theme.tag.backgroundColor};
-`;
-
-export const AddTagWrapper = styled.span`
-  display: flex;
-  border: 1px solid;
   border-radius: 4px;
-  align-items: center;
-  height: 25px;
-  border-color: ${(p) => p.theme.borderColor};
-  gap: 20px;
-  padding: 5px;
+  background-color: ${(p) => p.theme.tag.backgroundColor};
 `;
 
 export const LoaderWrapper = styled.span`
@@ -94,4 +81,11 @@ export const LoaderWrapper = styled.span`
   justify-content: center;
   flex-direction: column;
   min-height: 200px;
+`;
+
+export const TagBox = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 `;

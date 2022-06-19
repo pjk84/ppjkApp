@@ -1,23 +1,21 @@
 import React from "react";
-import { BlogMessageTitle } from "../../styles/header";
-import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { blogActions } from "../../state/actiontypes";
 import { TitleBar } from "../../styles/containers";
+import { Header2 } from "../../styles/header";
 
 type TitleProps = {
   title: string;
-  isEditing: boolean;
+  newPost?: boolean;
   clickable?: boolean;
 };
 
-export const Title = ({ title, isEditing, clickable }: TitleProps) => {
-  const router = useRouter();
+export const Title = ({ title, newPost }: TitleProps) => {
   const dispatch = useDispatch();
 
   const titlePlain = title?.replace(/_/g, " ");
 
-  return isEditing ? (
+  return newPost ? (
     <TitleBar
       newMessage={!title}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -27,15 +25,10 @@ export const Title = ({ title, isEditing, clickable }: TitleProps) => {
         })
       }
       defaultValue={title}
-      placeholder="add title here..."
+      placeholder="add title"
     />
   ) : (
-    <BlogMessageTitle
-      clickable={clickable}
-      onClick={() => router.push(`/blog/post/${title}`)}
-    >
-      {titlePlain}
-    </BlogMessageTitle>
+    <Header2>{titlePlain}</Header2>
   );
 };
 

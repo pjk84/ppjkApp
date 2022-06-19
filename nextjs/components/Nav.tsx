@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { RootState } from "../state";
 import { useSelector } from "react-redux";
-import { Btn4 } from "../styles/buttons";
+import { NavItem } from "../styles/buttons";
 import { FlexBox } from "../styles/containers";
 const navBar = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
@@ -12,16 +12,11 @@ const navBar = () => {
   return (
     <FlexBox wrap={"true"}>
       {pages.map((p) => {
+        const active = p === focus;
         return (
-          <span key={`page-button-${p}`}>
-            {p === focus ? (
-              <Btn4 active>{p}</Btn4>
-            ) : (
-              <Link href={`/${p}`}>
-                <Btn4>{p}</Btn4>
-              </Link>
-            )}
-          </span>
+          <Link key={`page-button-${p}`} href={`/${p}`} passHref>
+            <NavItem active={active}>{p}</NavItem>
+          </Link>
         );
       })}
     </FlexBox>

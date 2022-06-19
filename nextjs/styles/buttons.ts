@@ -158,17 +158,6 @@ export const Btn2 = styled.button<{
   }
 `;
 
-export const Btn3 = styled.button<{ color?: string }>`
-  width: max-content;
-  padding: 5;
-  background-color: transparent;
-  color: ${(props) => (props.color === "blue" ? props.theme.blue : "gray")};
-  border: 1px solid;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.5s;
-`;
-
 export const Control = styled.button<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
@@ -191,22 +180,18 @@ export const Control = styled.button<{
   }
 `;
 
-export const Btn4 = styled.button<{
+export const NavItem = styled.a<{
   active?: boolean;
-  isFirstRender?: boolean;
 }>`
   position: relative;
-  color: ${(props) =>
-    props.active
-      ? props.theme.textColor
-      : props.theme.button.textColorInactive};
-  background-color: transparent;
-  /* min-width: 150px; */
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
+  color: ${(p) => p.theme.textColor};
   font-size: 20px;
-  border: none;
+  border-radius: 8px;
   padding: 5px 20px 5px 20px;
   cursor: pointer;
-  transition: color 0.5s;
+  transition: all 0.5s;
+  text-decoration: none;
 `;
 
 export const HyperLink = styled.a`
