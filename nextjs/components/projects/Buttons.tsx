@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { ButtonBox, FlexBox, FlexBoxCentered } from "../../styles/containers";
+import { ButtonBox, FlexBox } from "../../styles/containers";
 import projects from "../../data/projects";
-import { Btn1, StdButton } from "../../styles/buttons";
+import { StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
 import { useRouter } from "next/router";
-import { min } from "lodash";
-import { route } from "next/dist/server/router";
-import { HtmlProps } from "next/dist/shared/lib/utils";
 
 interface Props {
   miniaturized?: boolean;

@@ -9,6 +9,7 @@ export const StdButton = styled.button<{
   position: relative;
   border-radius: 4px;
   height: max-content;
+  width: max-content;
   box-shadow: ${(p) => p.theme.button.boxShadow};
   font-size: ${(p) =>
     p.size === "tiny"

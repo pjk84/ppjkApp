@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef, ReactEventHandler } from "react";
 import { FlexBox, FlexBoxCentered } from "../styles/containers";
-import { Header1, Header2 } from "../styles/header";
+import { Header1 } from "../styles/header";
 import { v4 } from "uuid";
 import { appTheme } from "../styles";
 import { StdButton } from "../styles/buttons";
-import { time } from "console";
-// import "./wordhunt.css";
 
 type WordItem = {
   id: string;

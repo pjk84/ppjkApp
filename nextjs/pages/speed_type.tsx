@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { isNumberObject } from "util/types";
 import Score from "../components/projects/speedType/Score";
 import Timer from "../components/projects/speedType/Timer";
 import { appTheme, appThemeLight } from "../styles";

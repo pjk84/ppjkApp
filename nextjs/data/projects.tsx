@@ -14,7 +14,7 @@ const projects: Array<Project> = [
     languages: ["Typescript"],
     category: "game",
     framework: "React",
-    repo: "https://github.co[m/pjk84/]ppjksandbox/tree/master/speedtype",
+    repo: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/speed_type.tsx",
     description:
       "speed type game. Type as many words as you can in 1 minute. Shows wordcount and accuracy when done.",
     demo: true,
@@ -24,9 +24,18 @@ const projects: Array<Project> = [
     languages: ["Typescript"],
     category: "game",
     framework: "React",
-    repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
+    repo: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/word_hunt.tsx",
     description:
       "speed type game. kill words by typing them correcly before they reach the right hand edge of the board.",
+    demo: true,
+  },
+  {
+    id: "wordle",
+    languages: ["Typescript"],
+    category: "game",
+    framework: "React",
+    repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
+    description: "wordle clone",
     demo: true,
   },
   {
