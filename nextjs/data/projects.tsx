@@ -6,7 +6,7 @@ const projects: Array<Project> = [
     category: "web app",
     frameworks_and_tools:
       "Nextjs, Flask, Docker, Postgres, Sqlalchemy, .NET core 6, entity framework",
-    repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
+    code: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
     description: "personal sandbox and project showcase",
   },
   {
@@ -14,7 +14,7 @@ const projects: Array<Project> = [
     languages: ["Typescript"],
     category: "game",
     framework: "React",
-    repo: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/speed_type.tsx",
+    code: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/speed_type.tsx",
     description:
       "speed type game. Type as many words as you can in 1 minute. Shows wordcount and accuracy when done.",
     demo: true,
@@ -24,7 +24,7 @@ const projects: Array<Project> = [
     languages: ["Typescript"],
     category: "game",
     framework: "React",
-    repo: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/word_hunt.tsx",
+    code: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/word_hunt.tsx",
     description:
       "speed type game. kill words by typing them correcly before they reach the right hand edge of the board.",
     demo: true,
@@ -34,7 +34,7 @@ const projects: Array<Project> = [
     languages: ["Typescript"],
     category: "game",
     framework: "React",
-    repo: "https://github.com/pjk84/ppjksandbox/tree/master/speedtype",
+    code: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/wordle.tsx",
     description: "wordle clone",
     demo: true,
   },
@@ -43,7 +43,7 @@ const projects: Array<Project> = [
     languages: ["Python"],
     category: "game",
     libraries: "ncurses",
-    repo: "https://github.com/pjk84/python_games/blob/master/pong.py",
+    code: "https://github.com/pjk84/python_games/blob/master/pong.py",
     description: "pong for the command line",
   },
   {
@@ -51,14 +51,14 @@ const projects: Array<Project> = [
     languages: ["Python"],
     category: "game",
     libraries: "ncurses",
-    repo: "https://github.com/pjk84/python_games/blob/master/snake.py",
+    code: "https://github.com/pjk84/python_games/blob/master/snake.py",
     description: "Snake for the command line",
   },
   {
     id: "tetris",
     languages: ["cplusplus"],
     category: "game",
-    repo: "https://github.com/pjk84/cpp_tetris",
+    code: "https://github.com/pjk84/cpp_tetris",
     libraries: ["ncurses"],
     description: "command line Tetris using ncurses",
   },

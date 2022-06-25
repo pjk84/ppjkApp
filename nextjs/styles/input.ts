@@ -8,6 +8,9 @@ export const InputBorderless = styled.input`
 `;
 
 export const StdInput = styled.input`
+  -webkit-appearance: none;
+  text-align: center;
+  margin: 0;
   border: none;
   width: fit-content;
   color: ${(p) => p.theme.textColor};

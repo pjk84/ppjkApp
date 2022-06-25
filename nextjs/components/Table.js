@@ -19,7 +19,7 @@ const T = ({ details, animation }) => {
           {key}
         </TableCell>
         <TableCell key={`tablecell-right-${i}`} index={i}>
-          {d === "repo" ? (
+          {d === "code" ? (
             <HyperLink href={details[d]}>click here</HyperLink>
           ) : d === "languages" ? (
             details[d].map((language) => (
@@ -59,7 +59,7 @@ const T = ({ details, animation }) => {
             animation: `0.${Math.random() + 7}s jitterIn ease-out`,
           }}
         >
-          {d === "repo" ? (
+          {d === "code" ? (
             <HyperLink href={details[d]}>click here</HyperLink>
           ) : (
             details[d]

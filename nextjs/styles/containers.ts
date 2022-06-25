@@ -140,7 +140,7 @@ export const FlexBoxCentered = styled.div<{
 
 export const FlexBox = styled.div<{
   align?: "center";
-  gapSize?: "small" | "medium" | "large";
+  gapSize?: "small" | "medium" | "large" | number;
   column?: boolean;
   wrap?: "true";
   color?: "green" | "blue" | "gray";
@@ -161,7 +161,7 @@ export const FlexBox = styled.div<{
       ? "15px"
       : props.gapSize === "large"
       ? "20px"
-      : null};
+      : `${props.gapSize || 0}px`};
   align-items: ${(props) =>
     props.align === "center"
       ? "center"
