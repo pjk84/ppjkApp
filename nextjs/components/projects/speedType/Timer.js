@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { FlexBox } from "../../../styles/containers";
 
 const Timer = ({ isPlaying, minutes, endGame }) => {
   const [time, setTime] = useState({ minutes: `0${minutes}`, seconds: "00" });
@@ -39,7 +40,7 @@ const Timer = ({ isPlaying, minutes, endGame }) => {
   );
 
   return (
-    <div
+    <FlexBox
       style={{
         display: "flex",
         justifyContent: "center",
@@ -47,7 +48,7 @@ const Timer = ({ isPlaying, minutes, endGame }) => {
         animation: "0.3s fadeIn ease-in",
         fontSize: 25,
       }}
-    >{`${time.minutes}:${time.seconds}`}</div>
+    >{`${time.minutes}:${time.seconds}`}</FlexBox>
   );
 };
 

@@ -38,12 +38,21 @@ li {
   display: grid;
   min-height: 100vh;
   grid-template-rows: max-content auto 50px;
-  grid-template-areas: "header" "main" "footer";
+  grid-template-columns: max-content 1fr;
+  grid-template-areas:
+    "head head"
+    "s main"
+    "footer footer";
 }
 
 #app > header {
-  grid-area: header;
+  grid-area: head;
 }
+
+#app > #sideBar {
+  grid-area: s;
+}
+
 #app > main {
   grid-area: main;
 }
@@ -432,6 +441,24 @@ a {
   }
   100% {
     color: #8cf7b1;
+  }
+}
+
+@keyframes jumpUp {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-75px);
+  }
+  90% {
+    transform: translateY(0px);
+  }
+  99% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
   }
 }
 

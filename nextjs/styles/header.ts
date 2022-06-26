@@ -21,5 +21,4 @@ export const Header2 = styled.h1`
   display: flex;
   font-weight: normal;
   /* justify-content: center; */
-  color: ${(p) => p.theme.lightGray};
 `;

@@ -21,8 +21,9 @@ export const Wrapper = styled.div`
 export const Drop = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: transparent;
+  background-color: ${(p) => p.theme.drops.backgroundColor};
   border-radius: ${(p) => p.theme.drops.borderRadius};
+  color: ${(p) => p.theme.drops.color};
   opacity: 0;
   position: absolute;
   top: 0;
@@ -31,13 +32,13 @@ export const Drop = styled.div`
 export const Header = styled.header<{}>`
   display: flex;
   position: relative;
+  padding: 20px;
   justify-content: center;
-  align-items: center;
-  padding: 25px;
   flex-wrap: wrap;
-  background-color: ${(p) => p.theme.backgroundColor};
-  box-shadow: ${(props) => props.theme.header.boxShadow};
+  background-color: ${(p) => p.theme.header.backgroundColor};
+  box-shadow: ${(p) => p.theme.header.boxShadow};
   gap: 20px;
+  z-index: 1;
   &:after {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
     content: "";
@@ -57,12 +58,34 @@ export const Header = styled.header<{}>`
   }
 `;
 
+export const SideBar = styled.div`
+  position: relative;
+  display: flex;
+  padding-left: 10px;
+  flex-direction: column;
+  gap: 20px;
+  white-space: nowrap;
+  background-color: ${(p) => p.theme.sideBar.backgroundColor};
+  border-right: 1px solid;
+  padding-right: 50px;
+  border-color: ${(p) => p.theme.sideBar.borderColor};
+  color: ${(p) => p.theme.color};
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+
+  width: 100%;
+  overflow: hidden;
+`;
+
 export const Footer = styled.footer`
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
-  color: ${(p) => p.theme.mediumGray};
+  color: ${(p) => p.theme.color};
+  background-color: ${(p) => p.theme.footer.backgroundColor};
   min-height: 50px;
   width: 100%;
   &:before {
@@ -81,10 +104,11 @@ export const Main = styled.main<{}>`
   display: flex;
   /* align-items: center; */
   justify-content: center;
-  background-color: ${(p) => p.theme.backgroundColor2};
+  background-color: ${(p) => p.theme.main.backgroundColor};
 `;
 
 export const Inner = styled.div<{}>`
+  position: relative;
   width: 95%;
   padding: 5px;
 
@@ -93,7 +117,7 @@ export const Inner = styled.div<{}>`
     padding: 20px;
   }
   display: flex;
-  background-color: ${(p) => p.theme.backgroundColor2};
+  background-color: ${(p) => p.theme.inner.backgroundColor};
   flex-direction: column;
   overflow: hidden;
 `;
@@ -131,8 +155,10 @@ export const FlexBoxCentered = styled.div<{
   gap?: number;
 }>`
   width: ${(p) => (p.fullWidth ? "100%" : null)};
+  color: ${(p) => p.theme.color};
   display: flex;
   align-items: center;
+
   justify-content: center;
   flex-direction: column;
   gap: ${(p) => p.gap && `${p.gap}px`};
@@ -152,7 +178,7 @@ export const FlexBox = styled.div<{
       ? appTheme.gray
       : p.color === "blue"
       ? appTheme.blue
-      : p.theme.textColor};
+      : p.theme.color};
   display: Flex;
   gap: ${(props) =>
     props.gapSize === "small"
@@ -213,19 +239,16 @@ export const Box1 = styled.div<{
   word-break: break-word;
 `;
 
-export const PostList = styled.ul`
+export const StdList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 `;
 
-export const PostListItem = styled.li`
+export const StdListItem = styled.li`
   transition: all 0.5s;
   background-color: transparent;
   border-radius: 8px;
   border: 1px solid;
   border-color: transparent;
-  &:hover {
-    border-color: ${(p) => p.theme.lightGray};
-  }
 `;

@@ -21,7 +21,7 @@ export const StdButton = styled.button<{
       : "30px"};
   border: 1px solid;
   border-color: ${(p) =>
-    p.active ? p.theme.button.borderColorActive : p.theme.button.borderColor};
+    p.active ? p.theme.button.active.borderColor : p.theme.button.borderColor};
   padding: ${(p) =>
     p.size === "tiny"
       ? "5px 5px 5px 5px"
@@ -29,17 +29,18 @@ export const StdButton = styled.button<{
       ? "5px 10px 5px 10px"
       : "10px 20px 10px 20px"};
   color: ${(p) =>
-    p.active ? p.theme.button.textColorActive : p.theme.textColor};
+    p.active ? p.theme.button.active.color : p.theme.button.color};
   background-color: ${(p) =>
     p.active
-      ? p.theme.button.backgroundColorActive
+      ? p.theme.button.active.backgroundColor
       : p.theme.button.backgroundColor};
   cursor: pointer;
   transition: all 0.1s ease-out;
   animation: ${(p) => p.animation === "slideUp" && "0.2s slideUp ease-in"};
   &:hover {
     border: ${(p) =>
-      !p.active && `1px solid ${p.theme.button.borderColorHover}`};
+      !p.active && `1px solid ${p.theme.button.hover.borderColor}`};
+    color: ${(p) => !p.active && p.theme.button.hover.color};
   }
   &:before {
     animation: ${(props) =>
@@ -162,22 +163,25 @@ export const Btn2 = styled.button<{
 export const Control = styled.button<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
+  border?: boolean;
 }>`
-  padding: 0px;
+  padding: ${(p) => (p.border ? "5px" : 0)};
   background-color: transparent;
   text-align: left;
   transition: all 0.1s;
-  border: none;
+  border: 1px solid;
+  border-color: ${(p) =>
+    p.border ? p.theme.control.borderColor : "transparent"};
   color: ${(p) =>
     p.color
       ? p.theme[p.color]
       : p.active
-      ? p.theme.control.active
-      : p.theme.control.inactive};
+      ? p.theme.control.active.color
+      : p.theme.control.inactive.color};
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    color: ${(p) => !p.color && p.theme.control.hover};
+    color: ${(p) => !p.color && p.theme.control.hover.color};
   }
 `;
 
@@ -185,8 +189,8 @@ export const NavItem = styled.a<{
   active?: boolean;
 }>`
   position: relative;
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
-  color: ${(p) => p.theme.textColor};
+  color: ${(p) =>
+    p.active ? p.theme.navItem.active.color : p.theme.navItem.inactive.color};
   font-size: 20px;
   border-radius: 8px;
   padding: 5px 20px 5px 20px;
@@ -196,5 +200,12 @@ export const NavItem = styled.a<{
 `;
 
 export const HyperLink = styled.a`
-  color: ${(p) => p.theme.textColor};
+  color: ${(p) => p.theme.color};
+`;
+
+export const SideBarToggle = styled.button<{}>`
+  background-color: transparent;
+  border: none;
+  color: ${(p) => p.theme.sideBar.toggleColor};
+  cursor: pointer;
 `;

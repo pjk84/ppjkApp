@@ -11,6 +11,7 @@ export const actions = {
   SET_LOADER: "SET_LOADER",
   SELECT_PROJECT: "SELECT_PROJECT",
   SET_THEME: "SET_THEME",
+  TOGGLE_SIDE_BAR: "TOGGLE_SIDE_BAR",
 };
 
 export const blogActions = {

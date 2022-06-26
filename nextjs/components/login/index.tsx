@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FlexBox } from "../../styles/containers";
 import { StdInput } from "../../styles/input";
-import { StdButton } from "../../styles/buttons";
+import { Control, StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import apiClient from "../../api/client";
 import { useTheme } from "styled-components";
@@ -58,14 +58,10 @@ const Login = () => {
   });
 
   const login = (
-    <FlexBox
-      justify="center"
-      gapSize="small"
-      style={{ position: "absolute", left: 10, top: 10 }}
-    >
-      <StdButton size="tiny" style={{ zIndex: 2 }} onClick={toggle}>
+    <FlexBox column gapSize="small">
+      <Control style={{ zIndex: 2 }} onClick={toggle}>
         login
-      </StdButton>
+      </Control>
 
       {active && (
         <form onSubmit={handleLogin}>
@@ -84,35 +80,23 @@ const Login = () => {
             type="password"
             onChange={(e) => setInput(e.target.value)}
           />
-          {active && input && (
-            <StdButton
-              size="tiny"
-              type="submit"
-              onClick={handleLogin}
-              style={{
-                marginLeft: 10,
-                animation:
-                  "1s breathe ease-out infinite, 0.2s slideRight ease-out",
-              }}
-            >
-              {">"}
-            </StdButton>
-          )}
         </form>
       )}
     </FlexBox>
   );
 
   const logOut = (
-    <FlexBox
-      align="center"
-      gapSize="small"
-      style={{ position: "absolute", left: 10, top: 10 }}
-    >
-      <StdButton size="tiny" onClick={handleLogOut}>
-        logout
-      </StdButton>
-      <div style={{ color: theme.green }}>logged in</div>
+    <FlexBox gapSize="small" align="center">
+      <Control onClick={handleLogOut}>logout</Control>
+      <div
+        style={{
+          color: theme.green,
+          borderRadius: 50,
+          width: 10,
+          height: 10,
+          backgroundColor: theme.green,
+        }}
+      ></div>
     </FlexBox>
   );
 

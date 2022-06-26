@@ -29,7 +29,7 @@ const ProjectMenu = ({ miniaturized }: Props) => {
   };
 
   const handleKeyDown = (e: KeyboardEvent): void => {
-    e.preventDefault();
+    // e.preventDefault();
     if (e.key === "Enter") {
       if (!projects.find((p) => p.id === focus)?.demo) return;
 
@@ -44,14 +44,15 @@ const ProjectMenu = ({ miniaturized }: Props) => {
       if (current === 0) {
         next = projects.length - 1;
       }
+      selectProject(projects[next].id);
     }
     if (e.key === "ArrowRight") {
       next = current + 1;
       if (current === projects.length - 1) {
         next = 0;
       }
+      selectProject(projects[next].id);
     }
-    selectProject(projects[next].id);
   };
 
   useEffect(() => {

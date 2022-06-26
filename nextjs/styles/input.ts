@@ -4,14 +4,14 @@ export const InputBorderless = styled.input`
   border: none;
   width: fit-content;
   height: 1em;
-  color: ${(p) => p.theme.textColor};
+  color: ${(p) => p.theme.color};
 `;
 
 export const StdInput = styled.input`
   -webkit-appearance: none;
-  text-align: center;
   margin: 0;
   border: none;
   width: fit-content;
-  color: ${(p) => p.theme.textColor};
+  color: ${(p) => p.theme.color};
+  background-color: ${(p) => p.theme.input.backgroundColor};
 `;

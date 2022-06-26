@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import Score from "../components/projects/speedType/Score";
 import Timer from "../components/projects/speedType/Timer";
-import { appTheme, appThemeLight } from "../styles";
+import { appThemeDark, appThemeLight } from "../styles";
 import { StdButton } from "../styles/buttons";
 import { FlexBox, FlexBoxCentered } from "../styles/containers";
+import { StdInput } from "../styles/input";
+import { RootState } from "../state";
+import { useSelector } from "react-redux";
 
 const SpeedType = () => {
+  const theme = useSelector((state: RootState) => state.main.theme);
+  const appTheme = theme === "light" ? appThemeLight : appThemeDark;
   const random = require("random-words");
   const ref1 = useRef<HTMLDivElement>(null);
   const [showCursor, setShowCursor] = useState(
@@ -72,6 +77,7 @@ const SpeedType = () => {
           for (const c of children.slice(0, gameState.set + 1)) {
             h += c.clientHeight;
           }
+          // scroll up by combined height of previous lines
           ref1.current.style.transform = `translateY(-${h}px)`;
           setGameState({
             ...gameState,
@@ -101,7 +107,6 @@ const SpeedType = () => {
     alignItems: "center",
     borderRadius: 8,
     padding: 10,
-    color: `${appTheme.darkGray}`,
   };
 
   const handleCursor = () => {
@@ -133,11 +138,11 @@ const SpeedType = () => {
                 ...(showErrors && {
                   textDecoration: overFlow ? "line-through" : "normal",
                   color: overFlow
-                    ? "red"
+                    ? appTheme.red
                     : i < input.length
                     ? letter === input[i]
-                      ? "green"
-                      : "red"
+                      ? appTheme.green
+                      : appTheme.red
                     : undefined,
                 }),
               }}
@@ -150,7 +155,7 @@ const SpeedType = () => {
                 <div
                   style={{
                     height: 2,
-                    backgroundColor: "black",
+                    backgroundColor: appTheme.color,
                     position: "absolute",
                     bottom: 0,
                     left: 0,
@@ -177,13 +182,13 @@ const SpeedType = () => {
           ...(set === gameState.set && {
             color:
               gameState.roundResult[index] === true
-                ? `${appTheme.green}`
+                ? appTheme.green
                 : gameState.roundResult[index] === false
-                ? "#ff4f38"
-                : `${appTheme.darkGray}`,
+                ? appTheme.red
+                : undefined,
             backgroundColor:
               gameState.isPlaying && index === gameState.cursor
-                ? `${appThemeLight.lighterGray}`
+                ? appTheme.speedType.focus.backgroundColor
                 : undefined,
           }),
         }}
@@ -241,7 +246,7 @@ const SpeedType = () => {
   );
 
   const input = (
-    <input
+    <StdInput
       key="speedTypeInp"
       style={{
         overflow: "hidden",
@@ -251,7 +256,6 @@ const SpeedType = () => {
         border: "none",
         fontSize: 20,
         marginTop: 25,
-        color: `${appTheme.darkGray}`,
         boxSizing: "border-box",
         textAlign: "center",
         width: "100%",

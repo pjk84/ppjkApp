@@ -56,7 +56,6 @@ const About = () => {
               style={{
                 animation: `${Math.random()}s slideInRight`,
                 paddingLeft: 50,
-                color: gray,
               }}
             >
               {d}:

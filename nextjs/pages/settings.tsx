@@ -34,35 +34,34 @@ const Settings = () => {
 
   const api = localStorage.getItem("API");
 
+  const apiControls = (
+    <form key="config_api" style={{ display: "flex", gap: 10 }}>
+      <label>
+        <input
+          key="config_api_dotnet"
+          defaultChecked={api === "DOTNET"}
+          onChange={() => setApi("DOTNET")}
+          type="radio"
+          name="api"
+        />
+        Dotnet
+      </label>
+      <label>
+        <input
+          key="config_api_flask"
+          defaultChecked={api === "FLASK"}
+          onChange={() => setApi("FLASK")}
+          type="radio"
+          name="api"
+        />
+        Flask
+      </label>
+    </form>
+  );
+
   return (
     <FlexBox column>
-      <Section
-        title="api"
-        elem={
-          <form key="config_api">
-            <label>
-              <input
-                key="config_api_dotnet"
-                defaultChecked={api === "DOTNET"}
-                onChange={() => setApi("DOTNET")}
-                type="radio"
-                name="api"
-              />
-              Dotnet
-            </label>
-            <label>
-              <input
-                key="config_api_flask"
-                defaultChecked={api === "FLASK"}
-                onChange={() => setApi("FLASK")}
-                type="radio"
-                name="api"
-              />
-              Flask
-            </label>
-          </form>
-        }
-      />
+      <Section title="api" elem={apiControls} />
     </FlexBox>
   );
 };

@@ -197,7 +197,7 @@ const Wordle = () => {
           style={{ color: `${colors.green.text}` }}
         >{`Congratulations, you win!`}</div>
       )}
-      {state.guesses.length === WORD_LENGTH && !state.won && (
+      {state.guesses.length === state.word.length && !state.won && (
         <FlexBox column gapSize="large">
           <div style={{ color: "red" }}>
             {`game over. The target word was: ${state.word.toUpperCase()}`}
@@ -220,8 +220,8 @@ const Wordle = () => {
                 background: colors[letter.color].background,
                 color: colors[letter.color].text,
                 borderColor: colors[letter.color].text,
-                animation: `0.1s ${
-                  i / WORD_LENGTH
+                animation: `0.25s ${
+                  i / state.word.length
                 }s flipOver ease-out forwards`,
               }}
             >
@@ -281,6 +281,7 @@ const Wordle = () => {
             onChange={handleInput}
             placeholder={state.focused ? "" : "guess here..."}
             style={{
+              textAlign: "center",
               fontSize: 15,
               height: "3em",
             }}

@@ -1,8 +1,9 @@
 import React from "react";
+import { FlexBoxCentered } from "../../../styles/containers";
 
 export const Score = ({ score }) => {
   return (
-    <div
+    <FlexBoxCentered
       style={{
         display: "flex",
         flexDirection: "column",
@@ -22,7 +23,7 @@ export const Score = ({ score }) => {
         (score.filter((res) => res === true).length / score.length) * 100
       )}%`}</h3>
       <div style={{ marginTop: 25 }}></div>
-    </div>
+    </FlexBoxCentered>
   );
 };
 

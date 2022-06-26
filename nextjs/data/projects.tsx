@@ -39,6 +39,15 @@ const projects: Array<Project> = [
     demo: true,
   },
   {
+    id: "mouse_slinger",
+    languages: ["Typescript"],
+    category: "game",
+    framework: "React",
+    code: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/wordle.tsx",
+    description: "wordle clone",
+    demo: true,
+  },
+  {
     id: "pong",
     languages: ["Python"],
     category: "game",

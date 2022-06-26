@@ -13,6 +13,7 @@ type Istate = {
   loggedIn?: boolean;
   focus?: string;
   theme?: string;
+  showSideBar: boolean;
 };
 
 type IblogState = {
@@ -40,6 +41,7 @@ const initialState: Istate & IblogState = {
   posts: [],
   addedTags: [],
   selectedTags: [],
+  showSideBar: false,
 };
 
 const appReducer = (state = initialState, action: Action) => {
@@ -64,6 +66,9 @@ const appReducer = (state = initialState, action: Action) => {
     }
     case actions.SET_LOGGED_IN: {
       return { ...state, loggedIn: action.loggedIn };
+    }
+    case actions.TOGGLE_SIDE_BAR: {
+      return { ...state, showSideBar: !state.showSideBar };
     }
     case actions.SET_THEME: {
       console.log(action);

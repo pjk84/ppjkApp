@@ -8,6 +8,7 @@ const T = ({ details, animation }) => {
   {
   }
   const getSliding = (d, i) => {
+    console.log(d);
     const key = d.replaceAll("_", " ");
     return (
       <tr key={`section-row-slide-${d}-${i}`}>
@@ -46,21 +47,28 @@ const T = ({ details, animation }) => {
       <tr key={`section-row-jitter-${d}-${i}`}>
         <TableCell
           index={i}
+          animation="jitter"
           style={{
             width: "25%",
-            animation: `0.${Math.random() + 7}s jitterIn ease-out`,
           }}
         >
           {d.replace(/_/g, " ")}
         </TableCell>
-        <TableCell
-          index={i}
-          style={{
-            animation: `0.${Math.random() + 7}s jitterIn ease-out`,
-          }}
-        >
+        <TableCell key={`tablecell-right-${i}`} index={i} animation="jitter">
           {d === "code" ? (
             <HyperLink href={details[d]}>click here</HyperLink>
+          ) : d === "languages" ? (
+            details[d].map((language) => (
+              <img
+                key={`language-icon-${language}`}
+                style={{ marginRight: 10 }}
+                width="50px"
+                title={language}
+                src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${language
+                  .toLowerCase()
+                  .trim()}/${language.toLowerCase().trim()}-original.svg`}
+              />
+            ))
           ) : (
             details[d]
           )}

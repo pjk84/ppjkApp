@@ -20,13 +20,23 @@ export enum Themes {
 }
 
 export const color = {
+  darkTheme: {
+    darkGray: "#282222",
+    mediumGray: "#4b4545",
+    mediumGray2: "#776d6d",
+    lightGray: "#aca3a3",
+    lighterGray: "#cec4c4",
+  },
   lightestGray: "#f0f0f0",
   lighterGray: "#dcdcdc",
   lightGray: "#a6a6a6",
   green: "#57b967",
+  darkGreen: "#347940",
   lightGreen: "#cbf1d2",
   blue: "#2fb7e0",
   darkBlue: "#007498",
+  darkerBlue: "#003b4d",
+  darkestBlue: "#04232c",
   darkerGray: "black",
   gray: "#6d7275",
   darkGray: "#3b3e40",
@@ -34,6 +44,7 @@ export const color = {
   red: "#ff5d52",
   orange: "#ff6a00",
   white: "white",
+  black: "black",
   offWhite: "#f9f9f9",
   transparent: "transparent",
 };
@@ -41,23 +52,7 @@ export const color = {
 export const appThemeLight = {
   ...color,
 
-  nav: {
-    navItem: {
-      backgroundColor: color.lightestGray,
-      borderColor: color.lighterGray,
-    },
-  },
-
-  boxShadow: "0px 1px 5px 1px #aeb3b6",
-  dividerColor: color.lighterGray,
-  textColor: color.mediumGray,
-  textColorInactive: color.lightGray,
-  backgroundColor2: color.lightestGray,
-  backgroundColor: color.offWhite,
-  borderColor: color.lighterGray,
-  buttonBorder: color.transparent,
-  buttonActiveBorder: color.lightGray,
-  buttonActiveBackgroundColor: color.lightestGray,
+  color: color.mediumGray,
   table: {
     rowLight: color.lightestGray,
     rowDark: color.lighterGray,
@@ -73,19 +68,34 @@ export const appThemeLight = {
     },
   },
   button: {
-    textColorHover: color.mediumGray,
-    textColorActive: color.lightestGray,
-    backgroundColorActive: color.mediumGray,
+    active: {
+      color: color.offWhite,
+      borderColor: color.mediumGray,
+      backgroundColor: color.mediumGray,
+      boxShadow: null,
+    },
+    color: color.mediumGray,
     backgroundColor: color.white,
-    boxShadowActive: null,
-    textColorInactive: color.lightGray,
-    borderColor: color.lighterGray,
-    borderColorActive: color.mediumGray,
-    borderColorHover: color.lightGray,
+    borderColor: color.lightGray,
+    hover: {
+      color: color.darkerGray,
+      borderColor: color.darkerGray,
+    },
     boxShadow: `0px 1px 1px 0px ${color.lighterGray}`,
   },
   header: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
+    backgroundColor: color.offWhite,
+  },
+  footer: {
+    boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
+    backgroundColor: color.offWhite,
+  },
+  main: {
+    backgroundColor: color.lightestGray,
+  },
+  inner: {
+    backgroundColor: color.lightestGray,
   },
   drops: {
     backgroundColor: color.lighterGray,
@@ -101,39 +111,137 @@ export const appThemeLight = {
     backgroundColor: color.lighterGray,
   },
   control: {
+    active: {
+      color: color.darkGray,
+    },
+    inactive: {
+      color: color.lightGray,
+    },
+    hover: {
+      color: color.darkGray,
+    },
     backgroundColor: color.lighterGray,
     boxShadow: color.lightGray,
-    hover: color.darkGray,
-    active: color.darkGray,
-    inactive: color.lightGray,
+  },
+  navItem: {
+    active: {
+      color: color.darkGray,
+    },
+    inactive: {
+      color: color.lightGray,
+    },
   },
   input: {
-    placeholderColor: color.lighterGray,
+    placeholderColor: color.mediumGray,
+    backgroundColor: color.offWhite,
+  },
+  speedType: {
+    focus: {
+      backgroundColor: color.lighterGray,
+    },
+  },
+  sideBar: {
+    backgroundColor: color.white,
+    borderColor: "transparent",
+    toggleColor: color.darkGray,
   },
 };
 
 export const appThemeDark = {
-  dropColor: color.green,
-  buttonBorder: color.lightGray,
-  buttonActiveBorder: color.white,
-  dividerColor: "#8f9599",
-  messageBorder: '1px solid "#3b3e40"',
-  textColor: "#57b967",
-  textColorActive: "white",
-  backgroundColor: "black",
-  borderColor: "#8f9599",
-  green: "#57b967",
-  lightGreen: "#cbf1d2",
-  blue: "#2fb7e0",
-  darkGray: "black",
-  darkerGray: "black",
-  gray: "#6d7275",
-  mediumGray: "#3b3e40",
-  red: "#ff5d52",
-  lightGray: "#8f9599",
-  orange: "#ff6a00",
-  boxShadow: null,
-  post: {
-    titleColor: color.green,
+  ...color,
+
+  color: color.darkTheme.lighterGray,
+  table: {
+    rowLight: color.darkTheme.mediumGray,
+    rowDark: color.darkTheme.darkGray,
+  },
+  posts: {
+    titleColor: color.darkGray,
+    boxShadow: `0px 2px 5px 1px ${color.lightestGray}`,
+    threadColor: color.lighterGray,
+    borderColor: color.lighterGray,
+    backgroundColor: color.white,
+    header: {
+      backgroundColor: color.offWhite,
+    },
+  },
+  button: {
+    active: {
+      color: color.black,
+      borderColor: color.offWhite,
+      backgroundColor: color.offWhite,
+      boxShadow: null,
+    },
+    color: color.lightGray,
+    borderColor: color.darkTheme.mediumGray2,
+    backgroundColor: color.darkTheme.darkGray,
+    hover: {
+      borderColor: color.offWhite,
+      color: color.offWhite,
+    },
+    boxShadow: "none",
+  },
+  header: {
+    boxShadow: "none",
+    backgroundColor: color.darkTheme.darkGray,
+  },
+  footer: {
+    boxShadow: "none",
+    backgroundColor: color.darkTheme.darkGray,
+  },
+  main: {
+    backgroundColor: color.darkTheme.darkGray,
+  },
+  inner: {
+    backgroundColor: color.darkTheme.darkGray,
+  },
+  drops: {
+    backgroundColor: "transparent",
+    color: color.green,
+    borderRadius: "10px",
+    borderColor: color.lightGray,
+  },
+  ribbon: {
+    color1: color.lightestGray,
+    color2: color.green,
+  },
+  tag: {
+    backgroundColor: color.lighterGray,
+  },
+  control: {
+    active: {
+      color: color.offWhite,
+    },
+    inactive: {
+      color: color.lightGray,
+    },
+    hover: {
+      color: color.offWhite,
+    },
+    backgroundColor: color.lighterGray,
+    boxShadow: color.lightGray,
+    borderColor: color.lightGray,
+  },
+  navItem: {
+    active: {
+      color: color.darkTheme.lightGray,
+    },
+    inactive: {
+      color: color.darkTheme.mediumGray2,
+    },
+  },
+  input: {
+    placeholderColor: color.lighterGray,
+    backgroundColor: "transparent",
+  },
+  speedType: {
+    focus: {
+      backgroundColor: color.darkGray,
+    },
+  },
+  sideBar: {
+    backgroundColor: color.darkTheme.darkGray,
+    borderColor: color.mediumGray,
+    toggleColor: color.green,
   },
 };
