@@ -29,6 +29,9 @@ li {
   opacity: 0.5;
 }
 
+#mouse_slinger_main {
+  cursor: crosshair;
+}
 #app {
   position: absolute;
   top: 0;

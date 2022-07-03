@@ -1,10 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FlexBox } from "../styles/containers";
 import { getRandomNumber } from "../helpers";
-import { count } from "console";
-import { map } from "lodash";
-import { off } from "process";
-import { brotliCompressSync } from "zlib";
 
 const fieldStyle = {
   height: 100,
@@ -25,11 +21,21 @@ const Target = ({
     left: number;
     alive?: boolean;
     travelTime?: number;
+    health: number;
   };
   kill: (id: string) => void;
 }) => {
+  const color =
+    props.health > 60
+      ? "green"
+      : props.health > 40
+      ? "orange"
+      : props.health > 0
+      ? "red"
+      : "transparent";
   return (
     <FlexBox
+      column
       align="center"
       justify="center"
       id={id}
@@ -43,11 +49,22 @@ const Target = ({
         height: 10,
         width: "max-content",
         fontSize: props.size,
-        backgroundColor: "transparent",
         transition: `${props.travelTime}s all ease-in`,
-        cursor: "pointer",
       }}
     >
+      <FlexBox style={{ width: 40, border: "1px solid", borderColor: color }}>
+        {Array.from(Array(props.health / 10).keys()).map((h) => (
+          <span
+            key={`${id}-health-${h}`}
+            style={{
+              width: "10%",
+              backgroundColor: color,
+
+              height: 10,
+            }}
+          ></span>
+        ))}
+      </FlexBox>
       {props.alive
         ? props.taunt
           ? "🤠"
@@ -70,6 +87,7 @@ type Target = {
   draw?: boolean;
   fire?: boolean;
   alive?: boolean;
+  health: number;
   delay: number;
   travelTime?: number;
 };
@@ -88,37 +106,47 @@ const MouseSlinger = () => {
   }>({ status: 0, count: 0, bodyCount: 0, targets: [], health: 100, ticks: 1 });
 
   const killTarget = (id: string) => {
-    let top = 0;
     let travelTime = 1;
     if (ref.current) {
+      const elem = document.getElementById(`${id}`);
+      if (!elem) {
+        return;
+      }
       const { offsetHeight } = ref.current;
       const target = game.targets.find((t) => t.id === id);
       if (!target) return;
-      top = offsetHeight - target.size / 2;
+      let health = target.health - getRandomNumber(1, 10) * 10;
+      if (health < 0) {
+        health = 0;
+      }
+      const top = offsetHeight - target.size / 2;
       const x = ((offsetHeight - (target.top + target.size)) * 2) / (9.8 * 200);
       travelTime = Math.sqrt(x);
-      const elem = document.getElementById(`${id}`);
-      if (elem) {
+
+      if (health < 1) {
+        if (!elem) return;
+        // kill target
         elem.style.animation = "0.5s jumpUp ease-out forwards";
       }
+      manageGame({
+        ...game,
+        bodyCount: game.bodyCount + 1,
+        targets: game.targets.map((t) =>
+          t.id === id
+            ? {
+                ...t,
+                alive: health < 1 ? false : true,
+                travelTime,
+                top: health < 1 ? top : t.top,
+                health,
+              }
+            : t
+        ),
+      });
     }
-    const i = game.targets.findIndex((t) => t.id === id);
-    manageGame({
-      ...game,
-      bodyCount: game.bodyCount + 1,
-      targets: game.targets.map((t) =>
-        t.id === id ? { ...t, alive: false, top, travelTime } : t
-      ),
-    });
   };
 
   useEffect(() => {
-    if (game.targets.filter((t) => t.alive).length > 10) {
-      // 2 = game over
-      //   manageGame({ ...game, status: 1 });
-      //   return;
-    }
-
     const i = setInterval(() => {
       if (ref.current) {
         let { ticks, health } = game;
@@ -138,8 +166,9 @@ const MouseSlinger = () => {
             top,
             left,
             size,
+            health: 100,
             alive: true,
-            delay: getRandomNumber(0, 5),
+            delay: getRandomNumber(0, 20),
           });
           count++;
         };
@@ -188,6 +217,7 @@ const MouseSlinger = () => {
                 target.taunt = true;
                 if (blood.current) {
                   blood.current.style.opacity = "0.5";
+                  blood.current.style.transition = "0.5s all";
                   health = health - getRandomNumber(1, 5);
                 }
               }
@@ -213,7 +243,15 @@ const MouseSlinger = () => {
     };
   });
   return (
-    <FlexBox style={{ height: "100%", overflow: "hidden" }} ref={ref}>
+    <FlexBox
+      id="mouse_slinger_main"
+      style={{
+        height: "100%",
+        overflow: "hidden",
+        transition: "all 0.1s",
+      }}
+      ref={ref}
+    >
       <FlexBox column gapSize={5} style={{ padding: 5 }}>
         {game.status === 2 && <div>gameover</div>}
         <div>hp: {game.health}</div>
@@ -222,7 +260,7 @@ const MouseSlinger = () => {
       <div
         ref={blood}
         style={{
-          transition: `${game.status == 2 ? 5 : 0.5}s all`,
+          transition: `5s all`,
           position: "absolute",
           top: 0,
           left: 0,
