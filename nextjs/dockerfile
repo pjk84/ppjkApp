@@ -12,8 +12,8 @@ COPY . .
 RUN npm run build
 
 FROM node:14.5.0-alpine as run
-WORKDIR /usr/src/app
-COPY --from=build --chown=nextjs:nodejs /app/.next ./.next
+WORKDIR /usr/src/nextjs
+COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules

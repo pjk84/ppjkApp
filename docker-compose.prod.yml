@@ -42,6 +42,7 @@ services:
       - 8080:8080
     depends_on:
       - flaskapp
+      - dotnet
 
   db:
     container_name: postgres
