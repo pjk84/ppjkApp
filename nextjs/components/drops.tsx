@@ -50,7 +50,7 @@ const Drops: NextPage = () => {
         elem.length === 0 ? 0 : 10000
       );
     }
-  });
+  }, [addElem]);
   return (
     // <div>boingg</div>
     <div

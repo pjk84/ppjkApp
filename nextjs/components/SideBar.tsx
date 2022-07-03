@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FlexBox, SideBar } from "../styles/containers";
+import React from "react";
+import { SideBar } from "../styles/containers";
 import Login from "./login";
 import Theme from "./Theme";
 import { useSelector } from "react-redux";
@@ -7,6 +7,9 @@ import { RootState } from "../state";
 import { useDispatch } from "react-redux";
 import { actions } from "../state/actiontypes";
 import { Control, SideBarToggle } from "../styles/buttons";
+import dynamic from "next/dynamic";
+
+const login = dynamic(() => import("./login"));
 
 const SBar = () => {
   const show = useSelector((s: RootState) => s.main.showSideBar);
@@ -24,7 +27,7 @@ const SBar = () => {
   return (
     <SideBar id="sideBar" style={show ? visible : hidden}>
       <div style={{ height: 25 }}></div>
-      <Login />
+      {login}
       <Theme />
     </SideBar>
   );

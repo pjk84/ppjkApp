@@ -50,13 +50,12 @@ const SpeedType = () => {
   }>(initialState);
   const [focus, setFocus] = useState(false);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.ctrlKey && e.key === "r") {
-      setGameState(initialState);
-    }
-  };
-
   useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === "r") {
+        setGameState(initialState);
+      }
+    };
     window.addEventListener("keydown", handleKeyPress, true);
 
     const getHeight = (c: HTMLCollection) => {
@@ -96,7 +95,7 @@ const SpeedType = () => {
       // cleanup
       window.removeEventListener("keydown", handleKeyPress, true);
     };
-  }, [setGameState, gameState, handleKeyPress]);
+  }, [setGameState, gameState, random, initialState]);
 
   const getScore = () => {
     return <Score score={gameState.totalResult} />;

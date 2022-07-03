@@ -17,7 +17,7 @@ const Title = () => {
     );
   });
   return (
-    <Link href={"/"}>
+    <Link href={"/"} passHref={true}>
       <FlexBox key={tick.toString()}>
         {Array.from(title).map((l, i) => (
           <Header2

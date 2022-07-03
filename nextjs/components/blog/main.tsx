@@ -11,11 +11,7 @@ import { Control } from "../../styles/buttons";
 import { useRouter } from "next/router";
 import Loader from "../Loaders";
 import NavBar from "./navbar";
-import {
-  FlexBoxCentered,
-  PostList,
-  PostListItem,
-} from "../../styles/containers";
+import { FlexBoxCentered, StdList, StdListItem } from "../../styles/containers";
 import { Header1 } from "../../styles/header";
 import Link from "next/link";
 
@@ -43,14 +39,15 @@ const Blog = ({ tags }: { tags: string[] }) => {
   const reload = useSelector((state: RootState) => state.blog.reload);
   const loggedIn = useSelector((state: RootState) => state.main.loggedIn);
   const focus = useSelector((state: RootState) => state.main.focus);
-  const fetchMessages = async () => {
-    setLoading(true);
-    posts = await apiClient().fetchBlogMessages();
-    batch(() => {
-      dispatch({ type: blogActions.SET_POSTS, posts });
-    });
-  };
+
   React.useEffect(() => {
+    const fetchMessages = async () => {
+      setLoading(true);
+      posts = await apiClient().fetchBlogMessages();
+      batch(() => {
+        dispatch({ type: blogActions.SET_POSTS, posts });
+      });
+    };
     if (reload) {
       fetchMessages().then(() => setLoading(false));
     }
@@ -66,7 +63,7 @@ const Blog = ({ tags }: { tags: string[] }) => {
   if (posts.length === 0) {
     return (
       <FlexBoxCentered style={{ height: "100%" }} gap={25}>
-        <Header1>No posts found...</Header1>
+        <Header1 key="no_posts_found">No posts found...</Header1>
         {loggedIn && [
           <Control
             key="add_new_post"
@@ -90,23 +87,23 @@ const Blog = ({ tags }: { tags: string[] }) => {
       <Wrapper
         controls={
           loggedIn && [
-            <Link href="/blog/post/new_post">
-              <Control key="add_new_post">add new post</Control>
+            <Link key="add_new_post" href="/blog/post/new_post" passHref={true}>
+              <Control>add new post</Control>
             </Link>,
           ]
         }
         child={
-          <PostList>
+          <StdList>
             {elems.map((post: Post) => (
-              <PostListItem key={`blogPost-${post.id}`}>
-                <Link href={`/blog/post/${post.title}`}>
+              <StdListItem key={`blogPost-${post.id}`}>
+                <Link href={`/blog/post/${post.title}`} passHref={true}>
                   <span>
                     <BlogPost focused={false} post={post} />
                   </span>
                 </Link>
-              </PostListItem>
+              </StdListItem>
             ))}
-          </PostList>
+          </StdList>
         }
       />
     </div>

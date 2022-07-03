@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FlexBox } from "../../styles/containers";
 import { StdInput } from "../../styles/input";
-import { Control, StdButton } from "../../styles/buttons";
+import { Control } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import apiClient from "../../api/client";
-import { useTheme } from "styled-components";
 import Cookies from "universal-cookie";
 import { actions } from "../../state/actiontypes";
 import { RootState } from "../../state";
@@ -18,21 +17,16 @@ const Login = () => {
   const [input, setInput] = useState("");
   const [attempts, setAttempts] = useState(0);
 
-  type AppTheme = {
-    green: string;
-    blue: string;
-  };
-
   const myRef = useRef(null);
 
-  const theme = useTheme() as AppTheme;
+  // const theme = useTheme() as AppTheme;
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
     const token = await apiClient().login(input);
     if (token) {
       cookie.set("access_token", token);
-      return dispatch({ type: actions.SET_LOGGED_IN, loggedIn: true });
+      dispatch({ type: actions.SET_LOGGED_IN, loggedIn: true });
     }
     setAttempts(attempts + 1);
   };
@@ -52,9 +46,9 @@ const Login = () => {
     if (cookie.get("access_token")) {
       dispatch({ type: actions.SET_LOGGED_IN, loggedIn: true });
     }
-    if (myRef.current) {
-      document.getElementById("pwd")?.focus();
-    }
+    // if (myRef.current) {
+    //   document.getElementById("pwd")?.focus();
+    // }
   });
 
   const login = (
@@ -90,11 +84,9 @@ const Login = () => {
       <Control onClick={handleLogOut}>logout</Control>
       <div
         style={{
-          color: theme.green,
           borderRadius: 50,
           width: 10,
           height: 10,
-          backgroundColor: theme.green,
         }}
       ></div>
     </FlexBox>

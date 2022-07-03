@@ -10,11 +10,11 @@ const Home: NextPage = ({ children }) => {
     <div id="app">
       <SideBar />
       <Header>
+        <SBarToggle />
         <Logo />
         <Nav />
       </Header>
       <Main>
-        <SBarToggle />
         <Inner>{children}</Inner>
       </Main>
       <Footer>ppjk 2022</Footer>

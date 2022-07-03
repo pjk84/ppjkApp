@@ -60,6 +60,7 @@ const T = ({ details, animation }) => {
           ) : d === "languages" ? (
             details[d].map((language) => (
               <img
+                alt=""
                 key={`language-icon-${language}`}
                 style={{ marginRight: 10 }}
                 width="50px"

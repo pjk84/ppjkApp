@@ -62,7 +62,7 @@ const NewPost = () => {
       {warnings && (
         <FlexBox gapSize="small">
           {warnings.map((w: string) => (
-            <Warning>{w}</Warning>
+            <Warning key={`warning-${w}`}>{w}</Warning>
           ))}
         </FlexBox>
       )}

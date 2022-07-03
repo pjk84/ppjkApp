@@ -84,6 +84,7 @@ const PostByTitle = () => {
   if (!post) return null;
 
   const mock: Post = {
+    tags: [],
     id: "a",
     title: "b",
     body: "original",
@@ -91,24 +92,32 @@ const PostByTitle = () => {
     author: "a",
     replies: [
       {
+        title: "b",
+        tags: [],
         id: "b",
         body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         created_at: "a",
         author: "lisa",
         replies: [
           {
+            title: "d",
+            tags: [],
             id: "d",
             body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
             created_at: "a",
             author: "jimmy",
           },
           {
+            title: "dd",
+            tags: [],
             id: "dd",
             body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
             created_at: "a",
             author: "jimmy",
             replies: [
               {
+                title: "ddd",
+                tags: [],
                 id: "ddd",
                 body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                 created_at: "a",
@@ -119,6 +128,8 @@ const PostByTitle = () => {
         ],
       },
       {
+        title: "c",
+        tags: [],
         id: "c",
         body: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         created_at: "a",
@@ -134,8 +145,8 @@ const PostByTitle = () => {
   return (
     <Wrapper
       controls={[
-        <Link href="/blog">
-          <Control key="back_to_posts">back to all posts</Control>
+        <Link key="back_to_posts" href="/blog" passHref={true}>
+          <Control>back to all posts</Control>
         </Link>,
       ]}
       child={
