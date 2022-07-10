@@ -1,49 +1,49 @@
 version: "3.8"
 
 services:
-  # nextjs:
-  #   container_name: nextjs_app
-  #   build: ./nextjs
+  nextjs:
+    container_name: nextjs_app
+    build: ./nextjs
+    ports:
+      - 3001:3001
+    env_file:
+      - ./nextjs/.env.local
+  # flaskapp:
+  #   build: ./flaskapp
+  #   container_name: flask_app
+  #   command: python app.py
+  #   volumes:
+  #     - ./flaskapp/build:/usr/src/app/
+  #   expose:
+  #     - 8080
   #   ports:
-  #     - 3000:3000
+  #     - 5001:5001
   #   env_file:
-  #     - ./nextjs/.env.local
-  flaskapp:
-    build: ./flaskapp
-    container_name: flask_app
-    command: python app.py
-    volumes:
-      - ./flaskapp/build:/usr/src/app/
-    expose:
-      - 8080
-    ports:
-      - 5001:5001
-    env_file:
-      - ./flaskapp/build/.env
-    depends_on:
-      - db
+  #     - ./flaskapp/build/.env
+  #   depends_on:
+  #     - db
 
-  dotnet:
-    build: ./cs
-    container_name: dotnet_api
-    command: dotnet watch
-    volumes:
-      - ./cs/src:/usr/src/app/
-    ports:
-      - 5002:5002
-    env_file:
-      - ./cs/src/.env
-    depends_on:
-      - db
-  db:
-    container_name: postgres_db
-    image: postgres:13-alpine
-    volumes:
-      - ppjkdb:/var/lib/postgresql/data/
-    env_file:
-      - ./flaskapp/db/.env
-    ports:
-      - "5432:5432"
+  # dotnet:
+  #   build: ./cs
+  #   container_name: dotnet_api
+  #   command: dotnet watch
+  #   volumes:
+  #     - ./cs/src:/usr/src/app/
+  #   ports:
+  #     - 5002:5002
+  #   env_file:
+  #     - ./cs/src/.env
+  #   depends_on:
+  #     - db
+  # db:
+  #   container_name: postgres_db
+  #   image: postgres:13-alpine
+  #   volumes:
+  #     - ppjkdb:/var/lib/postgresql/data/
+  #   env_file:
+  #     - ./flaskapp/db/.env
+  #   ports:
+  #     - "5432:5432"
 
 volumes:
   ppjkdb:

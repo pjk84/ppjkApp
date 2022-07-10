@@ -19,8 +19,6 @@ const Login = () => {
 
   const myRef = useRef(null);
 
-  // const theme = useTheme() as AppTheme;
-
   const handleLogin = async (e: any) => {
     e.preventDefault();
     const token = await apiClient().login(input);

@@ -4,7 +4,7 @@ services:
   nextjs:
     container_name: nextjs
     build: ./nextjs
-    restart: always
+    # restart: always
     expose:
       - 3000
     env_file:
@@ -27,7 +27,7 @@ services:
       dockerfile: ../dockerfile.prod
     container_name: dotnet
     expose:
-      - 5001
+      - 5002
     env_file:
       - ./cs/src/.env
     depends_on:

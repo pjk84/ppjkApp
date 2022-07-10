@@ -71,7 +71,6 @@ const appReducer = (state = initialState, action: Action) => {
       return { ...state, showSideBar: !state.showSideBar };
     }
     case actions.SET_THEME: {
-      console.log(action);
       return { ...state, theme: action.theme };
     }
     default:

@@ -7,7 +7,7 @@ const Timer = ({ isPlaying, minutes, endGame }) => {
 
   useEffect(() => {
     if (isPlaying) {
-      const timer = setTimeout(() => {
+      const timer = setInterval(() => {
         if (time.seconds === "00") {
           setTime({
             ...time,
@@ -31,7 +31,7 @@ const Timer = ({ isPlaying, minutes, endGame }) => {
       if (time.minutes !== `0${minutes}` && time.seconds !== "00")
         setTime({ minutes: `0${minutes}`, seconds: "00" });
     }
-  }, [minutes, isPlaying, time, setTime, endGame]);
+  }, [minutes, isPlaying, time, setTime]);
 
   return (
     <FlexBox

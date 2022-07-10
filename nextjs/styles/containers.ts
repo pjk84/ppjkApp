@@ -73,7 +73,7 @@ export const SideBar = styled.div`
   -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   -o-transition: all 0.2s ease-in;
-  transition: all 0.2s ease-in;
+  transition: width 0.2s ease-in;
 
   width: 100%;
   overflow: hidden;
