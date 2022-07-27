@@ -19,6 +19,8 @@ builder.WebHost.ConfigureKestrel(opts =>
 var startup = new Startup();
 startup.ConfigureServices(builder.Services);
 
+builder.Services.AddHttpClient<OpenWeatherApi>();
+builder.Services.AddHttpClient<IpApi>();
 
 //auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

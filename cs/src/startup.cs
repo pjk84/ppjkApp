@@ -16,6 +16,9 @@ public class Startup
             mc.AddProfile(new MappingProfile());
         });
 
+        IMapper mapper = mapperConfig.CreateMapper();
+        services.AddSingleton(mapper);
+
         IConfiguration config = new ConfigurationBuilder()
         .AddEnvironmentVariables()
         .Build();
@@ -27,8 +30,6 @@ public class Startup
         }
         services.AddSingleton(config);
 
-        IMapper mapper = mapperConfig.CreateMapper();
-        services.AddSingleton(mapper);
 
         services.AddMvc();
 
