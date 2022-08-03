@@ -2,7 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using Api.Application.Entities;
+using Api.Application.Entities.Blog;
+using Api.Application.Entities.Authentication;
 
+
+namespace Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

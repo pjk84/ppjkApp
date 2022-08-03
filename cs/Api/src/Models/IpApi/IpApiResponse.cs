@@ -5,6 +5,7 @@ public class IpApiResponse
     public float Lat { get; set; }
     public float Lon { get; set; }
 
+
     public string Country { get; set; }
     public string Region { get; set; }
     public string RegionName { get; set; }

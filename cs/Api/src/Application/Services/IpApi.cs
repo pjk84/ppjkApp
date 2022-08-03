@@ -2,21 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
+using Api.Application.Interfaces;
 
-
-[ApiController]
-[Route("[controller")]
-public class IpApi : ControllerBase
+namespace Api.Application.Services;
+public class IpApi : IIpApi
 {
     private readonly IConfiguration _config;
     private readonly HttpClient _httpClient;
 
+    private readonly OpenWeatherApi _openWeatherApi;
     private readonly JsonSerializerOptions _serializerOptions;
     private readonly string _apiKey;
 
-    public IpApi(IConfiguration config, HttpClient http)
+    public IpApi(IConfiguration config, HttpClient http, OpenWeatherApi openWeatherClient)
     {
         _httpClient = http;
+        _openWeatherApi = openWeatherClient;
         _httpClient.BaseAddress = new Uri("http://ip-api.com/json/");
         _serializerOptions = new JsonSerializerOptions
         {
@@ -25,22 +26,14 @@ public class IpApi : ControllerBase
         };
     }
 
-    [HttpGet]
-    [Route("~/weather")]
-    public async Task<string> getLocation()
+    public async Task<IpApiResponse> getLocation(string clientIp)
     {
-        // var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-        var clientIp = "86.83.105.101";
         var res = await _httpClient.GetAsync(clientIp);
         if (res.StatusCode == HttpStatusCode.OK)
         {
-            string responseBody = await res.Content.ReadAsStringAsync();
-            Console.WriteLine(responseBody);
-            IpApiResponse ipApiResponse = JsonSerializer.Deserialize<IpApiResponse>(responseBody, _serializerOptions);
-            Console.WriteLine(ipApiResponse.Region);
-            return "a"
-;
+            var responseBody = await res.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<IpApiResponse>(responseBody, _serializerOptions);
         }
-        return "b";
+        throw new Exception("could not get weather data");
     }
 }
