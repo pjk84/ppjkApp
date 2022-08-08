@@ -16,7 +16,6 @@ namespace Api.Application.Services
 
         public async Task<string> GetKey(string key)
         {
-
             var cachedAsBytesArray = await _cache.GetAsync(key);
             if ((cachedAsBytesArray?.Count() ?? 0) > 0)
             {

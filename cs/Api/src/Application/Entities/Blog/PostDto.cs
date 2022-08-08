@@ -1,7 +1,7 @@
 namespace Api.Application.Entities.Blog;
 using Api.Application.Entities;
 
-public class BlogPostDto
+public record BlogPostDto
 {
     public Guid Id { get; set; }
     public string Title { get; set; }

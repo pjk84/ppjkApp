@@ -40,12 +40,13 @@ public class Startup
         }
         services.AddSingleton(config);
 
-        services.AddHttpClient<OpenWeatherApi>();
-        services.AddHttpClient<IpApi>();
-
         services.AddSingleton<IRedisCache, RedisCache>();
         services.AddSingleton<IIpApi, IpApi>();
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
+        services.AddSingleton<IGeoCoding, GeoCoding>();
+
+
+        services.AddHttpClient<IBaseApiClient, BaseApiClient>();
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(opts =>

@@ -3,7 +3,7 @@ namespace Api.Application.Interfaces;
 public interface IOpenWeatherApi
 {
 
-    Task<OpenWeatherResponse> getWeather(double lat, double lon);
+    Task<OpenWeatherResponse> GetWeatherByCoords(double lat, double lon);
 }
 
 

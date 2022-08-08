@@ -1,6 +1,6 @@
 
 
-public class OpenWeatherResponse
+public record struct OpenWeatherResponse
 {
     public int visibility { get; set; }
     public WeatherMain main { get; set; }
@@ -8,7 +8,7 @@ public class OpenWeatherResponse
 }
 
 
-public class WeatherMain
+public record struct WeatherMain
 {
     public float temp { get; set; }
     public float feels_like { get; set; }

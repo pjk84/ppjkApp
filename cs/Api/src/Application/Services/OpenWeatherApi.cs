@@ -4,24 +4,19 @@ using Api.Application.Interfaces;
 
 namespace Api.Application.Services;
 
-public class OpenWeatherApi : IOpenWeatherApi
+public class OpenWeatherApi : BaseApiClient, IOpenWeatherApi
 {
-    private readonly IConfiguration _config;
-    private readonly HttpClient _httpClient;
 
     private readonly string _apiKey;
 
-    private readonly IRedisCache _cache;
 
-    public OpenWeatherApi(IConfiguration config, HttpClient http, IRedisCache cache)
+    public OpenWeatherApi(HttpClient http, IRedisCache cache, IConfiguration config) : base(http, config, cache)
     {
-        _cache = cache;
-        _apiKey = config["OPEN_WEATHER_API_KEY"];
-        _httpClient = http;
+        _apiKey = _config["OPEN_WEATHER_API_KEY"];
         _httpClient.BaseAddress = new Uri($"https://api.openweathermap.org/data/2.5/");
     }
 
-    public async Task<OpenWeatherResponse> getWeather(double lat, double lon)
+    public async Task<OpenWeatherResponse> GetWeatherByCoords(double lat, double lon)
     {
         string date = DateTime.Now.Date.ToString("dd/MM/yyyy");
         string cacheKey = $"{lat}-{lon}-{date}";

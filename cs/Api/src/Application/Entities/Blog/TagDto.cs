@@ -2,11 +2,11 @@
 namespace Api.Application.Entities.Blog;
 using Api.Application.Entities;
 
-public class TagDto
+public record TagDto
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string PostId { get; set; }
+    public Guid Id { get; }
+    public string Name { get; }
+    public string PostId { get; }
 
 }
 
