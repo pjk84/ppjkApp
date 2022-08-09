@@ -3,52 +3,94 @@ using Api.Application.Chess.Interfaces;
 using System.Text.Json;
 namespace Api.Application.Chess.Models;
 
+
 public class Board : IChessboard
 {
 
     public Color HasTurn { get; private set; } = Color.W;
     public Square[][] Squares { get; private set; }
-
-    public Board(List<Square> squares)
+    public Dictionary<string, string> Pieces { get; init; } // piece representations
+    public Board(string squares)
     {
+
+        Pieces = new Dictionary<string, string>{
+            {"PB",  "♙"}, // (P)awn (w)hite .. etc
+            {"PW",  "♟"},
+            {"KB",  "♔"},
+            {"KW",  "♚"},
+            {"QB",  "♕"},
+            {"QW",  "♛"},
+            {"NB",  "♘"},
+            {"NW",  "♞"},
+            {"BB",  "♗"},
+            {"BW",  "♝"},
+            {"RB",  "♖"},
+            {"RW",  "♜"},
+        };
+
 
         if (squares is null)
         {
-            Setup();
-        }
-        else
-        {
-            // continue previous game
-            // Squares = squares;
-        }
-    }
-
-
-    public void Setup()
-    {
-        using (StreamReader r = new StreamReader("src/Application/Chess/positions.json"))
-        {
-            string board = r.ReadToEnd();
-            // add starting positions
-            var squares = JsonSerializer.Deserialize<List<Square>>(board, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-
-            foreach (int rank in Enumerable.Range(2, 4))
+            using (StreamReader r = new StreamReader("src/Application/Chess/start.json"))
             {
-                foreach (int file in Enumerable.Range(0, 8))
-                {
-                    var s = new Square(rank, file, null);
-                    squares.Add(s);
-                }
+                squares = r.ReadToEnd();
             }
-            // convert to array for ease of access (by rasterized index)
-            Squares = squares.OrderBy(n => n.File).ThenBy(n => n.Rank).Chunk(8).ToArray();
         }
+
+        Squares = Deserialize(squares);
     }
+
+    private Square[][] Deserialize(string squares)
+    {
+        return JsonSerializer.Deserialize<Square[][]>(squares, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+    }
+
+    public string Serialize()
+    {
+        return JsonSerializer.Serialize(Squares);
+    }
+
 
     public string PrintBoard()
     {
         var s = "";
+        var i = 0;
+        foreach (var rank in Squares.Reverse())
+        {
+            if (i == 0)
+            {
 
+                s += "  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓\n";
+            }
+
+            foreach (var square in rank)
+            {
+                var line = "│";
+                if (square.File == 0)
+                {
+                    s += $"{8 - i} ";
+                    line = "┃";
+                }
+                s += $"{(square.Piece is null ? $"{line}{(square.Color == Color.W ? "╳╳╳" : "   ")}" : $"{line} {Pieces[$"{square.Piece.Type}{square.Piece.Color}"]} ")}";
+                // s += $"_{square.Color}_";
+                if (square.File == 7)
+                {
+                    s += "┃\n";
+                }
+
+            }
+            if (i == 7)
+            {
+                s += "  ┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛\n";
+                s += "    a   b   c   d   e   f   g   h";
+            }
+            else
+            {
+                s += "  ┣───┼───┼───┼───┼───┼───┼───┼───┫\n";
+            }
+
+            i++;
+        }
         return s;
     }
 
@@ -65,15 +107,6 @@ public class Board : IChessboard
         return true;
     }
 
-    public IChessPiece GetPieceBySquare(IChessSquare square)
-    {
-        var s = Squares[square.File][square.Rank];
-        if (s.Piece != null)
-        {
-            return s.Piece;
-        }
-        return null;
-    }
 
     public bool ValidateMove(IChessPiece piece, IChessMove move)
     {
@@ -92,37 +125,55 @@ public class Board : IChessboard
             throw new Exception("illegal move: coordinates are outside of bounds");
         }
 
-        var pieceAtTargetSquare = GetPieceBySquare(move.To);
+        var target = GetSquare(move.To);
 
-        if (pieceAtTargetSquare?.Color == piece.Color)
+        if (target.Piece?.Color == piece.Color)
         {
             throw new Exception("illegal move: own piece found at target square");
         }
 
-
-        if (!piece.IsValidMove(move))
-        {
-            throw new Exception("illegal move for piece");
-        }
+        piece.ValidateMove(move, target);
 
         return true;
     }
 
     public Square GetSquare(IChessSquare square)
     {
-        return Squares[square.File][Squares.Rank];
+
+        var res = Squares[square.Rank][square.File];
+        return res;
     }
 
-    public void MakeMove(IChessMove move)
+
+
+    public (string err, string squares) MakeMove(IChessMove move)
     {
-        var square = GetSquare(move.From);
+        var from = GetSquare(move.From);
 
-        Console.WriteLine(square);
-        Console.WriteLine(square.Piece.Type);
+        string err = null;
+        try
+        {
+            ValidateMove(from.Piece, move);
+            HasTurn = HasTurn == Color.W ? Color.B : Color.W;
+            var to = GetSquare(move.To);
+            to.Update(from.Piece);
+            from.Update(null);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            err = $"{e.Message}\n";
+        }
 
-        ValidateMove(square.Piece, move);
+        return (err, Serialize());
 
-        HasTurn = HasTurn == Color.W ? Color.B : Color.W;
+
+
+
+        // ai move
+        // ....
+
+        // return new serialized new state
 
     }
 }
@@ -131,15 +182,24 @@ public class Board : IChessboard
 public record Square : IChessSquare
 {
 
-    public int Rank { get; set; }
-    public int File { get; set; }
+    public int Rank { get; init; }
+    public int File { get; init; }
+    public Color Color { get; init; }
 
-    public Piece Piece { get; set; } = null;
+    public Piece Piece { get; private set; } = null;
 
-    public Square(int rank, int file, Piece piece)
+    public void Update(Piece piece)
     {
+        Piece = piece;
+    }
+
+    public Square(int file, int rank, Piece piece)
+    {
+
         Rank = rank;
         File = file;
         Piece = piece;
+        Color = (file + rank) % 2 == 0 ? Color.B : Color.W;
     }
 }
+

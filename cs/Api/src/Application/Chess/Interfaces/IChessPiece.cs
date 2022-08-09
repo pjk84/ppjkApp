@@ -8,7 +8,8 @@ public interface IChessPiece
 
     public PieceType Type { get; init; }
 
-    public bool IsValidMove(IChessMove move);
+
+    public bool ValidateMove(IChessMove move, IChessSquare target);
 }
 
 

@@ -7,28 +7,32 @@ public interface IChessboard
 
     Square[][] Squares { get; }
 
+    public Dictionary<string, string> Pieces { get; init; } // piece representations
+
     public Color HasTurn { get; }
 
     public bool ValidateMove(IChessPiece piece, IChessMove move);
     public bool MoveIsWithinBounds(IChessMove move);
 
-    public void MakeMove(IChessMove move);
+    public (string err, string squares) MakeMove(IChessMove move);
 
     public string PrintBoard();
 
-    public IChessPiece GetPieceBySquare(IChessSquare square);
+    public string Serialize();
 
-    public void Setup();
+
 
 }
 
 
 public interface IChessSquare
 {
-    public int Rank { get; set; }
-    public int File { get; set; }
+    public int Rank { get; init; }
+    public int File { get; init; }
 
-    public Piece Piece { get; set; }
+    public Color Color { get; init; }
+
+    public Piece Piece { get; }
 
 }
 

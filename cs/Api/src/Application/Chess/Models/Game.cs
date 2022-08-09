@@ -1,25 +1,26 @@
 
 using Api.Application.Chess.Interfaces;
 
+
 namespace Api.Application.Chess.Models;
-public class Chess : IChessGame
+public class Chess
 {
 
     public IChessboard Board { get; init; }
     public bool IsPlaying { get; private set; }
-    public Chess()
+    public Chess(string squares)
     {
-        // load board from cache.. 
 
-        // or create new one
-        // Board = new Board(new[] { new Piece(0, ChessPieceType.P, ChessPieceColor.B, new int[] { 0, 0 }) });
-        Board = new Board(null);
+        Board = new Board(squares);
 
     }
 
-    public void MakeMove(IChessMove move)
+    public string MakeMove(IChessMove move)
     {
-        Board.MakeMove(move);
+        var (err, squares) = Board.MakeMove(move);
+        // cache squares
+        var errMsg = err is null ? null : $"illegal move: {err}";
+        return $"{Board.PrintBoard()}\n {errMsg}";
     }
 
     public void Quit()

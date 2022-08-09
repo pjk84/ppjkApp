@@ -37,13 +37,19 @@ public class TestController : ControllerBase
     [Route("~/test")]
     public string test()
     {
-        var game = new Chess();
+        var game = new Chess(null);
+
+
+        // var game2 = new Chess(s);
+
 
         try
         {
-            game.MakeMove(new Move(new Square(1, 6, null), new Square(1, 6, null)));
-            var p = game.Board.PrintBoard();
-            return p;
+            // Console.WriteLine(game.Board.Squares[0]);
+            var m = game.MakeMove(new Move(new Square(1, 1, null), new Square(2, 2, null)));
+            // var game2 = new Chess(m);
+            // var p = game2.Board.PrintBoard();
+            return m;
         }
         catch (Exception e)
         {
