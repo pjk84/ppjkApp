@@ -4,6 +4,7 @@ using Api.Application.Interfaces;
 using System.Text.Json;
 
 using Api.Application.Chess.Models;
+using Api.Application.Chess.Interfaces;
 namespace Api.Controllers;
 
 
@@ -34,33 +35,21 @@ public class TestController : ControllerBase
 
     [HttpGet]
     [Route("~/test")]
-    public int? test()
+    public string test()
     {
-        using (StreamReader r = new StreamReader("src/Application/Chess/data.json"))
+        var game = new Chess();
+
+        try
         {
-            string d = r.ReadToEnd();
-            Console.WriteLine(d);
-
-            var x = JsonSerializer.Deserialize<List<Piece>>(d);
-            Console.WriteLine(x[0].Type);
+            game.MakeMove(new Move(new Square(1, 6, null), new Square(1, 6, null)));
+            var p = game.Board.PrintBoard();
+            return p;
         }
-        // Person z = new("Joe", 25);
-        // var (a, b) = z;
-        // var myArray = new[] { 1, 2, 3 };
-        // Person x = new("Joe", 25);
-        // Person y = new("Joe", 25);
+        catch (Exception e)
+        {
+            return e.Message;
+        }
 
-
-        // Console.WriteLine(x == y);
-        // Struct1 myStruct = new("A", "B");
-        // var (value, value2) = myStruct;
-
-        // var test = new List<string> { "a", "b", "c", "d", "e", "f" };
-        // var z = test.Take(1..3);
-        // Console.WriteLine(JsonSerializer.Serialize(z));
-        // var chunks = test.Chunk(3);
-
-        return 1;
     }
 
     // public IEnumerable<IEnumerable<string>> ChunkBy(IEnumerable<string> source, int size){
@@ -70,3 +59,4 @@ public class TestController : ControllerBase
     // }
 
 }
+

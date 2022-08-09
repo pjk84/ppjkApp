@@ -1,90 +1,102 @@
 
 using Api.Application.Chess.Interfaces;
-
+using System.Text.Json;
 namespace Api.Application.Chess.Models;
 
 public class Board : IChessboard
 {
 
-    public List<IChessPiece> Pieces { get; private set; }
+    public Color HasTurn { get; private set; } = Color.W;
+    public Square[][] Squares { get; private set; }
 
-    public Board(List<IChessPiece> pieces)
+    public Board(List<Square> squares)
     {
-        if (pieces is null)
+
+        if (squares is null)
         {
             Setup();
         }
         else
         {
             // continue previous game
-            Pieces = pieces;
+            // Squares = squares;
         }
     }
 
+
     public void Setup()
     {
-        // // set up board with start positions
-        // List<Pawn> pawns = new List<Pawn>{
-        //     new Pawn(0, ChessPieceColor.B, 1, 7),
-        //     new Pawn(0, ChessPieceColor.B, 2, 7),
-        //     new Pawn(0, ChessPieceColor.B, 3, 7),
-        //     new Pawn(0, ChessPieceColor.B, 4, 7),
-        //     new Pawn(0, ChessPieceColor.B, 5, 7),
-        //     new Pawn(0, ChessPieceColor.B, 6, 7),
-        //     new Pawn(0, ChessPieceColor.B, 7, 7),
-        //     new Pawn(0, ChessPieceColor.B, 8, 7),
-        //     new Pawn(0, ChessPieceColor.W, 1, 2),
-        //     new Pawn(0, ChessPieceColor.W, 2, 2),
-        //     new Pawn(0, ChessPieceColor.W, 3, 2),
-        //     new Pawn(0, ChessPieceColor.W, 4, 2),
-        //     new Pawn(0, ChessPieceColor.W, 5, 2),
-        //     new Pawn(0, ChessPieceColor.W, 6, 2),
-        //     new Pawn(0, ChessPieceColor.W, 7, 2),
-        //     new Pawn(0, ChessPieceColor.W, 8, 2),
-        //     };
+        using (StreamReader r = new StreamReader("src/Application/Chess/positions.json"))
+        {
+            string board = r.ReadToEnd();
+            // add starting positions
+            var squares = JsonSerializer.Deserialize<List<Square>>(board, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+            foreach (int rank in Enumerable.Range(2, 4))
+            {
+                foreach (int file in Enumerable.Range(0, 8))
+                {
+                    var s = new Square(rank, file, null);
+                    squares.Add(s);
+                }
+            }
+            // convert to array for ease of access (by rasterized index)
+            Squares = squares.OrderBy(n => n.File).ThenBy(n => n.Rank).Chunk(8).ToArray();
+        }
+    }
+
+    public string PrintBoard()
+    {
+        var s = "";
+
+        return s;
     }
 
     public bool MoveIsWithinBounds(IChessMove move)
     {
-        if (!Enumerable.Range(1, 8).Contains(move.To.PositionX))
+        if (!Enumerable.Range(0, 7).Contains(move.To.Rank))
         {
             return false;
         }
-        if (!Enumerable.Range(1, 8).Contains(move.To.PositionY))
+        if (!Enumerable.Range(0, 7).Contains(move.To.File))
         {
             return false;
         }
         return true;
     }
 
-    public IChessPiece GetPieceBySquare(int x, int y)
+    public IChessPiece GetPieceBySquare(IChessSquare square)
     {
-        var piece = Pieces.Find(p => p.PositionX == x && p.PositionY == y);
-        if (piece != null)
+        var s = Squares[square.File][square.Rank];
+        if (s.Piece != null)
         {
-            return piece;
+            return s.Piece;
         }
         return null;
     }
 
     public bool ValidateMove(IChessPiece piece, IChessMove move)
     {
+        if (piece is null)
+        {
+            throw new Exception($"square is empty");
+        }
+
+        if (piece.Color != HasTurn)
+        {
+            throw new Exception($"illegal move: piece is not owned by player {HasTurn}");
+        }
 
         if (!MoveIsWithinBounds(move))
         {
-            throw new Exception("Move coordinates are invalid");
+            throw new Exception("illegal move: coordinates are outside of bounds");
         }
 
-        if (piece is null)
-        {
-            throw new Exception($"Piece {move.Id} does not exist");
-        }
+        var pieceAtTargetSquare = GetPieceBySquare(move.To);
 
-        var pieceAtTargetSquare = GetPieceBySquare(move.To.PositionX, move.To.PositionY);
-
-        if (pieceAtTargetSquare.Color == piece.Color)
+        if (pieceAtTargetSquare?.Color == piece.Color)
         {
-            throw new Exception("own piece already at location");
+            throw new Exception("illegal move: own piece found at target square");
         }
 
 
@@ -93,16 +105,41 @@ public class Board : IChessboard
             throw new Exception("illegal move for piece");
         }
 
-
         return true;
+    }
+
+    public Square GetSquare(IChessSquare square)
+    {
+        return Squares[square.File][Squares.Rank];
     }
 
     public void MakeMove(IChessMove move)
     {
-        var piece = Pieces.Find(p => p.PositionX == move.From.PositionX && p.PositionY == move.From.PositionY);
-        ValidateMove(piece, move);
+        var square = GetSquare(move.From);
 
+        Console.WriteLine(square);
+        Console.WriteLine(square.Piece.Type);
+
+        ValidateMove(square.Piece, move);
+
+        HasTurn = HasTurn == Color.W ? Color.B : Color.W;
 
     }
 }
 
+
+public record Square : IChessSquare
+{
+
+    public int Rank { get; set; }
+    public int File { get; set; }
+
+    public Piece Piece { get; set; } = null;
+
+    public Square(int rank, int file, Piece piece)
+    {
+        Rank = rank;
+        File = file;
+        Piece = piece;
+    }
+}

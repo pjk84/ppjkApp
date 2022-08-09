@@ -2,11 +2,12 @@
 using Api.Application.Chess.Interfaces;
 
 namespace Api.Application.Chess.Models;
-public class Game : IChessGame
+public class Chess : IChessGame
 {
+
     public IChessboard Board { get; init; }
     public bool IsPlaying { get; private set; }
-    public Game()
+    public Chess()
     {
         // load board from cache.. 
 

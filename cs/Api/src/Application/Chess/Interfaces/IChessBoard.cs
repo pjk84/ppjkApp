@@ -1,15 +1,22 @@
+using Api.Application.Chess.Models;
+
 namespace Api.Application.Chess.Interfaces;
 
 public interface IChessboard
 {
-    List<IChessPiece> Pieces { get; }
+
+    Square[][] Squares { get; }
+
+    public Color HasTurn { get; }
 
     public bool ValidateMove(IChessPiece piece, IChessMove move);
     public bool MoveIsWithinBounds(IChessMove move);
 
     public void MakeMove(IChessMove move);
 
-    public IChessPiece GetPieceBySquare(int x, int y);
+    public string PrintBoard();
+
+    public IChessPiece GetPieceBySquare(IChessSquare square);
 
     public void Setup();
 
@@ -18,7 +25,10 @@ public interface IChessboard
 
 public interface IChessSquare
 {
-    public int PositionX { get; set; }
-    public int PositionY { get; set; }
+    public int Rank { get; set; }
+    public int File { get; set; }
+
+    public Piece Piece { get; set; }
+
 }
 

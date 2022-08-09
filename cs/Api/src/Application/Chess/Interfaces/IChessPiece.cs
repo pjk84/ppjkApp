@@ -4,28 +4,26 @@ public interface IChessPiece
 {
     public int Id { get; init; }
     // public ChessPieceType Type { get; init; }
-    public ChessPieceColor Color { get; init; }
-    public int PositionX { get; }  // the horizontal position A-H
-    public int PositionY { get; } // the vertical position 1-8
+    public Color Color { get; init; }
 
-    void SetPosition(int[] position);
+    public PieceType Type { get; init; }
 
     public bool IsValidMove(IChessMove move);
 }
 
 
-public enum ChessPieceType
+public enum PieceType
 {
+    P, // Pawn
     K, // King
     Q, //Queen
     N, // Knight
     R, // Rook
     B, //Bishop
-    P // Pawn
 
 }
 
-public enum ChessPieceColor
+public enum Color
 {
     W,
     B
