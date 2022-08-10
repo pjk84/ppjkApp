@@ -24,10 +24,3 @@ public record Move : IChessMove
         Type = (Length != 0 && Width != 0) ? Length == Width ? MoveType.Diagonal : MoveType.Wild : MoveType.Straight;
     }
 }
-
-public enum MoveType
-{
-    Diagonal,
-    Straight,
-    Wild
-}

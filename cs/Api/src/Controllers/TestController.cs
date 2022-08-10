@@ -40,12 +40,16 @@ public class TestController : ControllerBase
         var game = new Chess(null);
 
         // var game2 = new Chess(s);
-
+        var y = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        var x = new int[] { 4, 1 };
+        Array.Sort(x);
+        var z = y.Take((1..2));
+        Console.WriteLine(JsonSerializer.Serialize(z));
 
         try
         {
             // Console.WriteLine(game.Board.Squares[0]);
-            var m = game.MakeMove(new Move(new Square(0, 0, null), new Square(0, 2, null)));
+            var m = game.MakeMove(new Move(new Square(0, 1, null), new Square(1, 2, null)));
             // var game2 = new Chess(m);
             // var p = game2.Board.PrintBoard();
             return m;

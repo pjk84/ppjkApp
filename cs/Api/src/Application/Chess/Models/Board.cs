@@ -94,17 +94,21 @@ public class Board : IChessboard
         return s;
     }
 
-    private bool MoveIsWithinBounds(IChessMove move)
+    private void MoveIsWithinBounds(IChessMove move)
     {
+        var isInBounds = true;
         if (!Enumerable.Range(0, 7).Contains(move.To.Rank))
         {
-            return false;
+            isInBounds = false;
         }
         if (!Enumerable.Range(0, 7).Contains(move.To.File))
         {
-            return false;
+            isInBounds = false;
         }
-        return true;
+        if (!isInBounds)
+        {
+            throw new Exception("out of bounds");
+        }
     }
 
 
@@ -117,20 +121,17 @@ public class Board : IChessboard
 
         if (piece.Color != HasTurn)
         {
-            throw new Exception($"illegal move: piece is not owned by player {HasTurn}");
+            throw new Exception($"piece is not owned by player {HasTurn}");
         }
 
         //bounds
-        if (!MoveIsWithinBounds(move))
-        {
-            throw new Exception("illegal move: coordinates are outside of bounds");
-        }
+        MoveIsWithinBounds(move);
 
         var target = GetSquare(move.To);
 
         if (target.Piece?.Color == piece.Color)
         {
-            throw new Exception("illegal move: own piece found at target square");
+            throw new Exception("own piece found at target square");
         }
 
         piece.ValidateMove(move, target);
@@ -151,7 +152,60 @@ public class Board : IChessboard
 
     private void CheckCollision(IChessMove move)
     {
+        if (move.Type == MoveType.Wild)
+        {
+            // no collision 
+            return;
+        }
+        if (move.Width < 2 && move.Length < 2)
+        {
+            // move to adjecent square. no collision
+            return;
+        }
+        var squares = Slice(move);
+        Console.WriteLine(JsonSerializer.Serialize(squares));
+        if (move.Type == MoveType.Straight)
+        {
+            foreach (var s in squares)
+            {
+                if (s.Piece is not null)
+                {
+                    throw new Exception($"collision detected at {s.Address}");
+                }
+            }
+        }
+    }
 
+    // return single array of squares by move direction
+    private Square[] Slice(IChessMove move)
+    {
+        var transposed = Enumerable.Empty<Square>();
+        int[] range = { };
+        if (move.Type == MoveType.Diagonal)
+        {
+            foreach (var i in Enumerable.Range(0, 8))
+            {
+                transposed = transposed.Append(Squares[move.From.File][i]);
+            }
+        }
+        if (move.From.File != move.To.File)
+        {
+            range = new[] { move.From.File, move.To.File };
+            Array.Sort(range);
+            // horizontal move. no transposition needed
+            transposed = Squares[move.From.Rank];
+        }
+        else
+        {
+            // vertical move
+            range = new[] { move.From.Rank, move.To.Rank };
+            foreach (var i in Enumerable.Range(0, 8))
+            {
+                var s = Squares[i][move.From.File];
+                transposed = transposed.Append(s);
+            }
+        }
+        return transposed.Take((range[0] + 1)..range[1]).ToArray();
     }
 
 
@@ -189,6 +243,8 @@ public record Square : IChessSquare
     public int File { get; init; }
     public Color Color { get; init; }
 
+    public string Address { get; init; } // string representation of square
+
     public Piece Piece { get; private set; } = null;
 
     public void Update(Piece piece)
@@ -203,6 +259,8 @@ public record Square : IChessSquare
         File = file;
         Piece = piece;
         Color = (file + rank) % 2 == 0 ? Color.B : Color.W;
+        var files = "abcdefgh";
+        Address = $"{files[file]}{rank + 1}";
     }
 }
 
