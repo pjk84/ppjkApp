@@ -45,7 +45,7 @@ public class Board : IChessboard
         return JsonSerializer.Deserialize<Square[][]>(squares, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
     }
 
-    public string Serialize()
+    private string Serialize()
     {
         return JsonSerializer.Serialize(Squares);
     }
@@ -94,7 +94,7 @@ public class Board : IChessboard
         return s;
     }
 
-    public bool MoveIsWithinBounds(IChessMove move)
+    private bool MoveIsWithinBounds(IChessMove move)
     {
         if (!Enumerable.Range(0, 7).Contains(move.To.Rank))
         {
@@ -108,7 +108,7 @@ public class Board : IChessboard
     }
 
 
-    public bool ValidateMove(IChessPiece piece, IChessMove move)
+    private bool ValidateMove(IChessPiece piece, IChessMove move)
     {
         if (piece is null)
         {
@@ -120,6 +120,7 @@ public class Board : IChessboard
             throw new Exception($"illegal move: piece is not owned by player {HasTurn}");
         }
 
+        //bounds
         if (!MoveIsWithinBounds(move))
         {
             throw new Exception("illegal move: coordinates are outside of bounds");
@@ -134,6 +135,10 @@ public class Board : IChessboard
 
         piece.ValidateMove(move, target);
 
+        // collisions
+        CheckCollision(move);
+
+
         return true;
     }
 
@@ -142,6 +147,11 @@ public class Board : IChessboard
 
         var res = Squares[square.Rank][square.File];
         return res;
+    }
+
+    private void CheckCollision(IChessMove move)
+    {
+
     }
 
 
@@ -167,13 +177,6 @@ public class Board : IChessboard
 
         return (err, Serialize());
 
-
-
-
-        // ai move
-        // ....
-
-        // return new serialized new state
 
     }
 }

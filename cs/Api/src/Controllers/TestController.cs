@@ -39,14 +39,13 @@ public class TestController : ControllerBase
     {
         var game = new Chess(null);
 
-
         // var game2 = new Chess(s);
 
 
         try
         {
             // Console.WriteLine(game.Board.Squares[0]);
-            var m = game.MakeMove(new Move(new Square(1, 1, null), new Square(2, 2, null)));
+            var m = game.MakeMove(new Move(new Square(0, 0, null), new Square(0, 2, null)));
             // var game2 = new Chess(m);
             // var p = game2.Board.PrintBoard();
             return m;
