@@ -12,7 +12,6 @@ public interface IChessMove
 
 }
 
-
 public enum MoveType
 {
     Diagonal,

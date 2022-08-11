@@ -13,15 +13,12 @@ public class Chess : IChessGame
     public Chess()
     {
         IsPlaying = true;
-        string? squares = null;
-
         {
             using (StreamReader r = new StreamReader("start.json"))
             {
-                squares = r.ReadToEnd();
+                _board = new Board(r.ReadToEnd());
             }
         }
-        _board = new Board(squares);
 
     }
 
