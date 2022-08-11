@@ -28,3 +28,5 @@ public class GeoCoding : BaseApiClient, IGeoCoding
 }
 
 //  curl "http://localhost:5002/api/dotnet/weather/address?city=eindhoven&postcode=5652xg&country=netherlands&street=scheltemaweg"
+
+

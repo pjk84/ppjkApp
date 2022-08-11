@@ -1,5 +1,7 @@
 namespace Api.Application.Chess.Interfaces;
 
+#nullable enable 
+
 public interface IChessPiece
 {
     public int Id { get; init; }
@@ -9,7 +11,7 @@ public interface IChessPiece
     public PieceType Type { get; init; }
 
 
-    public bool ValidateMove(IChessMove move, IChessSquare target);
+    public bool ValidateMove(IChessMove move, IChessPiece? pieceAtTarget);
 }
 
 

@@ -11,14 +11,13 @@ namespace Api.Controllers;
 [Route("[controller]")]
 public class WeatherController : ControllerBase
 {
-    private readonly IConfiguration _config;
 
     private readonly IOpenWeatherApi _openWeatherApi;
     private readonly IGeoCoding _geoCoding;
 
     private readonly IIpApi _ipApi;
 
-    public WeatherController(IConfiguration config, IIpApi ipApiClient, IOpenWeatherApi openWeatherClient, IGeoCoding geoCodingClient)
+    public WeatherController(IIpApi ipApiClient, IOpenWeatherApi openWeatherClient, IGeoCoding geoCodingClient)
     {
         _ipApi = ipApiClient;
         _openWeatherApi = openWeatherClient;

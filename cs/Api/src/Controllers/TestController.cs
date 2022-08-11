@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Application.Interfaces;
 using System.Text.Json;
 
-using Api.Application.Chess.Models;
-using Api.Application.Chess.Interfaces;
+
 namespace Api.Controllers;
 
 
@@ -37,28 +36,11 @@ public class TestController : ControllerBase
     [Route("~/test")]
     public string test()
     {
-        var game = new Chess(null);
+        var t = "ABCDEFGH";
+        Console.WriteLine("A1"[1]);
+        // var game = new Chess(null);
 
-        // var game2 = new Chess(s);
-        var y = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-        var x = new int[] { 4, 1 };
-        Array.Sort(x);
-        var z = y.Take((1..2));
-        Console.WriteLine(JsonSerializer.Serialize(z));
-
-        try
-        {
-            // Console.WriteLine(game.Board.Squares[0]);
-            var m = game.MakeMove(new Move(new Square(0, 1, null), new Square(1, 2, null)));
-            // var game2 = new Chess(m);
-            // var p = game2.Board.PrintBoard();
-            return m;
-        }
-        catch (Exception e)
-        {
-            return e.Message;
-        }
-
+        return "";
     }
 
     // public IEnumerable<IEnumerable<string>> ChunkBy(IEnumerable<string> source, int size){

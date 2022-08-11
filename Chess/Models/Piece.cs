@@ -2,6 +2,9 @@
 using Api.Application.Chess.Interfaces;
 
 namespace Api.Application.Chess.Models;
+
+#nullable enable
+
 public class Piece : IChessPiece
 {
     public int Id { get; init; }
@@ -19,13 +22,13 @@ public class Piece : IChessPiece
 
     // pattern and behavior validation
     // Does not account for board level bounds or collisions
-    public bool ValidateMove(IChessMove move, IChessSquare target)
+    public bool ValidateMove(IChessMove move, IChessPiece? pieceAtTarget)
     {
 
         if (move.Type == MoveType.Wild && Type != PieceType.N)
         {
             // wild move. if knight, evaluate on knight case
-            throw new Exception("illegal move");
+            throw new Exception("invalid pattern");
         }
         switch (Type)
         {
@@ -41,7 +44,7 @@ public class Piece : IChessPiece
                     {
                         throw new Exception("move size exceeds max allowed size of 1");
                     }
-                    if (target.Piece is null)
+                    if (pieceAtTarget is null)
                     {
 
                         throw new Exception("Pawn may not move diagonally unless attacking");
@@ -61,7 +64,7 @@ public class Piece : IChessPiece
 
                         throw new Exception("Pawn may only advance vertically");
                     }
-                    if (target.Piece is not null)
+                    if (pieceAtTarget is not null)
                     {
                         throw new Exception("Pawn may only attack diagonally");
                     }
