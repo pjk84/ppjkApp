@@ -1,7 +1,8 @@
 
-using Api.Application.Chess.Interfaces;
+using Chess.Interfaces;
 
-namespace Api.Application.Chess.Models;
+namespace Chess.Models;
+
 
 #nullable enable
 
@@ -66,7 +67,7 @@ public class Piece : IChessPiece
                     }
                     if (pieceAtTarget is not null)
                     {
-                        throw new Exception("Pawn may only attack diagonally");
+                        throw new Exception("Pawn may only attack diagonally or en passant");
                     }
                 }
                 if (Color == Color.B)

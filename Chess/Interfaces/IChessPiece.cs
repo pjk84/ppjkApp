@@ -1,4 +1,4 @@
-namespace Api.Application.Chess.Interfaces;
+namespace Chess.Interfaces;
 
 #nullable enable 
 

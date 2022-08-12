@@ -1,6 +1,6 @@
-using Api.Application.Chess.Interfaces;
+using Chess.Interfaces;
 
-namespace Api.Application.Chess.Models;
+namespace Chess.Models;
 
 public record Move : IChessMove
 {
@@ -22,5 +22,12 @@ public record Move : IChessMove
         Length = Math.Abs(to.Rank - from.Rank);
         Width = Math.Abs(to.File - from.File);
         Type = (Length != 0 && Width != 0) ? Length == Width ? MoveType.Diagonal : MoveType.Wild : MoveType.Straight;
+    }
+
+    public void Revert()
+    {
+        var t = From;
+        From = To;
+        To = t;
     }
 }

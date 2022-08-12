@@ -1,33 +1,64 @@
 
-using Api.Application.Chess.Interfaces;
+using Chess.Interfaces;
 using System.Text.Json;
 
-namespace Api.Application.Chess.Models;
-public class Chess : IChessGame
+namespace Chess.Models;
+
+
+
+
+public class Game : IChessGame
 {
 
-    private IChessboard _board { get; init; }
+    private Color _activeColor = Color.W;
+    private Board _board;
     public bool IsPlaying { get; private set; }
 
-    private List<string> _moves = new List<string> { };
-    public Chess()
+    private List<string> _moves = new List<string> { };  // <from>:<to>:<capture_id>
+    public Game()
     {
+        _board = NewBoard();
         IsPlaying = true;
+    }
+
+    public void Restart()
+    {
+        _moves = new List<string> { };
+        _board = NewBoard();
+        _activeColor = Color.W;
+    }
+
+    private Board NewBoard()
+    {
         {
-            using (StreamReader r = new StreamReader("start.json"))
+            using (StreamReader r = new StreamReader("test.json"))
             {
-                _board = new Board(r.ReadToEnd());
+                return new Board(r.ReadToEnd());
             }
         }
-
     }
 
-    public void LoadGame()
+    public void LoadGame(string fileName)
     {
+        {
+            using (StreamReader r = new StreamReader($"games/{fileName}.json"))
+            {
+                var saveGame = JsonSerializer.Deserialize<SaveGame>(r.ReadToEnd(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                _board = new Board(JsonSerializer.Serialize(saveGame.squares));
+                _activeColor = saveGame.activeColor;
+                _moves = saveGame.moves;
+            }
+        }
+    }
+
+    public void SaveGame(string fileName)
+    {
+        var saveGame = new SaveGame(_board.Squares, _moves, _activeColor);
+        File.WriteAllText($"games/{fileName}.json", JsonSerializer.Serialize(saveGame));
 
     }
 
-    public string Undo()
+    public void Undo()
     {
         if (_moves.Count == 0)
         {
@@ -35,51 +66,121 @@ public class Chess : IChessGame
         }
         // revert last move
         var lastMove = _moves.Last();
-        var parsed = ParseMove(lastMove);
-        var from = parsed.From;
-        var to = parsed.To;
-        parsed.From = to;
-        parsed.To = from;
+        var parsed = ParseMove(lastMove.Substring(0, 5));
+        parsed.Revert();
         _board.MakeMove(parsed);
+        if (lastMove.Length > 5)
+        {
+            // has capture. revive captured piece
+            var capture = lastMove.Substring(6);
+
+            // deserialize capture
+            var d = JsonSerializer.Deserialize<Capture>(capture);
+
+            // get the square at which the piece was captured
+            var square = _board.GetSquareByAddress(d.Address);
+
+            // re-populate square with piece
+            square.Update(d.Piece);
+        }
         _moves.RemoveAt(_moves.Count() - 1);
-        return _board.PrintBoard();
+        SwitchTurns();
     }
 
     // parse string presentation 'A1:A2' to move
     public IChessMove ParseMove(string move)
     {
-        move = move.ToUpper();
-        var files = "ABCDEFGH";
+        if (move.Length != 5)
+        {
+            throw new ParseError(ParseType.Move, null);
+        }
         string[] addresses = move.Split(":");
         if (addresses.Length != 2)
         {
-            throw new Exception("invalid square address");
+            throw new ParseError(ParseType.Move, null);
         }
-        int[][] coords = { };
-        foreach (var address in addresses)
-        {
-            var file = files.IndexOf(address[0]);
-            int.TryParse(address[1].ToString(), out int rank);
-            var x = new[] { file, rank - 1 };
-            coords = coords.Append(x).ToArray();
-        }
-        return new Move(_board.Squares[coords[0][1]][coords[0][0]], _board.Squares[coords[1][1]][coords[1][0]]);
+        return new Move(_board.GetSquareByAddress(addresses[0]), _board.GetSquareByAddress(addresses[1]));
     }
 
     public string PrintBoard(string? msg)
     {
-        return $"{_board.PrintBoard()}\n\n {msg}";
+        if (msg is not null)
+        {
+            msg = "-- " + msg;
+        }
+        return $"\n\n{_board.PrintBoard(_activeColor)}\n\n{msg}";
     }
+
+    public void SwitchTurns()
+    {
+        _activeColor = _activeColor == Color.W ? Color.B : Color.W;
+    }
+
+    public void MakeMoveAi()
+    {
+        // computer move
+    }
+
 
     public string? MakeMove(string move)
     {
         string err = null!;
         try
         {
-            var parsed = ParseMove(move);
-            _board.ValidateMove(parsed);
-            _board.MakeMove(parsed);
-            _moves.Add(move);
+            Capture? capture = null;
+            IChessMove? parsed = null;
+            try
+            {
+                parsed = ParseMove(move);
+                if (parsed.To.Piece is not null)
+                {
+                    capture = new Capture(parsed.To.Piece, parsed.To.Address);
+                }
+                try
+                {
+                    _board.ValidateMove(parsed, _activeColor);
+
+                }
+
+                catch (CollisionError e)
+                {
+                    var blocker = e.Square.Piece!;
+                    // en passant move.
+                    if (e.Mover.Type == PieceType.P)
+                    {
+                        capture = new Capture(blocker, e.Square.Address);
+                        e.Square.Update(null);
+                    }
+                    // castling
+                    if (e.Mover.Type == PieceType.R && blocker.Type == PieceType.K)
+                    {
+                        // ..
+                    }
+                }
+                if (capture is not null)
+                {
+                    // capture
+                    move += $":{JsonSerializer.Serialize(capture)}";
+                }
+                _board.MakeMove(parsed);
+                _moves.Add(move);
+
+
+                SwitchTurns();
+
+            }
+            catch (ParseError e)
+            {
+                if (e.Type == ParseType.Move)
+                {
+                    return "invalid move format. Move must be formatted as <from>:<to>. Example: a2-a3\n";
+                }
+            }
+            catch (AddressError e)
+            {
+                return $"address '{e.Address}' in move {move} is invalid: {e.Message}\n";
+            }
+
         }
         catch (Exception e)
         {
@@ -93,3 +194,9 @@ public class Chess : IChessGame
         IsPlaying = false;
     }
 }
+
+
+public record struct SaveGame(Square[][] squares, List<string> moves, Color activeColor) { }
+
+
+

@@ -1,15 +1,21 @@
-using Api.Application.Chess.Models;
+using Chess.Models;
 
 #nullable enable
-namespace Api.Application.Chess.Interfaces;
+namespace Chess.Interfaces;
 
 public interface IChessboard
 {
     public Square[][] Squares { get; }
-    public string MakeMove(IChessMove move);
-    public void ValidateMove(IChessMove move);
+    public void MakeMove(IChessMove move);
+    public void ValidateMove(IChessMove move, Color activeColor);
 
-    public string PrintBoard();
+    public string Serialize();
+
+    public IChessSquare GetSquareByAddress(string address);
+
+    public string PrintBoard(Color activeColor);
+    public bool IsChecked(Color activeColor);
+
 
 }
 

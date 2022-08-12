@@ -1,4 +1,5 @@
-namespace Api.Application.Chess.Interfaces;
+using Chess.Models;
+namespace Chess.Interfaces;
 
 public interface IChessGame
 {
@@ -7,7 +8,25 @@ public interface IChessGame
 
     public string PrintBoard(string? msg);
 
+    public void SaveGame(string fileName);
+    public void LoadGame(string fileName);
+
     public string? MakeMove(string move);
 
+    public void Undo();
+
+    public void Restart();
+
     public void Quit();
+}
+
+
+public interface ISaveGame
+{
+    public Board Board { get; init; }
+
+    public List<string> Moves { get; init; }
+
+    public Color ActiveColor { get; init; }
+
 }

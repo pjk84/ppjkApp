@@ -1,4 +1,4 @@
-namespace Api.Application.Chess.Interfaces;
+namespace Chess.Interfaces;
 
 public interface IChessMove
 {
@@ -9,6 +9,8 @@ public interface IChessMove
     public int Width { get; init; }
 
     public MoveType Type { get; init; }
+
+    public void Revert();
 
 }
 

@@ -1,14 +1,14 @@
 
-using Api.Application.Chess.Interfaces;
+using Chess.Interfaces;
 using System.Text.Json;
-namespace Api.Application.Chess.Models;
+namespace Chess.Models;
 
 
 public class Board : IChessboard
 {
-
-    private Color ActiveColor = Color.W;
     public Square[][] Squares { get; private set; }
+
+    public King[] _kings = { new King(Color.W, false, "e2"), new King(Color.B, false, "e8") };
     private Dictionary<string, string> Pieces;
     public Board(string squares)
     {
@@ -41,13 +41,33 @@ public class Board : IChessboard
         return deserialized;
     }
 
-    private string Serialize()
+    public string Serialize()
     {
         return JsonSerializer.Serialize(Squares);
     }
 
+    public IChessSquare GetSquareByAddress(string address)
+    {
+        var files = "abcdefgh";
+        if (address.Length != 2)
+        {
+            throw new AddressError(address, "address not of expected length 2");
+        }
+        var file = files.IndexOf(address[0]);
+        if (file == -1)
+        {
+            throw new AddressError(address, $"file '{address[0]}' is not a valid file");
+        }
+        // var rank = Convert.ToInt32(address[1].ToString());
+        int.TryParse(address[1].ToString(), out int rank);
+        if (!Enumerable.Range(1, 8).Contains(rank))
+        {
+            throw new AddressError(address, $"'{address[1]}' is not a valid rank");
+        }
+        return Squares[rank - 1][file];
+    }
 
-    public string PrintBoard()
+    public string PrintBoard(Color activeColor)
     {
         var s = "";
         var i = 0;
@@ -56,7 +76,7 @@ public class Board : IChessboard
             if (i == 0)
             {
 
-                s += "  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓\n";
+                s += $"  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓ {(activeColor == Color.B ? "<-" : null)} \n";
             }
 
             foreach (var square in rank)
@@ -77,7 +97,7 @@ public class Board : IChessboard
             }
             if (i == 7)
             {
-                s += "  ┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛\n";
+                s += $"  ┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛ {(activeColor == Color.W ? "<-" : null)}\n";
                 s += "    a   b   c   d   e   f   g   h";
             }
             else
@@ -107,56 +127,43 @@ public class Board : IChessboard
         }
     }
 
-
-    public void ValidateMove(IChessMove move)
+    public bool IsChecked(Color color)
     {
-        var from = GetSquare(move.From);
+        var i = (int)color;
+        bool check = false;
 
-        if (from.Piece is null)
+
+        return check;
+    }
+
+
+    public void ValidateMove(IChessMove move, Color activeColor)
+    {
+
+        if (move.From.Piece is null)
         {
             throw new Exception($"square is empty");
         }
 
-        if (from.Piece.Color != ActiveColor)
+        if (move.From.Piece.Color != activeColor)
         {
-            throw new Exception($"piece is not owned by player {ActiveColor}");
+            throw new Exception($"piece at {move.From.Address} is not owned by player {activeColor}");
         }
 
         //bounds
         MoveIsWithinBounds(move.To);
 
-        var target = GetSquare(move.To);
 
-        from.Piece.ValidateMove(move, target.Piece);
+        move.From.Piece.ValidateMove(move, move.To.Piece);
 
         CheckCollision(move);
 
-        CheckTarget(move, target.Piece);
-    }
-
-    private void CheckTarget(IChessMove move, IChessPiece? pieceAtTarget)
-    {
-        if (pieceAtTarget is null)
-        {
-            return;
-        }
-        if (pieceAtTarget.Color == ActiveColor)
+        if (move.To.Piece?.Color == activeColor)
         {
             throw new Exception("own piece found at target square");
         }
     }
 
-    public void Capture(IChessPiece piece)
-    {
-
-    }
-
-
-    public Square GetSquare(IChessSquare square)
-    {
-        var res = Squares[square.Rank][square.File];
-        return res;
-    }
 
     private void CheckCollision(IChessMove move)
     {
@@ -172,11 +179,11 @@ public class Board : IChessboard
         }
         var squares = Slice(move);
         {
-            foreach (var s in squares)
+            foreach (var square in squares)
             {
-                if (s.Piece is not null)
+                if (square.Piece is not null)
                 {
-                    throw new Exception($"blocked by {s.Piece.Type} at {s.Address}");
+                    throw new CollisionError($"blocked by {square.Piece.Color.ToString().ToLower()}{square.Piece.Type} at {square.Address}", move.From.Piece!, square);
                 }
             }
         }
@@ -236,25 +243,13 @@ public class Board : IChessboard
 
 
 
-    public string MakeMove(IChessMove move)
+    public void MakeMove(IChessMove move)
     {
-        var from = GetSquare(move.From);
-        var to = GetSquare(move.To);
 
-        if (to.Piece is not null)
-        {
-            // enemy piece at target square
-            Capture(to.Piece);
-        }
+        move.To.Update(move.From.Piece);
 
-        to.Update(from.Piece);
+        move.From.Update(null);
 
-        from.Update(null);
-
-
-        ActiveColor = ActiveColor == Color.W ? Color.B : Color.W;
-
-        return Serialize();
     }
 }
 
@@ -286,3 +281,19 @@ public record Square : IChessSquare
     }
 }
 
+
+
+public record King
+{
+    public Color Color { get; init; }
+
+    public string Address { get; set; }
+
+    public bool Checked { get; set; }
+    public King(Color color, bool isChecked, string address)
+    {
+        Color = color;
+        Checked = isChecked;
+        Address = address;
+    }
+}
