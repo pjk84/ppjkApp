@@ -136,6 +136,8 @@ public class Board : IChessboard
         }
     }
 
+    // if either side is checked, returns a tuple with that sides' color 
+    // and the offending square.
     public (int color, Square square)? EvaluateCheck()
     {
 
@@ -193,18 +195,19 @@ public class Board : IChessboard
             throw new Exception($"piece at {move.From.Address} is not owned by player {(activeColor == 0 ? "white" : "black")}");
         }
 
+        if (move.To.Piece?.Color == activeColor)
+        {
+            throw new Exception("own piece found at target square");
+        }
+
         //bounds
         MoveIsWithinBounds(move.To);
-
 
         move.From.Piece.ValidateMove(move, move.To.Piece);
 
         CheckCollision(move);
 
-        if (move.To.Piece?.Color == activeColor)
-        {
-            throw new Exception("own piece found at target square");
-        }
+
     }
 
 

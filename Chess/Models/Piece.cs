@@ -9,7 +9,8 @@ namespace Chess.Models;
 public class Piece : IChessPiece
 {
     public int Id { get; init; }
-    public PieceType Type { get; init; }
+    public PieceType Type { get; private set; }
+
     public int Color { get; init; }
 
 
@@ -19,6 +20,11 @@ public class Piece : IChessPiece
     {
         Id = id;
         Color = color;
+        Type = type;
+    }
+
+    public void Promote(PieceType type)
+    {
         Type = type;
     }
 

@@ -116,7 +116,7 @@ class Demo
                     }
                     if (e.Key == ConsoleKey.Backspace)
                     {
-                        game.Undo();
+                        game.UndoTurn();
                         if (game.Turns.Count() == 0)
                         {
                             done = true;
@@ -132,6 +132,40 @@ class Demo
             {
                 msg += $"player {game.Checked} is checked";
             }
+            if (game.Promotee is not null)
+            {
+                PieceType? newType = null;
+                var promoted = false;
+                print(null);
+                Console.WriteLine($"Pawn needs to be promoted. Press R for rook, N for knight, Q for queen or B for biship");
+                while (!promoted)
+                {
+                    var e = Console.ReadKey();
+                    if (e.Key == ConsoleKey.R)
+                    {
+                        newType = PieceType.R;
+                    }
+                    if (e.Key == ConsoleKey.N)
+                    {
+                        newType = PieceType.N;
+                    }
+                    if (e.Key == ConsoleKey.Q)
+                    {
+                        newType = PieceType.Q;
+                    }
+                    if (e.Key == ConsoleKey.B)
+                    {
+                        newType = PieceType.B;
+                    }
+                    if (newType.HasValue)
+                    {
+                        game.PromotePiece(game.Promotee, newType.Value);
+                        promoted = true;
+                    }
+                    Console.WriteLine($"-- invalid piece: {e.Key}. Must be either of R/N/Q/B. Try again.");
+                }
+            }
+            game.SwitchTurns();
             print(msg);
 
         }
@@ -141,6 +175,7 @@ class Demo
 
 
 //todo 
-// evaluate chess at start of move
+
+// checkmate
 // pawn promotion
 // castling

@@ -8,10 +8,12 @@ public interface IChessPiece
     // public ChessPieceType Type { get; init; }
     public int Color { get; init; }
 
-    public PieceType Type { get; init; }
+    public PieceType Type { get; }
 
 
     public void ValidateMove(IChessMove move, IChessPiece? pieceAtTarget);
+
+    public void Promote(PieceType type);
 }
 
 

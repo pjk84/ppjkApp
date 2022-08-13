@@ -1,5 +1,6 @@
 
 using Chess.Interfaces;
+using System.Linq;
 using System.Text.Json;
 
 namespace Chess.Models;
@@ -16,6 +17,8 @@ public class Game : IChessGame
     private int _presentation = 1;
 
     public string? Checked { get; private set; } = null;
+
+    public IChessPiece? Promotee { get; private set; }
 
     private Board _board;
     public bool IsPlaying { get; private set; }
@@ -65,7 +68,7 @@ public class Game : IChessGame
 
     }
 
-    public void Undo()
+    public void UndoTurn()
     {
         if (Turns.Count == 0)
         {
@@ -136,28 +139,65 @@ public class Game : IChessGame
     public void MakeMoveAi()
     {
         // computer move
+
     }
 
     // check if king at either side is checked
     // if active side king is checked the move is reverted.
-    public void Check()
+    public void DetectCheck()
     {
         var check = _board.EvaluateCheck();
         if (!check.HasValue)
         {
+            // neither side is checked. No need to take the analysis any further.
             return;
         }
+        // the square the has the piece that exerts the check
         var offender = check.Value.square;
+
+        // the side that is checked
         var color = check.Value.color;
-        var colorLiteral = color == 0 ? "White" : "Black";
         if (color == _activeColor)
         {
-
-            Undo();
+            UndoTurn();
             SwitchTurns();
-            throw new Exception($"{colorLiteral} checked by {offender.Piece!.Type} at {offender.Address}");
+            throw new CheckError(color, offender.Address, offender.Piece!.Type);
         }
-        Checked = colorLiteral;
+    }
+
+    public void PromotePiece(IChessPiece piece, PieceType type)
+    {
+        piece.Promote(type);
+        Promotee = null;
+    }
+
+    public void DetectPromotion(IChessSquare square)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(square));
+        var piece = square.Piece;
+        var rank = square.Rank;
+        if (piece is null)
+        {
+            return;
+        }
+        if (piece.Type != PieceType.P)
+        {
+            return;
+        }
+        if (rank != 7 && rank != 0)
+        {
+            return;
+        }
+        if (piece.Color == 0 && rank == 7)
+        {
+            // add white pawn for promotion
+            Promotee = piece;
+        }
+        if (piece.Color == 1 && rank == 0)
+        {
+            // add black pawn for promotion
+            Promotee = piece;
+        }
     }
 
     public string? MakeMove(string move)
@@ -183,11 +223,6 @@ public class Game : IChessGame
                     }
                 }
 
-                catch (MovementError e)
-                {
-                    throw new Exception($"move is invalid for piece of type {e.Type}. {e.Message}");
-                }
-
                 catch (CollisionError e)
                 {
                     var blocker = e.Square.Piece!;
@@ -207,11 +242,19 @@ public class Game : IChessGame
                 _board.MakeMove(parsed.From, parsed.To, parsed.From.Piece!);
                 Turns.Add(new Turn(move, piece, capture));
 
-                Check();
+                DetectCheck();
 
-                SwitchTurns();
+                DetectPromotion(parsed.To);
 
 
+            }
+            catch (MovementError e)
+            {
+                throw new Exception($"move is invalid for piece of type {e.Type}. {e.Message}");
+            }
+            catch (CheckError e)
+            {
+                err = $"{(e.Color == 0 ? "wK" : "bK")} checked by {e.Offender} at {e.Address} ";
             }
             catch (MoveParseError)
             {

@@ -7,6 +7,7 @@ public interface IChessGame
     public bool IsPlaying { get; }
 
     public string? Checked { get; }
+    public IChessPiece? Promotee { get; }
 
     public List<Turn> Turns { get; }
 
@@ -19,9 +20,13 @@ public interface IChessGame
 
     public string? MakeMove(string move);
 
-    public void Undo();
+    public void PromotePiece(IChessPiece piece, PieceType type);
+
+    public void UndoTurn();
 
     public void Restart();
+
+    public void SwitchTurns();
 
     public void Quit();
 }

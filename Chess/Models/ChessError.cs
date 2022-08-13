@@ -2,7 +2,6 @@
 using Chess.Interfaces;
 
 
-
 class CollisionError : Exception, ICollisonError
 {
     public IChessPiece Mover { get; init; }
@@ -15,6 +14,20 @@ class CollisionError : Exception, ICollisonError
 }
 
 class MoveParseError : Exception { }
+
+class CheckError : Exception
+{
+    public int Color { get; init; }
+    public string Address { get; init; }
+
+    public PieceType Offender { get; init; }
+    public CheckError(int color, string address, PieceType offender)
+    {
+        Color = color;
+        Address = address;
+        Offender = offender;
+    }
+}
 
 class MovementError : Exception
 {
