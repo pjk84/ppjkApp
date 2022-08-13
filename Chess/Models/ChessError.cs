@@ -16,6 +16,16 @@ class CollisionError : Exception, ICollisonError
 
 class MoveParseError : Exception { }
 
+class MovementError : Exception
+{
+    public PieceType Type { get; init; }
+
+    public MovementError(PieceType type, string? message) : base(message)
+    {
+        Type = type;
+    }
+}
+
 
 class AddressParseError : Exception
 {

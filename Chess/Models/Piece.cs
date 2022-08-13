@@ -24,13 +24,13 @@ public class Piece : IChessPiece
 
     // pattern and behavior validation
     // Does not account for board level bounds or collisions
-    public bool ValidateMove(IChessMove move, IChessPiece? pieceAtTarget)
+    public void ValidateMove(IChessMove move, IChessPiece? pieceAtTarget)
     {
-
+        string? err = null;
         if (move.Type == MoveType.Wild && Type != PieceType.N)
         {
             // wild move. if knight, evaluate on knight case
-            throw new Exception("invalid pattern");
+            err = "invalid pattern";
         }
         switch (Type)
         {
@@ -38,18 +38,18 @@ public class Piece : IChessPiece
 
                 if (move.Length > 2 || move.Width > 2)
                 {
-                    throw new Exception($"move size exceeds max allowed size of 2");
+                    err = $"move size exceeds max allowed size of 2";
                 }
                 if (move.Type == MoveType.Diagonal)
                 {
                     if (move.Width > 1)
                     {
-                        throw new Exception("move size exceeds max allowed size of 1");
+                        err = "move size exceeds max allowed size of 1";
                     }
                     if (pieceAtTarget is null)
                     {
 
-                        throw new Exception("Pawn may not move diagonally unless attacking");
+                        err = "Pawn may not move diagonally unless attacking";
                     }
                 }
                 if (move.Type == MoveType.Straight)
@@ -58,31 +58,31 @@ public class Piece : IChessPiece
                     {
                         if (Moves.Length > 0)
                         {
-                            throw new Exception("Pawn may only advance two squares on the first move");
+                            err = "Pawn may only advance two squares on the first move";
                         }
                     }
                     if (move.Width > 0)
                     {
 
-                        throw new Exception("Pawn may only advance vertically");
+                        err = "Pawn may only advance vertically";
                     }
                     if (pieceAtTarget is not null)
                     {
-                        throw new Exception("Pawn may only attack diagonally or en passant");
+                        err = "Pawn may only attack diagonally or en passant";
                     }
                 }
                 if (Color == 1)
                 {
                     if (move.To.Rank > move.From.Rank)
                     {
-                        throw new Exception("Pawn may not move backwards");
+                        err = "Pawn may not move backwards";
                     }
                 }
                 if (Color == 0)
                 {
                     if (move.To.Rank < move.From.Rank)
                     {
-                        throw new Exception("Pawn may not move backwards");
+                        err = "Pawn may not move backwards";
                     }
                 }
 
@@ -91,13 +91,13 @@ public class Piece : IChessPiece
             case PieceType.R:
                 if (move.Type != MoveType.Straight)
                 {
-                    throw new Exception("diagonal move not allowed");
+                    err = "diagonal move not allowed";
                 }
                 break;
             case PieceType.B:
                 if (move.Type != MoveType.Diagonal)
                 {
-                    throw new Exception("only diagonal move allowed");
+                    err = "only diagonal move allowed";
                 }
                 break;
             case PieceType.Q:
@@ -107,7 +107,7 @@ public class Piece : IChessPiece
                 // only wild move not allowed.
                 if (move.Length > 1 || move.Width > 1)
                 {
-                    throw new Exception($"move size exceeds max of 1");
+                    err = $"move size exceeds max of 1";
                 }
                 // implement castling
                 break;
@@ -115,19 +115,22 @@ public class Piece : IChessPiece
                 // only wild move not allowed.
                 if (move.Type != MoveType.Wild)
                 {
-                    throw new Exception($"straight or diagonal move not allowed");
+                    err = $"straight or diagonal move not allowed";
                 }
 
-                if (!((move.Length == 1 || move.Width == 1) && move.Length + move.Width != 3))
+                if (!((move.Length == 1 || move.Width == 1) && move.Length + move.Width == 3))
                 {
-                    throw new Exception($"illegal movement pattern");
+                    err = $"illegal movement pattern";
                 }
                 // implement castling
                 break;
             default:
                 break;
         }
-        return true;
+        if (err is not null)
+        {
+            throw new MovementError(Type, err);
+        }
     }
 
 }

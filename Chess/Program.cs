@@ -106,6 +106,7 @@ class Demo
                 while (!done)
                 {
                     msg = $" found {game.Turns.Count()} move(s). Press delete/backspace to undo move. Press enter when done.";
+                    msg += game.PrintTurns();
                     print(msg);
                     var e = Console.ReadKey();
                     if (e.Key == ConsoleKey.Enter)
@@ -127,9 +128,19 @@ class Demo
                 continue;
             }
             msg = game.MakeMove(inp);
+            if (game.Checked is not null)
+            {
+                msg += $"player {game.Checked} is checked";
+            }
             print(msg);
 
         }
 
     }
 }
+
+
+//todo 
+// evaluate chess at start of move
+// pawn promotion
+// castling

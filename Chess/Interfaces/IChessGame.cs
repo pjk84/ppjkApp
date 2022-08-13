@@ -6,6 +6,8 @@ public interface IChessGame
 
     public bool IsPlaying { get; }
 
+    public string? Checked { get; }
+
     public List<Turn> Turns { get; }
 
     public string PrintBoard(string? msg);

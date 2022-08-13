@@ -5,8 +5,6 @@ using System.Text.Json;
 namespace Chess.Models;
 
 
-
-
 public class Game : IChessGame
 {
 
@@ -17,7 +15,8 @@ public class Game : IChessGame
 
     private int _presentation = 1;
 
-    private bool _enemyChecked = false;
+    public string? Checked { get; private set; } = null;
+
     private Board _board;
     public bool IsPlaying { get; private set; }
 
@@ -80,10 +79,10 @@ public class Game : IChessGame
         if (lastTurn.Capture is not null)
         {
             // get the square at which the piece was captured
-            var square = _board.GetSquareByAddress(lastTurn.Move.Substring(3));
+            var square = _board.GetSquareByAddress(lastTurn.Capture.Address);
 
             // re-populate square with piece
-            square.Update(lastTurn.Capture);
+            square.Update(lastTurn.Capture.Piece);
         }
         Turns.RemoveAt(Turns.Count() - 1);
         SwitchTurns();
@@ -119,8 +118,8 @@ public class Game : IChessGame
         string? capture = null;
         foreach (var turn in Turns)
         {
-            capture = turn.Capture is not null ? $" x {turn.Capture.Type}" : null;
-            s += $"{(turn.Piece.Color == 0 ? "w" : "b")}{turn.Piece.Type} {turn.Move} {capture}\n";
+            capture = turn.Capture is not null ? $"x{turn.Capture.Piece.Type}" : null;
+            s += $"{(turn.Piece.Color == 0 ? "w" : "b")}{turn.Piece.Type} {turn.Move}{capture}\n";
         }
         return s;
     }
@@ -144,22 +143,21 @@ public class Game : IChessGame
     public void Check()
     {
         var check = _board.EvaluateCheck();
-        var playerChecked = check[_activeColor];
-        var enemyChecked = check[1 - _activeColor];
-        if (playerChecked is not null)
+        if (!check.HasValue)
         {
-            var kingAddress = _board.Kings[_activeColor].Address;
+            return;
+        }
+        var offender = check.Value.square;
+        var color = check.Value.color;
+        var colorLiteral = color == 0 ? "White" : "Black";
+        if (color == _activeColor)
+        {
+
             Undo();
-            throw new Exception($"K at {kingAddress} checked by {playerChecked.Piece!.Type} at {playerChecked.Address}");
+            SwitchTurns();
+            throw new Exception($"{colorLiteral} checked by {offender.Piece!.Type} at {offender.Address}");
         }
-        if (enemyChecked is not null)
-        {
-            _enemyChecked = true;
-        }
-        else
-        {
-            _enemyChecked = false;
-        }
+        Checked = colorLiteral;
     }
 
     public string? MakeMove(string move)
@@ -171,13 +169,23 @@ public class Game : IChessGame
             IChessMove? parsed = null;
             try
             {
+                Capture? capture = null;
                 parsed = ParseMove(move);
                 var piece = parsed.From.Piece!;
-                var capture = parsed.To.Piece;
                 try
                 {
                     _board.ValidateMove(parsed, _activeColor);
+                    if (parsed.To.Piece is not null)
+                    {
+                        // capture at destination square
+                        capture = new Capture(parsed.To.Piece, parsed.To.Address);
 
+                    }
+                }
+
+                catch (MovementError e)
+                {
+                    throw new Exception($"move is invalid for piece of type {e.Type}. {e.Message}");
                 }
 
                 catch (CollisionError e)
@@ -186,7 +194,8 @@ public class Game : IChessGame
                     // en passant move.
                     if (e.Mover.Type == PieceType.P)
                     {
-                        capture = blocker;
+                        // capture in passing
+                        capture = new Capture(blocker, e.Square.Address);
                         e.Square.Update(null);
                     }
                     // castling
@@ -200,21 +209,17 @@ public class Game : IChessGame
 
                 Check();
 
-                if (_enemyChecked)
-                {
-                    msg = $"enemy king is checked at {_board.Kings[1 - _activeColor].Address}";
-                }
-
                 SwitchTurns();
+
 
             }
             catch (MoveParseError)
             {
-                return "invalid move format. Move must be formatted as <from>:<to>. Example: a2-a3\n";
+                err = "invalid move format. Move must be formatted as <from>-<to>. Example: a2-a3";
             }
             catch (AddressParseError e)
             {
-                return $"invalid address '{e.Address}'\n";
+                err = $"invalid address '{e.Address}'";
             }
 
         }
@@ -222,7 +227,7 @@ public class Game : IChessGame
         {
             err = $"{e.Message}\n";
         }
-        return err is null ? msg : $"illegal move: {err}";
+        return err is null ? msg : $"illegal move: {err}\n";
     }
 
     public void Quit()

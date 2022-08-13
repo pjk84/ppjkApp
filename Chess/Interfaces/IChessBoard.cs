@@ -17,7 +17,7 @@ public interface IChessboard
     public IChessSquare GetSquareByAddress(string address);
 
     public string PrintBoard(int activeColor, int presentation);
-    public Square?[] EvaluateCheck();
+    public (int color, Square square)? EvaluateCheck();
 
 
 }

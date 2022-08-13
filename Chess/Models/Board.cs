@@ -136,10 +136,10 @@ public class Board : IChessboard
         }
     }
 
-    public Square?[] EvaluateCheck()
+    public (int color, Square square)? EvaluateCheck()
     {
-        Square?[] res = { null, null };
-        var n = 0;
+
+        int n = 0;
         foreach (var i in Enumerable.Range(0, 2))
         {
             var kingsSquare = GetSquareByAddress(Kings[i].Address);
@@ -150,7 +150,7 @@ public class Board : IChessboard
                 try
                 {
                     ValidateMove(new Move(square, kingsSquare), _i);
-                    res[n] = square;
+                    return new(n, square);
                 }
                 catch (Exception)
                 {
@@ -159,7 +159,7 @@ public class Board : IChessboard
             }
             n++;
         }
-        return res;
+        return null;
     }
 
     private Square[] getSquaresByArmy(int color)

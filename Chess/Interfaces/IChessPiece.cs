@@ -11,7 +11,7 @@ public interface IChessPiece
     public PieceType Type { get; init; }
 
 
-    public bool ValidateMove(IChessMove move, IChessPiece? pieceAtTarget);
+    public void ValidateMove(IChessMove move, IChessPiece? pieceAtTarget);
 }
 
 
