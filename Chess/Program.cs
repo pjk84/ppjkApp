@@ -162,7 +162,10 @@ class Demo
                         game.PromotePiece(game.Promotee, newType.Value);
                         promoted = true;
                     }
-                    Console.WriteLine($"-- invalid piece: {e.Key}. Must be either of R/N/Q/B. Try again.");
+                    else
+                    {
+                        Console.WriteLine($"-- invalid piece: {e.Key}. Must be either of R/N/Q/B. Try again.");
+                    }
                 }
             }
             game.SwitchTurns();

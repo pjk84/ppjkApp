@@ -165,17 +165,16 @@ public class Game : IChessGame
         }
     }
 
-    public void PromotePiece(IChessPiece piece, PieceType type)
+    public void PromotePiece(IChessPiece piece, PieceType promoteTo)
     {
-        piece.Promote(type);
+        piece.Promote(promoteTo);
         Promotee = null;
     }
 
-    public void DetectPromotion(IChessSquare square)
+    public void DetectPromotion(IChessMove move)
     {
-        Console.WriteLine(JsonSerializer.Serialize(square));
-        var piece = square.Piece;
-        var rank = square.Rank;
+        var piece = move.To.Piece;
+        var rank = move.To.Rank;
         if (piece is null)
         {
             return;
@@ -244,7 +243,7 @@ public class Game : IChessGame
 
                 DetectCheck();
 
-                DetectPromotion(parsed.To);
+                DetectPromotion(parsed);
 
 
             }
