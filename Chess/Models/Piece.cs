@@ -10,11 +10,12 @@ public class Piece : IChessPiece
 {
     public int Id { get; init; }
     public PieceType Type { get; init; }
-    public Color Color { get; init; }
+    public int Color { get; init; }
+
 
     private IChessMove[] Moves { get; } = { };
 
-    public Piece(int id, Color color, PieceType type)
+    public Piece(int id, int color, PieceType type)
     {
         Id = id;
         Color = color;
@@ -70,14 +71,14 @@ public class Piece : IChessPiece
                         throw new Exception("Pawn may only attack diagonally or en passant");
                     }
                 }
-                if (Color == Color.B)
+                if (Color == 1)
                 {
                     if (move.To.Rank > move.From.Rank)
                     {
                         throw new Exception("Pawn may not move backwards");
                     }
                 }
-                if (Color == Color.W)
+                if (Color == 0)
                 {
                     if (move.To.Rank < move.From.Rank)
                     {
@@ -116,9 +117,9 @@ public class Piece : IChessPiece
                 {
                     throw new Exception($"straight or diagonal move not allowed");
                 }
-                if ((move.Length == 1 || move.Width == 1) && move.Length + move.Width != 3)
-                {
 
+                if (!((move.Length == 1 || move.Width == 1) && move.Length + move.Width != 3))
+                {
                     throw new Exception($"illegal movement pattern");
                 }
                 // implement castling

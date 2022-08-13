@@ -6,15 +6,18 @@ namespace Chess.Interfaces;
 public interface IChessboard
 {
     public Square[][] Squares { get; }
-    public void MakeMove(IChessMove move);
-    public void ValidateMove(IChessMove move, Color activeColor);
+
+    public King[] Kings { get; }
+
+    public void MakeMove(IChessSquare from, IChessSquare to, Piece piece);
+    public void ValidateMove(IChessMove move, int activeColor);
 
     public string Serialize();
 
     public IChessSquare GetSquareByAddress(string address);
 
-    public string PrintBoard(Color activeColor);
-    public bool IsChecked(Color activeColor);
+    public string PrintBoard(int activeColor, int presentation);
+    public Square?[] EvaluateCheck();
 
 
 }
@@ -27,7 +30,7 @@ public interface IChessSquare
 
     public string Address { get; init; }
 
-    public Color Color { get; init; }
+    public int Color { get; init; }
 
     public Piece? Piece { get; }
 

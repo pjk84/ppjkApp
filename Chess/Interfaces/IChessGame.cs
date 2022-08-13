@@ -6,7 +6,11 @@ public interface IChessGame
 
     public bool IsPlaying { get; }
 
+    public List<Turn> Turns { get; }
+
     public string PrintBoard(string? msg);
+
+    public string PrintTurns();
 
     public void SaveGame(string fileName);
     public void LoadGame(string fileName);

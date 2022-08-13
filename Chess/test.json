@@ -107,7 +107,12 @@
       "Color": 0,
       "Piece": { "Id": 99, "Type": 0, "Color": 1 }
     },
-    { "Rank": 2, "File": 2, "Color": 1, "Piece": null },
+    {
+      "Rank": 2,
+      "File": 2,
+      "Color": 1,
+      "Piece": { "Id": 101, "Type": 5, "Color": 1 }
+    },
     { "Rank": 2, "File": 3, "Color": 0, "Piece": null },
     { "Rank": 2, "File": 4, "Color": 1, "Piece": null },
     { "Rank": 2, "File": 5, "Color": 0, "Piece": null },
@@ -146,8 +151,18 @@
     { "Rank": 5, "File": 3, "Color": 1, "Piece": null },
     { "Rank": 5, "File": 4, "Color": 0, "Piece": null },
     { "Rank": 5, "File": 5, "Color": 1, "Piece": null },
-    { "Rank": 5, "File": 6, "Color": 0, "Piece": null },
-    { "Rank": 5, "File": 7, "Color": 1, "Piece": null }
+    {
+      "Rank": 5,
+      "File": 6,
+      "Color": 0,
+      "Piece": { "Id": 102, "Type": 5, "Color": 0 }
+    },
+    {
+      "Rank": 5,
+      "File": 7,
+      "Color": 1,
+      "Piece": null
+    }
   ],
   [
     {

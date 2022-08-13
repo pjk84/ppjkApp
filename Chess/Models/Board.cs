@@ -8,24 +8,24 @@ public class Board : IChessboard
 {
     public Square[][] Squares { get; private set; }
 
-    public King[] _kings = { new King(Color.W, false, "e2"), new King(Color.B, false, "e8") };
+    public King[] Kings { get; private set; } = { new King(0, false, "e1"), new King(1, false, "e8") };
     private Dictionary<string, string> Pieces;
     public Board(string squares)
     {
 
         Pieces = new Dictionary<string, string>{
-            {"PB",  "♙"}, // (P)awn (w)hite .. etc
-            {"PW",  "♟"},
-            {"KB",  "♔"},
-            {"KW",  "♚"},
-            {"QB",  "♕"},
-            {"QW",  "♛"},
-            {"NB",  "♘"},
-            {"NW",  "♞"},
-            {"BB",  "♗"},
-            {"BW",  "♝"},
-            {"RB",  "♖"},
-            {"RW",  "♜"},
+            {"P1",  "♙"}, // (P)awn (w)hite .. etc
+            {"P0",  "♟"},
+            {"K1",  "♔"},
+            {"K0",  "♚"},
+            {"Q1",  "♕"},
+            {"Q0",  "♛"},
+            {"N1",  "♘"},
+            {"N0",  "♞"},
+            {"B1",  "♗"},
+            {"B0",  "♝"},
+            {"R1",  "♖"},
+            {"R0",  "♜"},
         };
 
         Squares = Deserialize(squares);
@@ -48,26 +48,27 @@ public class Board : IChessboard
 
     public IChessSquare GetSquareByAddress(string address)
     {
+        address = address.ToLower();
         var files = "abcdefgh";
         if (address.Length != 2)
         {
-            throw new AddressError(address, "address not of expected length 2");
+            throw new AddressParseError(address);
         }
         var file = files.IndexOf(address[0]);
         if (file == -1)
         {
-            throw new AddressError(address, $"file '{address[0]}' is not a valid file");
+            throw new AddressParseError(address);
         }
         // var rank = Convert.ToInt32(address[1].ToString());
         int.TryParse(address[1].ToString(), out int rank);
         if (!Enumerable.Range(1, 8).Contains(rank))
         {
-            throw new AddressError(address, $"'{address[1]}' is not a valid rank");
+            throw new AddressParseError(address);
         }
         return Squares[rank - 1][file];
     }
 
-    public string PrintBoard(Color activeColor)
+    public string PrintBoard(int activeColor, int presentation)
     {
         var s = "";
         var i = 0;
@@ -75,8 +76,8 @@ public class Board : IChessboard
         {
             if (i == 0)
             {
-
-                s += $"  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓ {(activeColor == Color.B ? "<-" : null)} \n";
+                s += "    a   b   c   d   e   f   g   h\n";
+                s += $"  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓ {(activeColor == 1 ? "<- B" : null)} \n";
             }
 
             foreach (var square in rank)
@@ -87,17 +88,25 @@ public class Board : IChessboard
                     s += $"{8 - i} ";
                     line = "┃";
                 }
-                s += $"{(square.Piece is null ? $"{line}{(square.Color == Color.W ? "╳╳╳" : "   ")}" : $"{line} {Pieces[$"{square.Piece.Type}{square.Piece.Color}"]} ")}";
+                if (presentation == 0)
+                {
+                    s += $"{(square.Piece is null ? $"{line}{(square.Color == 0 ? "╳╳╳" : "   ")}" : $"{line} {Pieces[$"{square.Piece.Type}{square.Piece.Color}"]} ")}";
+                }
+                else
+                {
+
+                    s += $"{(square.Piece is null ? $"{line}{(square.Color == 0 ? "╳╳╳" : "   ")}" : $"{line}{square.Piece.Type}{(square.Piece.Color == 0 ? "w" : "b")} ")}";
+                }
                 // s += $"_{square.Color}_";
                 if (square.File == 7)
                 {
-                    s += "┃\n";
+                    s += $"┃ {square.Rank}\n";
                 }
 
             }
             if (i == 7)
             {
-                s += $"  ┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛ {(activeColor == Color.W ? "<-" : null)}\n";
+                s += $"  ┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛ {(activeColor == 0 ? "<- W" : null)}\n";
                 s += "    a   b   c   d   e   f   g   h";
             }
             else
@@ -127,17 +136,51 @@ public class Board : IChessboard
         }
     }
 
-    public bool IsChecked(Color color)
+    public Square?[] EvaluateCheck()
     {
-        var i = (int)color;
-        bool check = false;
-
-
-        return check;
+        Square?[] res = { null, null };
+        var n = 0;
+        foreach (var i in Enumerable.Range(0, 2))
+        {
+            var kingsSquare = GetSquareByAddress(Kings[i].Address);
+            var _i = i == 0 ? 1 : 0;
+            var squares = getSquaresByArmy(_i);
+            foreach (var square in squares)
+            {
+                try
+                {
+                    ValidateMove(new Move(square, kingsSquare), _i);
+                    res[n] = square;
+                }
+                catch (Exception)
+                {
+                    // Console.WriteLine($"{square.Piece?.Type} at {square.Address}: {e.Message}");
+                }
+            }
+            n++;
+        }
+        return res;
     }
 
+    private Square[] getSquaresByArmy(int color)
+    {
+        List<Square> squares = new List<Square>();
+        foreach (var rank in Squares)
+        {
+            foreach (var square in rank)
+            {
+                if (square.Piece?.Color == color)
+                {
+                    squares.Add(square);
+                }
+            }
+        }
+        return squares.ToArray();
+    }
 
-    public void ValidateMove(IChessMove move, Color activeColor)
+    // checks move against game rules at the board and piece level.
+    // Does not account for check. Check is evaluated separately in the game scope.
+    public void ValidateMove(IChessMove move, int activeColor)
     {
 
         if (move.From.Piece is null)
@@ -147,7 +190,7 @@ public class Board : IChessboard
 
         if (move.From.Piece.Color != activeColor)
         {
-            throw new Exception($"piece at {move.From.Address} is not owned by player {activeColor}");
+            throw new Exception($"piece at {move.From.Address} is not owned by player {(activeColor == 0 ? "white" : "black")}");
         }
 
         //bounds
@@ -183,7 +226,7 @@ public class Board : IChessboard
             {
                 if (square.Piece is not null)
                 {
-                    throw new CollisionError($"blocked by {square.Piece.Color.ToString().ToLower()}{square.Piece.Type} at {square.Address}", move.From.Piece!, square);
+                    throw new CollisionError($"blocked by {square.Piece.Type} at {square.Address}", move.From.Piece!, square);
                 }
             }
         }
@@ -243,12 +286,17 @@ public class Board : IChessboard
 
 
 
-    public void MakeMove(IChessMove move)
+    public void MakeMove(IChessSquare from, IChessSquare to, Piece piece)
     {
+        to.Update(piece);
 
-        move.To.Update(move.From.Piece);
+        from.Update(null);
 
-        move.From.Update(null);
+        if (piece.Type == PieceType.K)
+        {
+            var king = Kings.First(k => k.Color == piece.Color);
+            king.Address = to.Address;
+        }
 
     }
 }
@@ -258,7 +306,7 @@ public record Square : IChessSquare
 
     public int Rank { get; init; }
     public int File { get; init; }
-    public Color Color { get; init; }
+    public int Color { get; init; }
 
     public string Address { get; init; } // string representation of square
 
@@ -275,7 +323,7 @@ public record Square : IChessSquare
         Rank = rank;
         File = file;
         Piece = piece;
-        Color = (file + rank) % 2 == 0 ? Color.B : Color.W;
+        Color = (file + rank) % 2 == 0 ? 1 : 0;
         var files = "abcdefgh";
         Address = $"{files[file]}{rank + 1}";
     }
@@ -285,12 +333,12 @@ public record Square : IChessSquare
 
 public record King
 {
-    public Color Color { get; init; }
+    public int Color { get; init; }
 
     public string Address { get; set; }
 
     public bool Checked { get; set; }
-    public King(Color color, bool isChecked, string address)
+    public King(int color, bool isChecked, string address)
     {
         Color = color;
         Checked = isChecked;

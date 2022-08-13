@@ -2,6 +2,7 @@
 using Chess.Interfaces;
 
 
+
 class CollisionError : Exception, ICollisonError
 {
     public IChessPiece Mover { get; init; }
@@ -13,20 +14,13 @@ class CollisionError : Exception, ICollisonError
     }
 }
 
-class ParseError : Exception, IParseError
-{
-    public ParseType Type { get; init; }
-    public ParseError(ParseType type, string? message)
-    {
-        Type = type;
-    }
-}
+class MoveParseError : Exception { }
 
 
-class AddressError : Exception
+class AddressParseError : Exception
 {
     public string Address { get; init; }
-    public AddressError(string address, string? message) : base(message)
+    public AddressParseError(string address)
     {
         Address = address;
     }

@@ -15,6 +15,7 @@ public record Move : IChessMove
     public IChessSquare From { get; set; }
     public IChessSquare To { get; set; }
 
+
     public Move(IChessSquare from, IChessSquare to)
     {
         From = from;

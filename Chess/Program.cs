@@ -14,6 +14,12 @@ class Demo
             Console.WriteLine(game.PrintBoard(msg));
             msg = null;
         }
+        Console.WriteLine("commands:");
+        Console.WriteLine("moves  --> show sequence of moves");
+        Console.WriteLine("save  --> save game");
+        Console.WriteLine("load  --> load game");
+        Console.WriteLine("reset --> reset game");
+        Console.WriteLine("exit  --> quit game");
         Console.WriteLine(game.PrintBoard(null));
         while (game.IsPlaying)
         {
@@ -32,7 +38,7 @@ class Demo
                     var f = file.Replace("games/", "").Replace(".json", "");
                     Console.WriteLine($"- {f}");
                 }
-                Console.Write($"\nfound {files.Length} savegames. Which game do you want to continue?");
+                Console.Write($"\nfound {files.Length} savegames. Which game do you want to continue? ");
                 string? fileName = Console.ReadLine()?.ToLower();
                 msg = $"succesfully loadded game {fileName}";
                 if (fileName is null)
@@ -45,18 +51,34 @@ class Demo
                 }
                 catch (Exception e)
                 {
-                    msg = $"-- could not load game: {e.Message}";
+                    msg = $"could not load game: {e.Message}";
                 }
                 print(msg);
                 continue;
             }
+            if (inp == "moves")
+            {
+                if (game.Turns.Count == 0)
+                {
+                    Console.WriteLine("no moves found..");
+                    continue;
+                }
+                var moves = game.PrintTurns();
+                Console.WriteLine(moves);
+                continue;
+            }
             if (inp == "save")
             {
-                Console.Write("enter filename: ");
+                Console.Write("enter filename. type 'skip' to continue without saving: ");
                 string? fileName = Console.ReadLine();
+
                 if (fileName is null)
                 {
                     throw new Exception("-- invalid file name");
+                }
+                if (fileName.ToLower() == "skip")
+                {
+                    continue;
                 }
                 game.SaveGame(fileName);
                 Console.WriteLine($"-- game saved as '{fileName}'. To load game use command 'load test'.");
@@ -70,14 +92,21 @@ class Demo
             if (inp == "restart" || inp == "reset")
             {
                 game.Restart();
+                print("game reset");
                 continue;
             }
             if (inp == "undo")
             {
-                Console.WriteLine("-- press delete/backspace to undo move. Press enter when done.");
+                if (game.Turns.Count() == 0)
+                {
+                    Console.WriteLine("no turns found.. ");
+                    continue;
+                }
                 bool done = false;
                 while (!done)
                 {
+                    msg = $" found {game.Turns.Count()} move(s). Press delete/backspace to undo move. Press enter when done.";
+                    print(msg);
                     var e = Console.ReadKey();
                     if (e.Key == ConsoleKey.Enter)
                     {
@@ -86,19 +115,15 @@ class Demo
                     }
                     if (e.Key == ConsoleKey.Backspace)
                     {
-                        try
+                        game.Undo();
+                        if (game.Turns.Count() == 0)
                         {
-                            game.Undo();
-
-                        }
-                        catch
-                        {
-                            msg = "no moves to undo..";
                             done = true;
                         }
-                        print(msg);
                     }
+
                 }
+                print(null);
                 continue;
             }
             msg = game.MakeMove(inp);

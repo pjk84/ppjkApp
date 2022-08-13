@@ -6,7 +6,7 @@ public interface IChessPiece
 {
     public int Id { get; init; }
     // public ChessPieceType Type { get; init; }
-    public Color Color { get; init; }
+    public int Color { get; init; }
 
     public PieceType Type { get; init; }
 

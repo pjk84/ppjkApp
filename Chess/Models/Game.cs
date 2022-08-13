@@ -10,22 +10,30 @@ namespace Chess.Models;
 public class Game : IChessGame
 {
 
-    private Color _activeColor = Color.W;
+    private int _activeColor = 0;
+    private int _playerColor;
+
+    private bool _withAi = false;
+
+    private int _presentation = 1;
+
+    private bool _enemyChecked = false;
     private Board _board;
     public bool IsPlaying { get; private set; }
 
-    private List<string> _moves = new List<string> { };  // <from>:<to>:<capture_id>
+    public List<Turn> Turns { get; private set; } = new List<Turn> { };
     public Game()
     {
         _board = NewBoard();
         IsPlaying = true;
+        _playerColor = 0;
     }
 
     public void Restart()
     {
-        _moves = new List<string> { };
+        Turns = new List<Turn> { };
         _board = NewBoard();
-        _activeColor = Color.W;
+        _activeColor = 0;
     }
 
     private Board NewBoard()
@@ -44,46 +52,40 @@ public class Game : IChessGame
             using (StreamReader r = new StreamReader($"games/{fileName}.json"))
             {
                 var saveGame = JsonSerializer.Deserialize<SaveGame>(r.ReadToEnd(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                _board = new Board(JsonSerializer.Serialize(saveGame.squares));
-                _activeColor = saveGame.activeColor;
-                _moves = saveGame.moves;
+                _board = new Board(JsonSerializer.Serialize(saveGame.Squares));
+                _activeColor = saveGame.ActiveColor;
+                Turns = saveGame.Turns;
             }
         }
     }
 
     public void SaveGame(string fileName)
     {
-        var saveGame = new SaveGame(_board.Squares, _moves, _activeColor);
+        var saveGame = new SaveGame(_board.Squares, Turns, _activeColor);
         File.WriteAllText($"games/{fileName}.json", JsonSerializer.Serialize(saveGame));
 
     }
 
     public void Undo()
     {
-        if (_moves.Count == 0)
+        if (Turns.Count == 0)
         {
             throw new Exception("no moves found");
         }
         // revert last move
-        var lastMove = _moves.Last();
-        var parsed = ParseMove(lastMove.Substring(0, 5));
+        var lastTurn = Turns.Last();
+        var parsed = ParseMove(lastTurn.Move);
         parsed.Revert();
-        _board.MakeMove(parsed);
-        if (lastMove.Length > 5)
+        _board.MakeMove(parsed.From, parsed.To, parsed.From.Piece!);
+        if (lastTurn.Capture is not null)
         {
-            // has capture. revive captured piece
-            var capture = lastMove.Substring(6);
-
-            // deserialize capture
-            var d = JsonSerializer.Deserialize<Capture>(capture);
-
             // get the square at which the piece was captured
-            var square = _board.GetSquareByAddress(d.Address);
+            var square = _board.GetSquareByAddress(lastTurn.Move.Substring(3));
 
             // re-populate square with piece
-            square.Update(d.Piece);
+            square.Update(lastTurn.Capture);
         }
-        _moves.RemoveAt(_moves.Count() - 1);
+        Turns.RemoveAt(Turns.Count() - 1);
         SwitchTurns();
     }
 
@@ -92,12 +94,12 @@ public class Game : IChessGame
     {
         if (move.Length != 5)
         {
-            throw new ParseError(ParseType.Move, null);
+            throw new MoveParseError();
         }
-        string[] addresses = move.Split(":");
+        string[] addresses = move.Split("-");
         if (addresses.Length != 2)
         {
-            throw new ParseError(ParseType.Move, null);
+            throw new MoveParseError();
         }
         return new Move(_board.GetSquareByAddress(addresses[0]), _board.GetSquareByAddress(addresses[1]));
     }
@@ -108,12 +110,28 @@ public class Game : IChessGame
         {
             msg = "-- " + msg;
         }
-        return $"\n\n{_board.PrintBoard(_activeColor)}\n\n{msg}";
+        return $"\n\n{_board.PrintBoard(_activeColor, _presentation)}\n\n{msg}";
+    }
+
+    public string PrintTurns()
+    {
+        var s = "\nmoves:\n";
+        string? capture = null;
+        foreach (var turn in Turns)
+        {
+            capture = turn.Capture is not null ? $" x {turn.Capture.Type}" : null;
+            s += $"{(turn.Piece.Color == 0 ? "w" : "b")}{turn.Piece.Type} {turn.Move} {capture}\n";
+        }
+        return s;
     }
 
     public void SwitchTurns()
     {
-        _activeColor = _activeColor == Color.W ? Color.B : Color.W;
+        _activeColor = 1 - _activeColor;
+        if (!_withAi)
+        {
+            _playerColor = 1 - _playerColor;
+        }
     }
 
     public void MakeMoveAi()
@@ -121,21 +139,41 @@ public class Game : IChessGame
         // computer move
     }
 
+    // check if king at either side is checked
+    // if active side king is checked the move is reverted.
+    public void Check()
+    {
+        var check = _board.EvaluateCheck();
+        var playerChecked = check[_activeColor];
+        var enemyChecked = check[1 - _activeColor];
+        if (playerChecked is not null)
+        {
+            var kingAddress = _board.Kings[_activeColor].Address;
+            Undo();
+            throw new Exception($"K at {kingAddress} checked by {playerChecked.Piece!.Type} at {playerChecked.Address}");
+        }
+        if (enemyChecked is not null)
+        {
+            _enemyChecked = true;
+        }
+        else
+        {
+            _enemyChecked = false;
+        }
+    }
 
     public string? MakeMove(string move)
     {
-        string err = null!;
+        string? err = null;
+        string? msg = null;
         try
         {
-            Capture? capture = null;
             IChessMove? parsed = null;
             try
             {
                 parsed = ParseMove(move);
-                if (parsed.To.Piece is not null)
-                {
-                    capture = new Capture(parsed.To.Piece, parsed.To.Address);
-                }
+                var piece = parsed.From.Piece!;
+                var capture = parsed.To.Piece;
                 try
                 {
                     _board.ValidateMove(parsed, _activeColor);
@@ -148,7 +186,7 @@ public class Game : IChessGame
                     // en passant move.
                     if (e.Mover.Type == PieceType.P)
                     {
-                        capture = new Capture(blocker, e.Square.Address);
+                        capture = blocker;
                         e.Square.Update(null);
                     }
                     // castling
@@ -157,28 +195,26 @@ public class Game : IChessGame
                         // ..
                     }
                 }
-                if (capture is not null)
-                {
-                    // capture
-                    move += $":{JsonSerializer.Serialize(capture)}";
-                }
-                _board.MakeMove(parsed);
-                _moves.Add(move);
+                _board.MakeMove(parsed.From, parsed.To, parsed.From.Piece!);
+                Turns.Add(new Turn(move, piece, capture));
 
+                Check();
+
+                if (_enemyChecked)
+                {
+                    msg = $"enemy king is checked at {_board.Kings[1 - _activeColor].Address}";
+                }
 
                 SwitchTurns();
 
             }
-            catch (ParseError e)
+            catch (MoveParseError)
             {
-                if (e.Type == ParseType.Move)
-                {
-                    return "invalid move format. Move must be formatted as <from>:<to>. Example: a2-a3\n";
-                }
+                return "invalid move format. Move must be formatted as <from>:<to>. Example: a2-a3\n";
             }
-            catch (AddressError e)
+            catch (AddressParseError e)
             {
-                return $"address '{e.Address}' in move {move} is invalid: {e.Message}\n";
+                return $"invalid address '{e.Address}'\n";
             }
 
         }
@@ -186,7 +222,7 @@ public class Game : IChessGame
         {
             err = $"{e.Message}\n";
         }
-        return err is null ? null : $"illegal move: {err}";
+        return err is null ? msg : $"illegal move: {err}";
     }
 
     public void Quit()
@@ -196,7 +232,7 @@ public class Game : IChessGame
 }
 
 
-public record struct SaveGame(Square[][] squares, List<string> moves, Color activeColor) { }
+public record struct SaveGame(Square[][] Squares, List<Turn> Turns, int ActiveColor) { }
 
 
 
