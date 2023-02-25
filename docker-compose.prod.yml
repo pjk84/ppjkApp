@@ -23,13 +23,13 @@ services:
       - db
   dotnet:
     build:
-      context: ./cs/src
+      context: ./cs/Api/src
       dockerfile: ../dockerfile.prod
     container_name: dotnet
     expose:
       - 5002
     env_file:
-      - ./cs/src/.env
+      - ./cs/Api/.env
     depends_on:
       - db
 
