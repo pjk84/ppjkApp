@@ -23,8 +23,8 @@ services:
       - db
   dotnet:
     build:
-      context: ./cs/Api/src
-      dockerfile: ../dockerfile.prod
+      context: ./cs
+      dockerfile: dockerfile.prod
     container_name: dotnet
     expose:
       - 5002
