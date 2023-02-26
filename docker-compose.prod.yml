@@ -21,31 +21,19 @@ services:
       - ./flaskapp/build/.env.prod
     depends_on:
       - db
-  dotnet:
-    build:
-      context: ./cs
-      dockerfile: dockerfile.prod
-    container_name: dotnet
-    expose:
-      - 5002
-    env_file:
-      - ./cs/Api/.env
-    depends_on:
-      - db
 
   nginx:
     container_name: nginx
     build: ./nginx
     volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
+      - static_volume:/home/ppjk/flaskapp/project/static
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - flaskapp
-      - dotnet
 
   certbot:
     image: certbot/certbot:latest
