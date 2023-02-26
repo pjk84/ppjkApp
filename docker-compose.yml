@@ -2,59 +2,55 @@ version: "3.8"
 
 services:
   nextjs:
-    container_name: nextjs_app
+    container_name: nextjs
     build: ./nextjs
-    ports:
-      - 3001:3001
-    env_file:
-      - ./nextjs/.env.local
-  flaskapp:
-    build: ./flaskapp
-    container_name: flask_app
-    command: python app.py
-    volumes:
-      - ./flaskapp/build:/usr/src/app/
+    restart: always
     expose:
-      - 8080
-    ports:
-      - 5001:5001
+      - 3000
     env_file:
-      - ./flaskapp/build/.env
+      - ./nextjs/.env.prod
+  flaskapp:
+    build:
+      context: ./flaskapp
+      dockerfile: dockerfile.prod
+    container_name: flask
+    command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
+    expose:
+      - 5000
+    env_file:
+      - ./flaskapp/build/.env.prod
     depends_on:
       - db
 
-  dotnet:
-    build:
-      context: ./cs
-      dockerfile: dockerfile
-    container_name: dotnet_api
-    command: dotnet watch
+  nginx:
+    container_name: nginx
+    build: ./nginx
     volumes:
-      - ./cs/Api/src:/usr/src/app/
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+      - static_volume:/home/ppjk/flaskapp/project/static
     ports:
-      - 5002:5002
-    env_file:
-      - ./cs/Api/.env
+      - "80:80"
+      - "443:443"
     depends_on:
-      - db
+      - flaskapp
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+
   db:
-    container_name: postgres_db
+    container_name: postgres
     image: postgres:13-alpine
     volumes:
-      - ppjkdb:/var/lib/postgresql/data/
+      - ppjkdb_prod:/var/lib/postgresql/data/
     env_file:
       - ./flaskapp/db/.env
     ports:
       - "5432:5432"
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - "6379:6379"
-    command: >
-      --requirepass ${REDIS_PASSWORD}
-    volumes:
-      - ./redis:/data
 
 volumes:
-  ppjkdb:
+  ppjkdb_prod:
+  static_volume:
