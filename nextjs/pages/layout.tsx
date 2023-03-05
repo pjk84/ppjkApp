@@ -17,7 +17,7 @@ const Home: NextPage = ({ children }) => {
         <SBarToggle />
         <Inner>{children}</Inner>
       </Main>
-      <Footer>ppjk 2022</Footer>
+      <Footer>{`pjk ${new Date().getFullYear()}`}</Footer>
     </div>
   );
 };

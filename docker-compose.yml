@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   nextjs:
-    container_name: nextjs
+    container_name: nextjs_app
     build: ./nextjs
     restart: always
     expose:
@@ -13,7 +13,7 @@ services:
     build:
       context: ./flaskapp
       dockerfile: dockerfile.prod
-    container_name: flask
+    container_name: flask_api
     command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
     expose:
       - 5000
@@ -26,7 +26,7 @@ services:
     build:
       context: ./cs
       dockerfile: dockerfile.prod
-    container_name: dotnet
+    container_name: dotnet_api
     expose:
       - 5002
     env_file:
@@ -67,7 +67,7 @@ services:
       - ./redis:/data
 
   db:
-    container_name: postgres
+    container_name: postgres_db
     image: postgres:13-alpine
     volumes:
       - ppjkdb_prod:/var/lib/postgresql/data/
