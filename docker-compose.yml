@@ -55,6 +55,16 @@ services:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
 
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: >
+      --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./redis:/data
+
   db:
     container_name: postgres
     image: postgres:13-alpine
