@@ -221,7 +221,6 @@ const WordInvader = ({ interval }: Props) => {
       <FlexBox style={{ width: "100%" }} align="center" gapSize="large">
         <Header1
           style={{
-            color: `${appTheme.darkGray}`,
             opacity: 0.5,
             width: "max-content",
           }}
