@@ -7,7 +7,6 @@ namespace Api.Application.Services
 {
     public class RedisCache : IRedisCache
     {
-
         private readonly IDistributedCache _cache;
         public RedisCache(IDistributedCache cache)
         {

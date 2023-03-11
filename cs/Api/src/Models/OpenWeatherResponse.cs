@@ -1,21 +1,35 @@
 
+using System.Text.Json.Serialization;
 
-public record struct OpenWeatherResponse
+public struct OpenWeatherResponse
 {
-    public int visibility { get; set; }
-    public WeatherMain main { get; set; }
+    [JsonPropertyName("dt")]
+    public int MeasurementTime { get; set; }
+    [JsonPropertyName("visibility")]
+    public int Visibility { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+    [JsonPropertyName("main")]
+    public WeatherMain Main { get; set; }
 
 }
 
 
-public record struct WeatherMain
+public struct WeatherMain
 {
-    public float temp { get; set; }
-    public float feels_like { get; set; }
-    public float temp_min { get; set; }
-    public float temp_max { get; set; }
-    public int humidity { get; set; }
-    public int pressure { get; set; }
+    [JsonPropertyName("temp")]
+    public float Temp { get; set; }
+    [JsonPropertyName("feels_like")]
+    public float FeelsLike { get; set; }
+    [JsonPropertyName("temp_min")]
+    public float TempMin { get; set; }
+    [JsonPropertyName("temp_max")]
+    public float TempMax { get; set; }
+    [JsonPropertyName("humidity")]
+    public int Humidity { get; set; }
+    [JsonPropertyName("pressure")]
+    public int Pressure { get; set; }
+
 }
 
 

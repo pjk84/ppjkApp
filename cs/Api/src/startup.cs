@@ -99,7 +99,7 @@ public class Startup
         {
             var host = Environment.GetEnvironmentVariable("REDIS_HOST_ADDRESS");
             var password = Environment.GetEnvironmentVariable("REDIS_PASSWORD");
-            options.Configuration = $"{host},password={password}";
+            options.Configuration = $"{host},password={password},abortConnect=false";
             options.InstanceName = "redis";
         });
 

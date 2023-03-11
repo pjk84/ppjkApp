@@ -47,6 +47,7 @@ services:
     ports:
       - "5432:5432"
   cache:
+    container_name: redis_cache
     image: redis:6.2-alpine
     restart: always
     ports:

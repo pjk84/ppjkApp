@@ -9,7 +9,6 @@ public class IpApi : BaseApiClient, IIpApi
 
     private readonly IOpenWeatherApi _openWeatherApi;
     private readonly JsonSerializerOptions _serializerOptions;
-    private readonly string _apiKey;
 
     public IpApi(IConfiguration config, HttpClient http, IOpenWeatherApi openWeatherClient, IRedisCache cache) : base(http, config, cache)
     {
@@ -24,17 +23,28 @@ public class IpApi : BaseApiClient, IIpApi
 
     public async Task<IpApiResponse> GetCoordsByIp(string clientIp)
     {
+        string cacheKey = $"coords_by_ip_{clientIp.Replace(".", "_")}";
         IPAddress ipAddress;
+        string asString = String.Empty;
         if (!IPAddress.TryParse(clientIp, out ipAddress))
         {
             throw new FormatException();
         }
-        var res = await _httpClient.GetAsync(clientIp);
-        if (res.StatusCode == HttpStatusCode.OK)
+        // get from cache
+        try
         {
-            var responseBody = await res.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<IpApiResponse>(responseBody, _serializerOptions);
+            asString = await _cache.GetKey(cacheKey);
         }
-        throw new Exception();
+        catch
+        {
+            // get from api
+            var res = await _httpClient.GetAsync(clientIp);
+            if (res.StatusCode == HttpStatusCode.OK)
+            {
+                asString = await res.Content.ReadAsStringAsync();
+                await _cache.SetKey(cacheKey, asString);
+            }
+        }
+        return JsonSerializer.Deserialize<IpApiResponse>(asString, _serializerOptions);
     }
 }

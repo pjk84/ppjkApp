@@ -30,7 +30,6 @@ public class WeatherController : ControllerBase
         var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
         // var clientIp = "86.83.105.101";
         var ipApiResponse = await _ipApi.GetCoordsByIp(clientIp);
-        Console.WriteLine(ipApiResponse);
         //round to 2 digits for ease of caching lalton
         var lat = Math.Round(ipApiResponse.Lat, 2);
         var lon = Math.Round(ipApiResponse.Lon, 2);
