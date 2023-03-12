@@ -8,7 +8,7 @@ import ProjectDetails from "../../components/projects/Details";
 import projects from "../../data/projects";
 import { useRouter } from "next/router";
 import { RootState } from "../../state";
-import { FlexBoxCentered, ProjectPage } from "../../styles/containers";
+import { FlexBoxCentered } from "../../styles/containers";
 import { Themes } from "../../styles";
 
 const Projects = () => {
@@ -31,21 +31,17 @@ const Projects = () => {
   if (!projectDetails) return null;
 
   return (
-    <ProjectPage>
-      <FlexBoxCentered gap={50}>
-        <ProjectButtons miniaturized={true} />
-        <ProjectDetails
-          key={`projectDetails-${id}`}
-          animation={theme === Themes.light ? "slide" : "jitter"}
-          project={projectDetails}
-        />
-        <FlexBoxCentered>
-          {projectDetails.demo && (
-            <LaunchProject projectId={projectDetails.id} />
-          )}
-        </FlexBoxCentered>
+    <FlexBoxCentered gap={50}>
+      <ProjectButtons miniaturized={true} />
+      <ProjectDetails
+        key={`projectDetails-${id}`}
+        animation={theme === Themes.light ? "slide" : "jitter"}
+        project={projectDetails}
+      />
+      <FlexBoxCentered>
+        {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
       </FlexBoxCentered>
-    </ProjectPage>
+    </FlexBoxCentered>
   );
 };
 
