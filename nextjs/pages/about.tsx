@@ -82,6 +82,7 @@ const AboutMe = () => {
                     const r = Math.random();
                     return (
                       <picture
+                        key={`chunk-${ir}-${ic}`}
                         style={{
                           position: "relative",
                           width: chunkSize,
@@ -89,7 +90,6 @@ const AboutMe = () => {
                         }}
                       >
                         <img
-                          key={`chunk-${ir}-${ic}`}
                           alt=""
                           src={c}
                           style={{
