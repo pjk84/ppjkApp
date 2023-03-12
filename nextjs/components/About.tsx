@@ -2,6 +2,7 @@ import React from "react";
 import { RootState } from "../state";
 import { useSelector } from "react-redux";
 import { FlexBox } from "../styles/containers";
+import { HyperLink } from "../styles/buttons";
 import { color, Themes } from "../styles";
 
 const details = {
@@ -10,6 +11,7 @@ const details = {
   Country: "The Netherlands",
   City: "Eindhoven",
   Email: "ppjk84@gmail.com",
+  Github: "https://github.com/pjk84",
   Scope: "full stack",
   Languages: ["dutch", "english"],
   Programming_languages: [
@@ -47,8 +49,16 @@ const About = () => {
       >{`{`}</div>
       {Object.keys(details).map((d) => {
         let v = details[d as keyof typeof details];
+        let e;
+
         if (typeof v === "object") {
-          v = `[${v.map((vv) => `"${vv}"`).join(", ")}]`;
+          e = `[${v.map((vv) => `"${vv}"`).join(", ")}]`;
+        } else {
+          if (v.includes("https")) {
+            e = <HyperLink href={`${v}`}>{`"${v}",`}</HyperLink>;
+          } else {
+            e = `"${v}",`;
+          }
         }
         return (
           <FlexBox key={`about_${d}`} gapSize="medium">
@@ -57,20 +67,18 @@ const About = () => {
               style={{
                 animation: `${Math.random()}s slideInRight`,
                 paddingLeft: 50,
+                opacity: 0.8,
               }}
             >
-              {d}:
+              {`"${d}"`}:
             </div>
             <div
               key={`about_right_${d}`}
               style={{
                 animation: `${Math.random()}s slideInLeft`,
-                color: `${
-                  theme === Themes.light ? color.lightGray : color.green
-                }`,
               }}
             >
-              {v}
+              {e}
             </div>
           </FlexBox>
         );
