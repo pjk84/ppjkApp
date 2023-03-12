@@ -14,7 +14,7 @@ const AboutMe = () => {
   const dispatch = useDispatch();
   const focus = useSelector((state: RootState) => state.main.focus);
   const [chunks, setChunks] = useState<string[][]>([]);
-  let chunkSize = 20;
+  let chunkSize = 25;
 
   useEffect(() => {
     if (focus !== name) {
@@ -67,7 +67,11 @@ const AboutMe = () => {
 
   return (
     <div>
-      <canvas style={{ visibility: "hidden" }} ref={ref}></canvas>
+      <canvas
+        key="about_canvas"
+        style={{ visibility: "hidden" }}
+        ref={ref}
+      ></canvas>
       {chunks.length > 0 && (
         <>
           <FlexBox justify="center" style={{ marginBottom: 20 }}>
@@ -78,7 +82,6 @@ const AboutMe = () => {
                     const r = Math.random();
                     return (
                       <picture
-                        key={`chunk-${ir}-${ic}`}
                         style={{
                           position: "relative",
                           width: chunkSize,
@@ -86,6 +89,7 @@ const AboutMe = () => {
                         }}
                       >
                         <img
+                          key={`chunk-${ir}-${ic}`}
                           alt=""
                           src={c}
                           style={{

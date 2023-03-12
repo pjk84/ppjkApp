@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Header2 } from "../styles/header";
 import { FlexBox } from "../styles/containers";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Title = () => {
-  const router = useRouter();
   const [tick, tock] = useState(0);
   const title = "<Pjk84_/>";
   useEffect(() => {

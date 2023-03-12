@@ -13,7 +13,9 @@ const NavBar = () => {
     <FlexBox wrap={"true"} justify="center" align="center">
       {pages.map((p) => {
         const active = p === focus;
-        return (
+        return active ? (
+          <NavItem active={active}>{p}</NavItem>
+        ) : (
           <Link key={`page-button-${p}`} href={`/${p}`} passHref>
             <NavItem active={active}>{p}</NavItem>
           </Link>
