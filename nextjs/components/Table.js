@@ -79,7 +79,7 @@ const T = ({ details, animation }) => {
   };
 
   return (
-    <Table style={{ width: "100%", fontSize: 18, wordBreak: "break-all" }}>
+    <Table style={{ width: "100%", fontSize: 18 }}>
       <tbody>
         {Object.keys(details).map(
           (d, i) =>

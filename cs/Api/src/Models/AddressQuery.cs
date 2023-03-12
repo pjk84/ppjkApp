@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-
+using System.Text.Json.Serialization;
 namespace Api.Application.Models;
 
 public record AddressQuery
 {
     [FromQuery(Name = "country")]
-    public string Country { get; init; }
+    public string country { get; init; }
     [FromQuery(Name = "postcode")]
-    public string Postcode { get; init; }
+    public string postal_code { get; init; }
     [FromQuery(Name = "city")]
-    public string City { get; init; }
+    public string city { get; init; }
     [FromQuery(Name = "street")]
-    public string Street { get; init; }
+    public string street { get; init; }
 
 }
 

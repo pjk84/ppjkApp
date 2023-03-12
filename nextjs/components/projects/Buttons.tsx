@@ -76,9 +76,7 @@ const ProjectMenu = ({ miniaturized }: Props) => {
               id={p.id}
               key={`projectBtn-${p.id}-miniature`}
               style={{
-                animation: `${
-                  projects.length > 10 ? Math.random() / 2 : 0 + i / 5
-                }s slideRight2 linear`,
+                animation: "0.5s fadeIn",
               }}
               onClick={(e) => selectProject((e.target as HTMLButtonElement).id)}
             >

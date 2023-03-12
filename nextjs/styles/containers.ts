@@ -109,14 +109,15 @@ export const Main = styled.main<{}>`
 
 export const Inner = styled.div<{}>`
   position: relative;
+  display: flex;
   width: 95%;
   padding: 5px;
 
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
     padding: 20px;
+    padding-top: 150px;
   }
-  display: flex;
   background-color: ${(p) => p.theme.inner.backgroundColor};
   flex-direction: column;
   overflow: hidden;

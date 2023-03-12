@@ -30,6 +30,7 @@ public class WeatherController : ControllerBase
         var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
         // var clientIp = "86.83.105.101";
         var ipApiResponse = await _ipApi.GetCoordsByIp(clientIp);
+        Console.WriteLine(ipApiResponse);
         //round to 2 digits for ease of caching lalton
         var lat = Math.Round(ipApiResponse.Lat, 2);
         var lon = Math.Round(ipApiResponse.Lon, 2);
@@ -47,10 +48,11 @@ public class WeatherController : ControllerBase
     [Route("~/weather/address")]
     public async Task<ActionResult<string>> getWeatherByAddress([FromQuery] AddressQuery address)
     {
-        var city = address.City;
-        var country = address.Country;
-        var street = address.Street;
-        var postCode = address.Postcode;
+        var city = address.city;
+        var country = address.country;
+        var street = address.street;
+        var postCode = address.postal_code;
+        string q = String.Empty;
 
         string fullAddress = "";
         foreach (PropertyInfo prop in address.GetType().GetProperties())
@@ -60,12 +62,12 @@ public class WeatherController : ControllerBase
             {
                 continue;
             }
-            Console.WriteLine($"found arg: {prop.Name} with value: {value}");
+            q = $"{prop.Name.ToString()}={value.ToString().Replace(" ", "+")}";
             if (fullAddress.Length != 0)
             {
-                value = $"+{value}";
+                q = $"&{q}";
             }
-            fullAddress += value;
+            fullAddress += q;
         }
         var res = await _geoCoding.GetCoordsByAddress(fullAddress);
         if (res == null)

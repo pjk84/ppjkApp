@@ -318,7 +318,7 @@ const Wordle = () => {
   );
 
   return (
-    <FlexBoxCentered gap={50} style={{ height: "100%", padding: 10 }}>
+    <FlexBoxCentered gap={50}>
       {messages}
       {/* <div>{state.word}</div> */}
       <FlexBox column gapSize={GRID_GAP_SIZE}>

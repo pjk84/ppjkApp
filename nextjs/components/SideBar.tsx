@@ -15,7 +15,6 @@ const SBar = () => {
 
   const visible = {
     width: 100,
-    paddingRight: 50,
   };
 
   const hidden = {
@@ -35,7 +34,7 @@ const SBar = () => {
 export const SBarToggle = () => {
   const show = useSelector((s: RootState) => s.main.showSideBar);
   const dispatch = useDispatch();
-  const transform = show ? "rotate(180deg)" : "rotate(0deg)";
+  // const transform = show ? "rotate(180deg)" : "rotate(0deg)";
   return (
     <Control
       key={"toggle-sidebar"}
@@ -44,11 +43,11 @@ export const SBarToggle = () => {
         left: 10,
         top: 10,
         fontSize: 20,
-        transform,
+        // transform,
       }}
       onClick={() => dispatch({ type: actions.TOGGLE_SIDE_BAR })}
     >
-      <SideBarToggle title="settings">{">>"}</SideBarToggle>
+      <SideBarToggle title="settings">{"☰"}</SideBarToggle>
     </Control>
   );
 };
