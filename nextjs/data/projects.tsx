@@ -1,7 +1,7 @@
 import { Project } from "../projects/types";
 const projects: Array<Project> = [
   {
-    id: "ppjk84",
+    id: "this_site",
     languages: ["Javascript", "Typescript", "python", "csharp"],
     category: "web app",
     frameworks_and_tools:

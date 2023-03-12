@@ -28,6 +28,12 @@ export const Drop = styled.div`
   top: 0;
 `;
 
+export const Bar = styled.div`
+  background-color: ${(p) => p.theme.barChart.backgroundColor};
+  color: ${(p) => p.theme.barChart.textColor};
+  opacity: 0.5;
+`;
+
 export const Header = styled.header<{}>`
   display: flex;
   position: relative;
@@ -74,16 +80,15 @@ export const SideBar = styled.div<{ active: boolean }>`
   gap: 20px;
   white-space: nowrap;
   background-color: ${(p) => p.theme.sideBar.backgroundColor};
-  border-right: 1px solid;
+  border-right: ${(p) => (p.active ? "1px solid" : null)};
   border-color: ${(p) => p.theme.sideBar.borderColor};
   color: ${(p) => p.theme.color};
   /* -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   -o-transition: all 0.2s ease-in; */
-  transition: width 0.2s ease-in;
+  transition: 0.2s ease-in;
   width: ${(p) => (p.active ? "100px" : "0px")};
   opacity: ${(p) => (p.active ? 1 : 0)};
-  animation: ${(p) => (p.active ? "1s fadeIn" : "0.2s fadeOut")};
   overflow: hidden;
 `;
 

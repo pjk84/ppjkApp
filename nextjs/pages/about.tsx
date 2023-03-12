@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../state/actiontypes";
 import { FlexBox } from "../styles/containers";
 import ppjk from "../public/ppjk.png";
-import About from "../components/About";
-import { chunk } from "lodash";
+import Languages from "../components/about/languages";
+import Basics from "../components/about/basics";
+import Tools from "../components/about/tools";
 
 const AboutMe = () => {
   const name = "about";
@@ -73,8 +74,8 @@ const AboutMe = () => {
         ref={ref}
       ></canvas>
       {chunks.length > 0 && (
-        <>
-          <FlexBox justify="center" style={{ marginBottom: 20 }}>
+        <FlexBox gapSize={40} column>
+          <FlexBox>
             <FlexBox key="chunks" column>
               {chunks?.map((r, ir) => (
                 <FlexBox key={`chunks-row-${r}`}>
@@ -104,8 +105,10 @@ const AboutMe = () => {
               ))}
             </FlexBox>
           </FlexBox>
-          <About />
-        </>
+          <Basics />
+          <Languages />
+          <Tools />
+        </FlexBox>
       )}
     </div>
   );

@@ -14,9 +14,11 @@ const NavBar = () => {
       {pages.map((p) => {
         const active = p === focus;
         return active ? (
-          <NavItem active={active}>{p}</NavItem>
+          <NavItem key={`page-button-${p}`} active={active}>
+            {p}
+          </NavItem>
         ) : (
-          <Link key={`page-button-${p}`} href={`/${p}`} passHref>
+          <Link key={`page-link-${p}`} href={`/${p}`} passHref>
             <NavItem active={active}>{p}</NavItem>
           </Link>
         );

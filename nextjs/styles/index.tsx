@@ -145,6 +145,10 @@ export const appThemeLight = {
     borderColor: "transparent",
     toggleColor: color.darkGray,
   },
+  barChart: {
+    backgroundColor: color.green,
+    textColor: color.darkGray,
+  },
 };
 
 export const appThemeDark = {
@@ -243,5 +247,9 @@ export const appThemeDark = {
     backgroundColor: color.darkTheme.darkGray,
     borderColor: color.mediumGray,
     toggleColor: color.green,
+  },
+  barChart: {
+    backgroundColor: color.lightGreen,
+    textColor: color.darkGray,
   },
 };
