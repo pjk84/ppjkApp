@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../state";
 import { actions } from "../state/actiontypes";
 import { useRouter } from "next/router";
+import { ProjectPage } from "../styles/containers";
 
 const Projects = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
@@ -16,7 +17,11 @@ const Projects = () => {
     if (project) router.push(`/projects/${project}`);
   });
   if (project) return null;
-  return <ProjectButtons miniaturized={false} />;
+  return (
+    <ProjectPage>
+      <ProjectButtons miniaturized={false} />
+    </ProjectPage>
+  );
 };
 
 export default Projects;

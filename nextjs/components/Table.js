@@ -8,7 +8,6 @@ const T = ({ details, animation }) => {
   {
   }
   const getSliding = (d, i) => {
-    console.log(d);
     const key = d.replaceAll("_", " ");
     return (
       <tr key={`section-row-slide-${d}-${i}`}>

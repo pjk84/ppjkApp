@@ -202,10 +202,3 @@ export const NavItem = styled.a<{
 export const HyperLink = styled.a`
   color: ${(p) => p.theme.color};
 `;
-
-export const SideBarToggle = styled.button<{}>`
-  background-color: transparent;
-  border: none;
-  color: ${(p) => p.theme.sideBar.toggleColor};
-  cursor: pointer;
-`;

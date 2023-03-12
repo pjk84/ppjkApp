@@ -124,7 +124,6 @@ export const Inner = styled.div<{}>`
   @media only screen and ${device.tablet} {
     width: ${size.tablet};
     padding: 20px;
-    padding-top: 150px;
   }
   background-color: ${(p) => p.theme.inner.backgroundColor};
   flex-direction: column;
@@ -148,8 +147,16 @@ export const ButtonBox = styled.div<{ column?: boolean }>`
   flex-wrap: wrap;
   gap: 10px;
   width: 80%;
-  margin-top: 30px;
   flex-direction: ${(props) => props.column && "column"};
+`;
+
+export const ProjectPage = styled.div`
+  padding-bottom: 25px;
+  padding-top: 25px;
+  @media only screen and ${device.tablet} {
+    padding-top: 150px;
+    padding-bottom: 0px;
+  }
 `;
 
 export const TitleBar = styled.input<{ newMessage?: boolean }>`
