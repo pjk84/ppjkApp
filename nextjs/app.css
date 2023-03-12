@@ -207,24 +207,6 @@ a {
     transform: translateY(0px);
   }
 }
-@keyframes smoke1 {
-  0% {
-    transform: translateX(-20px) scale(2);
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-@keyframes smoke2 {
-  0% {
-    transform: translateX(-100px) scale(1);
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
 
 @keyframes slideOverRight {
   0% {
@@ -277,17 +259,7 @@ a {
     opacity: 1;
   }
 }
-@keyframes fadeInFast {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+
 @keyframes fadeOut {
   0% {
     opacity: 1;

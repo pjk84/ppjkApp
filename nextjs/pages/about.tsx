@@ -5,16 +5,22 @@ import { RootState } from "../state";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../state/actiontypes";
 import { FlexBox } from "../styles/containers";
-import dynamic from "next/dynamic";
 import ppjk from "../public/ppjk.png";
+import About from "../components/About";
+import { chunk } from "lodash";
 
 const AboutMe = () => {
+  const name = "about";
   const dispatch = useDispatch();
   const focus = useSelector((state: RootState) => state.main.focus);
   const [chunks, setChunks] = useState<string[][]>([]);
+  let chunkSize = 20;
 
   useEffect(() => {
-    let chunkSize = 25;
+    if (focus !== name) {
+      dispatch({ type: actions.SET_FOCUS, focus: name });
+      return;
+    }
     if (ref.current && chunks?.length === 0) {
       const draw = () => {
         const getSection = (offsetX: number, offsetY: number) => {
@@ -32,9 +38,14 @@ const AboutMe = () => {
           return c.toDataURL("image/jpeg");
         };
         let rows: string[][] = [];
-        for (let i = 0; i < img.height; i += chunkSize) {
+
+        // make height and width exact multiple of chunk size
+        const height = img.height - (img.height % chunkSize);
+        const width = img.width - (img.width % chunkSize);
+
+        for (let i = 0; i < height; i += chunkSize) {
           let r = [];
-          for (let n = 0; n < img.width; n += chunkSize) {
+          for (let n = 0; n < width; n += chunkSize) {
             r.push(getSection(n, i));
           }
           rows.push(r);
@@ -42,22 +53,18 @@ const AboutMe = () => {
         setChunks(rows);
       };
       const c = ref.current;
-
       var ctx = c.getContext("2d");
       if (!ctx) return;
       var img = new Image();
       img.src = ppjk.src;
-
       c.height = chunkSize;
       c.width = chunkSize;
       img.onload = draw;
     }
-    if (focus !== "about") {
-      dispatch({ type: actions.SET_FOCUS, focus: "about" });
-    }
   });
   const ref = useRef<HTMLCanvasElement>(null);
-  const About = dynamic(() => import("../components/About"), { ssr: false });
+  // const About = dynamic(() => import("../components/About"), { ssr: false });
+
   return (
     <div>
       <canvas style={{ visibility: "hidden" }} ref={ref}></canvas>
@@ -68,19 +75,22 @@ const AboutMe = () => {
               {chunks?.map((r, ir) => (
                 <FlexBox key={`chunks-row-${r}`}>
                   {r.map((c, ic) => {
+                    const r = Math.random();
                     return (
                       <picture
                         key={`chunk-${ir}-${ic}`}
-                        style={{ position: "relative", width: 25, height: 25 }}
+                        style={{
+                          position: "relative",
+                          width: chunkSize,
+                          height: chunkSize,
+                        }}
                       >
                         <img
                           alt=""
                           src={c}
                           style={{
-                            opacity: 0,
-                            animation: `${Math.random()}s ${Math.random()}s ${
-                              ic % 2 === 0 ? "smoke1" : "smoke2"
-                            } ease-in forwards`,
+                            opacity: r > 0.5 ? 0.95 : 1,
+                            animation: `${r}s jitterIn ease-out`,
                           }}
                         />
                       </picture>

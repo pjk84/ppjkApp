@@ -1,6 +1,5 @@
-import styled, { StyledComponent } from "styled-components";
-import { Style } from "util";
-import { appTheme, color } from ".";
+import styled from "styled-components";
+import { appTheme } from ".";
 import device, { size } from "./devices";
 
 export const Wrapper = styled.div`
@@ -58,24 +57,33 @@ export const Header = styled.header<{}>`
   }
 `;
 
-export const SideBar = styled.div`
+export const Backdrop = styled.div`
+  position: absolute;
+  background-color: ${(p) => p.theme.sideBar.backgroundColor};
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`;
+
+export const SideBar = styled.div<{ active: boolean }>`
   position: relative;
   display: flex;
-  padding-left: 10px;
+
   flex-direction: column;
   gap: 20px;
   white-space: nowrap;
   background-color: ${(p) => p.theme.sideBar.backgroundColor};
   border-right: 1px solid;
-  padding-right: 50px;
   border-color: ${(p) => p.theme.sideBar.borderColor};
   color: ${(p) => p.theme.color};
-  -webkit-transition: all 0.2s ease-in;
+  /* -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
-  -o-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in; */
   transition: width 0.2s ease-in;
-
-  width: 100%;
+  width: ${(p) => (p.active ? "100px" : "0px")};
+  opacity: ${(p) => (p.active ? 1 : 0)};
+  animation: ${(p) => (p.active ? "1s fadeIn" : "0.2s fadeOut")};
   overflow: hidden;
 `;
 

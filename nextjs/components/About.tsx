@@ -11,7 +11,7 @@ const details = {
   City: "Eindhoven",
   Email: "ppjk84@gmail.com",
   Scope: "full stack",
-  languages: ["dutch", "english"],
+  Languages: ["dutch", "english"],
   Programming_languages: [
     "Javascript",
     "Typescript",
@@ -53,6 +53,7 @@ const About = () => {
         return (
           <FlexBox key={`about_${d}`} gapSize="medium">
             <div
+              key={`about_left_${d}`}
               style={{
                 animation: `${Math.random()}s slideInRight`,
                 paddingLeft: 50,
@@ -61,6 +62,7 @@ const About = () => {
               {d}:
             </div>
             <div
+              key={`about_right_${d}`}
               style={{
                 animation: `${Math.random()}s slideInLeft`,
                 color: `${
