@@ -3,6 +3,8 @@ import { HyperLink } from "../styles/buttons";
 import { FlexBox } from "../styles/containers";
 import { TableCell, Table } from "../styles/table";
 
+const withIcon = ["languages", "frameworks_and_tools", "database", "hosting"];
+
 const T = ({ details, animation }) => {
   const exclude = ["id", "title", "demo"];
   {
@@ -21,7 +23,7 @@ const T = ({ details, animation }) => {
         <TableCell key={`tablecell-right-${i}`} index={i}>
           {d === "code" ? (
             <HyperLink href={details[d]}>click here</HyperLink>
-          ) : d === "languages" ? (
+          ) : withIcon.includes(d) ? (
             details[d].map((language) => (
               <img
                 key={`language-icon-${language}`}
@@ -56,7 +58,7 @@ const T = ({ details, animation }) => {
         <TableCell key={`tablecell-right-${i}`} index={i} animation="jitter">
           {d === "code" ? (
             <HyperLink href={details[d]}>click here</HyperLink>
-          ) : d === "languages" ? (
+          ) : withIcon.includes(d) ? (
             details[d].map((language) => (
               <img
                 alt=""

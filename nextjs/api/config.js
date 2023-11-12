@@ -1,12 +1,12 @@
 const config = {
   FLASK:
     process.env.APP_ENV === "production"
-      ? `http://206.189.63.208:80/api`
-      : `http://localhost:5001/api/flask`,
+      ? `http://206.189.63.208:80`
+      : `http://localhost:5001`,
   DOTNET:
     process.env.APP_ENV === "production"
-      ? `http://206.189.63.208:80/api`
-      : `http://localhost:5002/api/dotnet`,
+      ? `http://206.189.63.208:80`
+      : `http://localhost:5002`,
 };
 
 export default config;

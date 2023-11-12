@@ -191,12 +191,18 @@ export const NavItem = styled.a<{
   position: relative;
   color: ${(p) =>
     p.active ? p.theme.navItem.active.color : p.theme.navItem.inactive.color};
+  background-color: ${(p) =>
+    p.active ? p.theme.navItem.active.backgroundColor : null};
   font-size: 20px;
+
   border-radius: 8px;
   padding: 5px 20px 5px 20px;
   cursor: pointer;
-  transition: all 0.5s;
+  transition: all 0.25s;
   text-decoration: none;
+  &:hover {
+    color: ${(p) => p.theme.navItem.active.color};
+  }
 `;
 
 export const HyperLink = styled.a`

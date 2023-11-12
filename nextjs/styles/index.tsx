@@ -22,6 +22,7 @@ export enum Themes {
 export const color = {
   darkTheme: {
     darkGray: "#282222",
+    darkGray2: "#332d2d",
     mediumGray: "#4b4545",
     mediumGray2: "#776d6d",
     lightGray: "#aca3a3",
@@ -56,6 +57,7 @@ export const appThemeLight = {
   table: {
     rowLight: color.lightestGray,
     rowDark: color.lighterGray,
+    header: color.lightGray,
   },
   posts: {
     titleColor: color.darkGray,
@@ -126,6 +128,7 @@ export const appThemeLight = {
   navItem: {
     active: {
       color: color.darkGray,
+      backgroundColor: color.lighterGray,
     },
     inactive: {
       color: color.lightGray,
@@ -156,8 +159,9 @@ export const appThemeDark = {
 
   color: color.darkTheme.lighterGray,
   table: {
-    rowLight: color.darkTheme.mediumGray,
+    rowLight: color.darkTheme.darkGray2,
     rowDark: color.darkTheme.darkGray,
+    header: color.darkTheme.mediumGray,
   },
   posts: {
     titleColor: color.darkGray,
@@ -229,6 +233,7 @@ export const appThemeDark = {
   navItem: {
     active: {
       color: color.darkTheme.lightGray,
+      backgroundColor: color.darkGray,
     },
     inactive: {
       color: color.darkTheme.mediumGray2,

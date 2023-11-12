@@ -10,7 +10,6 @@ const Settings = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
 
   useEffect(() => {
-    console.log(focus);
     if (!localStorage.getItem("API")) {
       const v = process.env["NEXT_PUBLIC_API"] || "DOTNET";
       setApi(v);

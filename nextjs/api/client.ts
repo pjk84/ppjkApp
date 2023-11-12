@@ -9,45 +9,16 @@ export enum Framework {
   Dotnet = "DOTNET",
 }
 
+export type AuthResponse = { token: string; identity: string };
+
 const apiClient = () => {
   const api = localStorage.getItem("API") || "FLASK";
-  const baseUrl = config[api as Framework];
+  const baseUrl = `${config[api as Framework]}`;
   const cookie = new Cookies();
   const token = cookie.get("access_token");
 
   const headers = {
     Authorization: `Bearer ${token}`,
-  };
-
-  const login = async (password: string) => {
-    try {
-      return (
-        await axios.post<string>(
-          `${baseUrl}/login`,
-          { password: await bcrypt.hashSync(password) },
-          { withCredentials: true }
-        )
-      ).data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const test = async (payload: { access_token: string }) => {
-    let h;
-    if (payload.access_token) {
-      h = { ...headers };
-      h.Authorization = `Bearer ${payload.access_token}`;
-    }
-    console.log(h);
-    try {
-      return await axios.post(`${baseUrl}/test`, payload, {
-        withCredentials: true,
-        headers: h || headers,
-      });
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const editBlogMessage = async (post: Post) => {
@@ -118,6 +89,32 @@ const apiClient = () => {
     }
   };
 
+  const get = async <T>(path: string) => {
+    console.log(`${baseUrl}${path}`);
+    try {
+      const messages = await axios.get<T>(`${baseUrl}${path}`, {
+        withCredentials: true,
+        headers: headers,
+      });
+      return messages.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const post = async <T, P>(path: string, payload: P) => {
+    try {
+      const messages = await axios.post<T>(`${baseUrl}/${path}`, {
+        ...payload,
+        withCredentials: true,
+        headers: headers,
+      });
+      return messages.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addBlogMessage = async (post: Post) => {
     try {
       return await axios.post(
@@ -142,13 +139,13 @@ const apiClient = () => {
 
   return {
     getBlogRepliesByParentId,
-    login,
-    test,
     editBlogMessage,
     addBlogMessage,
     fetchBlogMessages,
     deleteBlogMessages,
     getBlogMessageByTitle,
+    get,
+    post,
   };
 };
 

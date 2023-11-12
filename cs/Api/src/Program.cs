@@ -4,14 +4,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+var env = builder.Environment.EnvironmentName;
+Console.WriteLine($"environment is: {env}");
+
 builder.WebHost.ConfigureKestrel(opts =>
 {
     opts.ListenAnyIP(5002);
 });
 
 var startup = new Startup();
-startup.ConfigureServices(builder.Services);
 
+
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile($"appsettings.{env}.json", optional: true)
+    .AddEnvironmentVariables()
+    .Build();
+
+startup.ConfigureServices(builder.Services, config);
 
 var app = builder.Build();
 app.UseCors();
@@ -24,13 +33,12 @@ app.UseSwaggerUI(swaggerUiOptions =>
     swaggerUiOptions.RoutePrefix = string.Empty;
 });
 
-if (!app.Environment.IsDevelopment())
+if (env != "Local")
 {
     app.UseHttpsRedirection();
 }
 
 app.UseAuthentication();
-app.UsePathBase(new PathString("/api/dotnet/"));
 app.UseRouting();
 app.UseAuthorization();
 

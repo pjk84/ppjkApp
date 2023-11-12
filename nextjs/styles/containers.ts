@@ -75,7 +75,7 @@ export const Backdrop = styled.div`
 export const SideBar = styled.div<{ active: boolean }>`
   position: relative;
   display: flex;
-
+  padding-right: 10px;
   flex-direction: column;
   gap: 20px;
   white-space: nowrap;
@@ -86,8 +86,7 @@ export const SideBar = styled.div<{ active: boolean }>`
   /* -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   -o-transition: all 0.2s ease-in; */
-  transition: 0.2s ease-in;
-  width: ${(p) => (p.active ? "100px" : "0px")};
+  width: ${(p) => (p.active ? "auto" : "0px")};
   opacity: ${(p) => (p.active ? 1 : 0)};
   overflow: hidden;
 `;

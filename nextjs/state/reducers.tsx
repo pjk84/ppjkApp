@@ -11,6 +11,12 @@ type Istate = {
   active: Array<string>;
   project?: string;
   loggedIn?: boolean;
+  loggedInIdentity?: string;
+  auth: {
+    loggedIn?: boolean;
+    loggedInIdentity?: string;
+    error?: string;
+  };
   focus?: string;
   theme?: string;
   showSideBar: boolean;
@@ -39,6 +45,9 @@ const initialState: Istate & IblogState = {
   reload: true,
   active: [],
   posts: [],
+  auth: {
+    loggedIn: false,
+  },
   addedTags: [],
   selectedTags: [],
   showSideBar: false,
@@ -65,7 +74,14 @@ const appReducer = (state = initialState, action: Action) => {
       return { ...state, project: action.id };
     }
     case actions.SET_LOGGED_IN: {
-      return { ...state, loggedIn: action.loggedIn };
+      return {
+        ...state,
+        auth: {
+          loggedIn: action.loggedIn,
+          loggedInIdentity: action.identity,
+          error: action.error,
+        },
+      };
     }
     case actions.TOGGLE_SIDE_BAR: {
       return { ...state, showSideBar: !state.showSideBar };

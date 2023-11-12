@@ -6,7 +6,7 @@ import { NavItem } from "../styles/buttons";
 import { FlexBox } from "../styles/containers";
 const NavBar = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
-  const loggedIn = useSelector((state: RootState) => state.main.loggedIn);
+  const loggedIn = useSelector((state: RootState) => state.main.auth.loggedIn);
   const pages = ["about", "projects", "blog", loggedIn && "settings"];
 
   return (

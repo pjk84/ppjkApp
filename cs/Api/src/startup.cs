@@ -6,32 +6,28 @@ using Api.Application.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
-using System.Text;
-using dotenv.net;
 using System.Collections;
-using Api.Application.Interfaces;
-using Api.Application.Services;
+using Api.Common.RedisCache;
+using Api.Common.ApiClient;
+using Api.Common.GeoCoding;
+using Api.Common.IpApi;
+using Api.Features.WeatherApi;
+using Api.Database;
+
 
 public class Startup
 {
-    public void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services, IConfiguration config)
     {
-        // env vars
-        DotEnv.Load();
-        // .... Ignore code before this
 
-        // Auto Mapper Configurations
         var mapperConfig = new MapperConfiguration(mc =>
         {
             mc.AddProfile(new MappingProfile());
         });
 
         IMapper mapper = mapperConfig.CreateMapper();
-        services.AddSingleton(mapper);
 
-        IConfiguration config = new ConfigurationBuilder()
-        .AddEnvironmentVariables()
-        .Build();
+        services.AddSingleton(mapper);
 
         foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
         {
@@ -45,6 +41,8 @@ public class Startup
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
         services.AddSingleton<IGeoCoding, GeoCoding>();
 
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
         services.AddHttpClient<IBaseApiClient, BaseApiClient>();
 
@@ -65,23 +63,28 @@ public class Startup
             opts.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "my api", Version = "v1" });
         });
 
+        // mongoDB
+        services.Configure<ApiDatabaseSettings>(config.GetSection("Database"));
+        services.AddSingleton<IUserService, UserService>();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(opts =>
-            {
-                opts.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    RequireExpirationTime = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(
-                            Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
-                        )
-                    )
-                };
-            });
+        services.AddRouting(options => options.LowercaseUrls = true);
+
+        // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //     .AddJwtBearer(opts =>
+        //     {
+        //         opts.TokenValidationParameters = new TokenValidationParameters
+        //         {
+        //             ValidateIssuerSigningKey = true,
+        //             ValidateIssuer = false,
+        //             ValidateAudience = false,
+        //             RequireExpirationTime = false,
+        //             IssuerSigningKey = new SymmetricSecurityKey(
+        //                 Encoding.UTF8.GetBytes(
+        //                     Environment.GetEnvironmentVariable(config["Auth:SecretKey"])
+        //                 )
+        //             )
+        //         };
+        //     });
 
         services.AddCors(options =>
         {
@@ -97,19 +100,19 @@ public class Startup
 
         services.AddStackExchangeRedisCache(options =>
         {
-            var host = Environment.GetEnvironmentVariable("REDIS_HOST_ADDRESS");
-            var password = Environment.GetEnvironmentVariable("REDIS_PASSWORD");
+            var host = config["Redis:BaseUrl"];
+            var password = config["Redis:Password"];
             options.Configuration = $"{host},password={password},abortConnect=false";
             options.InstanceName = "redis";
         });
 
         //db context
-        services.AddDbContext<AppDBContext>(options =>
-        {
-            var connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
-            options.UseNpgsql(connString)
-                .UseSnakeCaseNamingConvention();
-        });
+        // services.AddDbContext<AppDBContext>(options =>
+        // {
+        //     var connString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
+        //     options.UseNpgsql(connString)
+        //         .UseSnakeCaseNamingConvention();
+        // });
 
 
 
