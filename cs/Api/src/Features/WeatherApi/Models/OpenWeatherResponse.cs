@@ -59,7 +59,7 @@ public record Coords
 public record SunData
 {
     [JsonPropertyName("sunrise")]
-    public int SunRise { get; set; }
+    public int Sunrise { get; set; }
     [JsonPropertyName("sunset")]
-    public int SunSet { get; set; }
+    public int Sunset { get; set; }
 }

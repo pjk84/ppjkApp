@@ -30,9 +30,7 @@ public class WeatherController : ControllerBase
     [Route("~/weather/ip")]
     public async Task<ActionResult<string>> getWeatherByIp()
     {
-        Console.WriteLine("!@#!@");
         var clientIp = Request.HttpContext?.Connection?.RemoteIpAddress?.ToString();
-        clientIp = "86.83.105.101";
         if (clientIp == null)
         {
             return BadRequest();
@@ -55,40 +53,5 @@ public class WeatherController : ControllerBase
         {
             return Unauthorized();
         }
-    }
-    [HttpGet]
-    [Route("~/weather/address")]
-    public async Task<ActionResult<string>> getWeatherByAddress([FromQuery] AddressQuery address)
-    {
-        var city = address.city;
-        var country = address.country;
-        var street = address.street;
-        var postCode = address.postal_code;
-        string q = String.Empty;
-
-        string fullAddress = "";
-        foreach (PropertyInfo prop in address.GetType().GetProperties())
-        {
-            var value = prop.GetValue(address);
-            if (value == null)
-            {
-                continue;
-            }
-            q = $"{prop.Name.ToString()}={value.ToString().Replace(" ", "+")}";
-            if (fullAddress.Length != 0)
-            {
-                q = $"&{q}";
-            }
-            fullAddress += q;
-        }
-        var res = await _geoCoding.GetCoordsByAddress(fullAddress);
-
-        Console.WriteLine(res);
-        if (res == null)
-        {
-            return NotFound("address not found");
-        }
-
-        return res;
     }
 }

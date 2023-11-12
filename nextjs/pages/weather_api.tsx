@@ -14,8 +14,10 @@ type WeahterData = {
   tempMax: number;
   tempMin: number;
   humidity: number;
-  sunSet: Date;
-  sunRise: Date;
+  sunset: Date;
+  sunrise: Date;
+  icon: string;
+  description: string;
 };
 
 type WeatherResponse = {
@@ -26,10 +28,6 @@ type WeatherResponse = {
 const WeatherDetails = (data: any) => (
   <table>
     <tbody>
-      <tr key={`weather_header`}>
-        <TableHeader>item</TableHeader>
-        <TableHeader>value</TableHeader>
-      </tr>
       {Object.keys(data).map((d, i) => (
         <tr key={`weather_row_${i}`}>
           <TableCell index={i}>{d}</TableCell>

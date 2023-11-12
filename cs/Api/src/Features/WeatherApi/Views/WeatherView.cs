@@ -11,8 +11,8 @@ public record WeatherView(
     float TempMax,
     float TempMin,
     float Humidity,
-    DateTime SunRise,
-    DateTime SunSet,
+    DateTime Sunrise,
+    DateTime Sunset,
     string Icon,
     string Description
 );

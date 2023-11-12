@@ -3,7 +3,7 @@ namespace Api.Features.WeatherApi;
 public interface IOpenWeatherApi
 {
 
-    Task<WeatherView> GetWeatherByCoords(double lat, double lon);
+    Task<WeatherView?> GetWeatherByCoords(double lat, double lon);
 }
 
 

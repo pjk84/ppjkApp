@@ -15,8 +15,8 @@ public class OpenWeatherApi : BaseApiClient, IOpenWeatherApi
 
     public OpenWeatherApi(HttpClient http, IRedisCache cache, IConfiguration config) : base(http, config, cache)
     {
-        _apiKey = _config["OpenWeather:ApiKey"];
-        _httpClient.BaseAddress = new Uri(_config["OpenWeather:BaseUrl"]);
+        _apiKey = _config["OpenWeather:ApiKey"]!;
+        _httpClient.BaseAddress = new Uri(_config["OpenWeather:BaseUrl"]!);
         _serializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -62,8 +62,8 @@ public class OpenWeatherApi : BaseApiClient, IOpenWeatherApi
                         TempMax: raw.Main.TempMax,
                         TempMin: raw.Main.TempMin,
                         Humidity: raw.Main.Humidity,
-                        SunRise: DateTimeOffset.FromUnixTimeSeconds(raw.Sys.SunRise).DateTime,
-                        SunSet: DateTimeOffset.FromUnixTimeSeconds(raw.Sys.SunSet).DateTime,
+                        Sunrise: DateTimeOffset.FromUnixTimeSeconds(raw.Sys.Sunrise).DateTime,
+                        Sunset: DateTimeOffset.FromUnixTimeSeconds(raw.Sys.Sunset).DateTime,
                         Latitude: raw.Coord.Lat,
                         Longitude: raw.Coord.Lon
                     );

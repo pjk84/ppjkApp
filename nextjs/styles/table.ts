@@ -17,10 +17,11 @@ export const TableCell = styled.td<{
       : null};
 `;
 
-export const TableHeader = styled.td<{}>`
+export const TableHeader = styled.th<{}>`
   position: relative;
   background-color: ${(p) => p.theme.table.header};
   padding: 10px;
+  font-size: 20px;
   color: ${(p) => p.theme.color};
 `;
 
