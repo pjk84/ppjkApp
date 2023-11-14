@@ -12,7 +12,7 @@ export enum Framework {
 export type AuthResponse = { token: string; identity: string };
 
 const apiClient = () => {
-  const api = localStorage.getItem("API") || "FLASK";
+  const api = "DOTNET";
   const baseUrl = `${config[api as Framework]}`;
   const cookie = new Cookies();
   const token = cookie.get("access_token");

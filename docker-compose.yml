@@ -9,16 +9,16 @@ services:
       - 3000
     env_file:
       - ./nextjs/.env.prod
-  flaskapp:
-    build:
-      context: ./flaskapp
-      dockerfile: dockerfile.prod
-    container_name: flask_api
-    command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
-    expose:
-      - 5000
-    env_file:
-      - ./flaskapp/build/.env.prod
+  # flaskapp:
+  #   build:
+  #     context: ./flaskapp
+  #     dockerfile: dockerfile.prod
+  #   container_name: flask_api
+  #   command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
+  #   expose:
+  #     - 5000
+  #   env_file:
+  #     - ./flaskapp/build/.env.prod
 
   dotnet:
     build:
