@@ -19,8 +19,6 @@ services:
       - 5000
     env_file:
       - ./flaskapp/build/.env.prod
-    depends_on:
-      - db
 
   dotnet:
     build:
