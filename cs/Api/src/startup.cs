@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Api.Application.Entities;
@@ -69,22 +70,22 @@ public class Startup
 
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //     .AddJwtBearer(opts =>
-        //     {
-        //         opts.TokenValidationParameters = new TokenValidationParameters
-        //         {
-        //             ValidateIssuerSigningKey = true,
-        //             ValidateIssuer = false,
-        //             ValidateAudience = false,
-        //             RequireExpirationTime = false,
-        //             IssuerSigningKey = new SymmetricSecurityKey(
-        //                 Encoding.UTF8.GetBytes(
-        //                     Environment.GetEnvironmentVariable(config["Auth:SecretKey"])
-        //                 )
-        //             )
-        //         };
-        //     });
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opts =>
+            {
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    RequireExpirationTime = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(
+                            Environment.GetEnvironmentVariable(config["Auth:SecretKey"])
+                        )
+                    )
+                };
+            });
 
         services.AddCors(options =>
         {
