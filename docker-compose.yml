@@ -27,8 +27,6 @@ services:
     container_name: dotnet_api
     expose:
       - 5002
-    env_file:
-      - ./cs/Api/.env
     depends_on:
       - mongodb
 

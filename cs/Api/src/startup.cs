@@ -42,7 +42,6 @@ public class Startup
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
         services.AddSingleton<IGeoCoding, GeoCoding>();
 
-
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
         services.AddHttpClient<IBaseApiClient, BaseApiClient>();
