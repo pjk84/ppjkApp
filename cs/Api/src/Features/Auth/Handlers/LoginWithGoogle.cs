@@ -25,9 +25,10 @@ public class LoginWithGoogleHandler : IRequestHandler<LoginWithGoogleQuery, R>
         var res = await GoogleJsonWebSignature.ValidateAsync(request.Payload.Token);
 
         var user = await _userService.GetByEmailAsync(res.Email);
-
+        // 
         if (user == null)
         {
+            await _userService.CreateAsync(new User(Email: "ppjk84@gmail.com", DateTime.UtcNow, DateTime.UtcNow, DateTime.UtcNow));
             return Result.Failed<LoginResponse>(new ApiError("unauthorized"));
         }
 

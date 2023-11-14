@@ -24,7 +24,7 @@ public class IpApi : BaseApiClient, IIpApi
     public async Task<IpApiResponse?> GetCoordsByIp(string clientIp)
     {
         string cacheKey = $"coords_by_ip:{clientIp.Replace(".", "_")}";
-        IpApiResponse? ipAddress = null;;
+        IpApiResponse? ipAddress = null;
         if (!IPAddress.TryParse(clientIp, out _))
         {
             throw new FormatException();

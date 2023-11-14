@@ -16,15 +16,12 @@ public class GeoCoding : BaseApiClient, IGeoCoding
     public async Task<string?> GetCoordsByAddress(string address)
     {
         var res = await _httpClient.GetAsync($"geocode?q={address}&api_key={_apiKey}");
-        Console.WriteLine(res);
         if (res.StatusCode == HttpStatusCode.OK)
         {
             return await res.Content.ReadAsStringAsync();
         }
-       return null;
+        return null;
     }
 }
-
-//  curl "http://localhost:5002/api/dotnet/weather/address?city=eindhoven&postcode=5652xg&country=netherlands&street=scheltemaweg"
 
 

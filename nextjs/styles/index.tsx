@@ -82,9 +82,9 @@ export const appThemeLight = {
     borderColor: color.lightGray,
     hover: {
       color: color.darkerGray,
-      borderColor: color.darkerGray,
+      borderColor: color.black,
     },
-    boxShadow: `0px 1px 1px 0px ${color.lighterGray}`,
+    boxShadow: `0px 1px 1px 2px ${color.lighterGray}`,
   },
   header: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,

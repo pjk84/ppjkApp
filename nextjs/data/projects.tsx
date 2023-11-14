@@ -41,7 +41,7 @@ const projects: Array<Project> = [
     languages: ["Typescript"],
     category: "game",
     code: "https://github.com/pjk84/ppjkApp/blob/master/nextjs/pages/wordle.tsx",
-    description: "wordle clone",
+    description: "point and click style shoot 'm up",
     demo: true,
   },
   {
@@ -71,11 +71,22 @@ const projects: Array<Project> = [
   {
     id: "weather_api",
     languages: ["csharp", "typescript"],
-    category: "weather",
+    category: "web service",
     code: "https://github.com/pjk84/cpp_tetris",
     libraries: ["ipApi"],
     description: "get weather data based on your ip",
     demo: true,
+  },
+  {
+    id: "game_of_life",
+    languages: ["cplusplus"],
+    category: "algorithm",
+    code: "https://github.com/pjk84/gameOfLife",
+    libraries: ["ncurses"],
+    image:
+      "https://user-images.githubusercontent.com/47746832/229317033-5b89753f-7590-43dc-83af-afb994992df8.png",
+    description:
+      "cellular automation based on the algorithm of John Horton Conway",
   },
 ];
 

@@ -27,7 +27,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodb:/var/lib/mongodb/data/
+      - mongodb:/data/db
 
   dotnet:
     build:
@@ -56,5 +56,4 @@ services:
       - ./redis:/data
 
 volumes:
-  ppjkdb:
   mongodb:

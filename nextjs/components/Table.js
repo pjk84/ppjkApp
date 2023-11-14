@@ -6,7 +6,7 @@ import { TableCell, Table } from "../styles/table";
 const withIcon = ["languages", "frameworks_and_tools", "database", "hosting"];
 
 const T = ({ details, animation }) => {
-  const exclude = ["id", "title", "demo"];
+  const exclude = ["id", "title", "demo", "image"];
   {
   }
   const getSliding = (d, i) => {
@@ -80,7 +80,7 @@ const T = ({ details, animation }) => {
   };
 
   return (
-    <Table style={{ width: "100%", fontSize: 18 }}>
+    <Table style={{ fontSize: 18 }}>
       <tbody>
         {Object.keys(details).map(
           (d, i) =>

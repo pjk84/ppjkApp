@@ -44,12 +44,11 @@ public class OpenWeatherApi : BaseApiClient, IOpenWeatherApi
                     throw new Exception("cached measurements too old");
                 }
             }
-            catch
+            catch (Exception)
             {
                 {
                     // set key
                     var res = await _httpClient.GetAsync($"weather?appid={_apiKey}&units=metric&lat={lat}&lon={lon}");
-                    Console.WriteLine(await res.Content.ReadAsStringAsync());
                     var raw = await res.DeserializeAsync<OpenWeatherResponse>();
                     weatherData = new(
                         Description: raw.Weather[0].Description,
