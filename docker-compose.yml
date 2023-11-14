@@ -9,18 +9,18 @@ services:
       - 3000
     env_file:
       - ./nextjs/.env.prod
-  flaskapp:
-    build:
-      context: ./flaskapp
-      dockerfile: dockerfile.prod
-    container_name: flask_api
-    command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
-    expose:
-      - 5000
-    env_file:
-      - ./flaskapp/build/.env.prod
-    depends_on:
-      - db
+  # flaskapp:
+  #   build:
+  #     context: ./flaskapp
+  #     dockerfile: dockerfile.prod
+  #   container_name: flask_api
+  #   command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
+  #   expose:
+  #     - 5000
+  #   env_file:
+  #     - ./flaskapp/build/.env.prod
+  #   depends_on:
+  #     - db
 
   dotnet:
     build:
@@ -32,7 +32,7 @@ services:
     env_file:
       - ./cs/Api/.env
     depends_on:
-      - db
+      - mongodb
 
   nginx:
     container_name: nginx
@@ -66,16 +66,13 @@ services:
     volumes:
       - ./redis:/data
 
-  db:
-    container_name: postgres_db
-    image: postgres:13-alpine
-    volumes:
-      - ppjkdb_prod:/var/lib/postgresql/data/
-    env_file:
-      - ./flaskapp/db/.env
+  mongodb:
+    image: mongo
+    container_name: mongodb
     ports:
-      - "5432:5432"
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
 
 volumes:
-  ppjkdb_prod:
-  static_volume:
+  mongodb:
