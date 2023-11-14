@@ -85,13 +85,13 @@ const Blog = ({ tags }: { tags: string[] }) => {
     <div style={{ display: "grid", gridTemplateColumns: "20% 80%" }}>
       <NavBar posts={posts} />
       <Wrapper
-        controls={
-          loggedIn && [
-            <Link key="add_new_post" href="/blog/post/new_post" passHref={true}>
-              <Control>add new post</Control>
-            </Link>,
-          ]
-        }
+        // controls={
+        //   loggedIn && [
+        //     <Link key="add_new_post" href="/blog/post/new_post" passHref={true}>
+        //       <Control>add new post</Control>
+        //     </Link>,
+        //   ]
+        // }
         child={
           <StdList>
             {elems.map((post: Post) => (
