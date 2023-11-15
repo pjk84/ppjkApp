@@ -21,7 +21,6 @@ services:
   #     - ./flaskapp/build/.env.prod
 
   dotnet:
-    container_name: dotnet
     build:
       context: ./cs
       dockerfile: dockerfile.prod
