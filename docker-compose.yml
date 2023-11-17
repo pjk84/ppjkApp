@@ -21,7 +21,7 @@ services:
   #     - ./flaskapp/build/.env.prod
 
   dotnet:
-    build:
+    build:v
       context: ./cs
       dockerfile: dockerfile.prod
     container_name: dotnet_api
@@ -61,7 +61,7 @@ services:
       - ./redis:/data
 
   mongodb:
-    image: mongo:6-jammy
+    image: mongo:latest
     container_name: mongodb
     ports:
       - "27017:27017"
