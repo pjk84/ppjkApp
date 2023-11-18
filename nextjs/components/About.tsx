@@ -1,9 +1,6 @@
 import React from "react";
-import { RootState } from "../state";
-import { useSelector } from "react-redux";
 import { Bar, FlexBox } from "../styles/containers";
 import { HyperLink } from "../styles/buttons";
-import { color, Themes } from "../styles";
 
 const languages = [
   { language: "cSharp", label: "c#", experience: 1 },
@@ -15,8 +12,6 @@ const languages = [
 ];
 
 const maxExp = Math.max(...languages.map((l) => l.experience));
-
-console.log(maxExp);
 
 const details = {
   Name: "Pieter Kemps",
@@ -40,8 +35,6 @@ const details = {
   ],
 };
 const About = () => {
-  const theme = useSelector((state: RootState) => state.main.theme);
-  const gray = `${theme === Themes.light ? color.darkGray : color.lightGray}`;
   return (
     <FlexBox gapSize={50} column>
       <FlexBox gapSize="small" column>

@@ -7,8 +7,8 @@ import { color, Themes } from "../../styles";
 const languages = [
   { language: "cSharp", label: "c#", experience: 1 },
   { language: "cPlusPlus", label: "c++", experience: 0.5 },
-  { language: "python", label: "Python", experience: 3 },
-  { language: "typescript", label: "Typescript", experience: 3 },
+  { language: "python", label: "Python", experience: 2 },
+  { language: "typescript", label: "Typescript", experience: 5 },
   { language: "goLang", label: "go", experience: 0.2 },
   { language: "javascript", label: "Javascript", experience: 5 },
 ];

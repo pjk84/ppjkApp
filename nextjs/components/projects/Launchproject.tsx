@@ -10,7 +10,7 @@ interface Props {
 const LaunchProject = ({ projectId }: Props) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [firstRender, isFirstRender] = useState(true);
+  const [firstRender, _] = useState(true);
   const [launching, setLaunching] = useState(false);
   const launchProject = () => {
     console.log(projectId);

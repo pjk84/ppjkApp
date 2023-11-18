@@ -75,7 +75,8 @@ export const Backdrop = styled.div`
 export const SideBar = styled.div<{ active: boolean }>`
   position: relative;
   display: flex;
-  padding-right: 10px;
+  padding: ${(p) => (p.active ? "10px" : null)};
+  padding-top: 25px;
   flex-direction: column;
   gap: 20px;
   white-space: nowrap;

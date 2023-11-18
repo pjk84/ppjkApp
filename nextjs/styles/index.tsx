@@ -101,7 +101,7 @@ export const appThemeLight = {
     backgroundColor: color.lightestGray,
   },
   drops: {
-    backgroundColor: color.lighterGray,
+    backgroundColor: null,
     color: color.darkGray,
     borderRadius: "10px",
     borderColor: color.lightGray,
@@ -161,7 +161,7 @@ export const appThemeDark = {
   color: color.darkTheme.lighterGray,
   table: {
     rowLight: color.darkTheme.darkGray2,
-    rowDark: color.darkTheme.mediumGray,
+    rowDark: null,
     header: color.darkTheme.mediumGray,
   },
   posts: {

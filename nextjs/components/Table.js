@@ -2,61 +2,35 @@ import React from "react";
 import { HyperLink } from "../styles/buttons";
 import { FlexBox } from "../styles/containers";
 import { TableCell, Table } from "../styles/table";
+import { useSelector } from "react-redux";
 
 const withIcon = ["languages", "frameworks_and_tools", "database", "hosting"];
 
-const T = ({ details, animation }) => {
+const T = ({ details }) => {
+  const theme = useSelector((state) => state.main.theme);
   const exclude = ["id", "title", "demo", "image"];
-  {
-  }
-  const getSliding = (d, i) => {
-    const key = d.replaceAll("_", " ");
-    return (
-      <tr key={`section-row-slide-${d}-${i}`}>
-        <TableCell
-          key={`tablecell-left-${i}`}
-          index={i}
-          style={{ padding: 5, width: "25%" }}
-        >
-          {key}
-        </TableCell>
-        <TableCell key={`tablecell-right-${i}`} index={i}>
-          {d === "code" ? (
-            <HyperLink href={details[d]}>click here</HyperLink>
-          ) : withIcon.includes(d) ? (
-            details[d].map((language) => (
-              <img
-                key={`language-icon-${language}`}
-                style={{ marginRight: 10 }}
-                width="50px"
-                title={language}
-                src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${language
-                  .toLowerCase()
-                  .trim()}/${language.toLowerCase().trim()}-original.svg`}
-              />
-            ))
-          ) : (
-            details[d]
-          )}
-        </TableCell>
-      </tr>
-    );
-  };
 
-  const getJitterIn = (d, i) => {
+  function isURL(str) {
+    // Regular expression for a basic URL pattern
+    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+    return urlRegex.test(str);
+  }
+
+  const getTable = (d, i) => {
+    var animation = theme == "dark" ? "jitter" : null;
     return (
       <tr key={`section-row-jitter-${d}-${i}`}>
         <TableCell
           index={i}
-          animation="jitter"
+          animation={animation}
           style={{
             width: "25%",
           }}
         >
           {d.replace(/_/g, " ")}
         </TableCell>
-        <TableCell key={`tablecell-right-${i}`} index={i} animation="jitter">
-          {d === "code" ? (
+        <TableCell key={`tablecell-right-${i}`} index={i} animation={animation}>
+          {isURL(details[d]) ? (
             <HyperLink href={details[d]}>click here</HyperLink>
           ) : withIcon.includes(d) ? (
             details[d].map((language) => (
@@ -71,6 +45,8 @@ const T = ({ details, animation }) => {
                   .trim()}/${language.toLowerCase().trim()}-original.svg`}
               />
             ))
+          ) : typeof details[d] === "object" ? (
+            details[d].join(", ")
           ) : (
             details[d]
           )}
@@ -83,13 +59,7 @@ const T = ({ details, animation }) => {
     <Table style={{ fontSize: 18 }}>
       <tbody>
         {Object.keys(details).map(
-          (d, i) =>
-            !exclude.includes(d) &&
-            (animation === "slide"
-              ? getSliding(d, i)
-              : animation === "jitter"
-              ? getJitterIn(d, i)
-              : null)
+          (d, i) => !exclude.includes(d) && getTable(d, i)
         )}
       </tbody>
     </Table>

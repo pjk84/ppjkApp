@@ -10,7 +10,7 @@ const languages = [
   { language: "redux", label: "Redux", experience: 3 },
   { language: "postgres", label: "Postgres", experience: 4 },
   { language: "node", label: "NodeJS", experience: 2 },
-  { language: "flask", label: "Flask", experience: 3 },
+  { language: "flask", label: "Flask", experience: 2 },
 ];
 
 const maxExp = Math.max(...languages.map((l) => l.experience));

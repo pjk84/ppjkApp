@@ -15,8 +15,7 @@ const SBar = () => {
 
   return (
     <SideBar id="sideBar" active={active}>
-      <StdList style={{ marginLeft: 10 }}>
-        <div style={{ height: 25 }}></div>
+      <StdList>
         <Login />
         <Theme />
       </StdList>

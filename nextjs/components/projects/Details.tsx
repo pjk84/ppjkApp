@@ -11,8 +11,8 @@ interface Props {
 const ProjectDetails = ({ project, animation }: Props) => {
   return (
     <FlexBox column gapSize={"large"} style={{ width: "100%" }}>
-      <Table animation={animation} details={project} />
-      <img src={project["image"]} />
+      <Table details={project} />
+      <img src={project["image"]} style={{ maxWidth: "100%" }} />
     </FlexBox>
   );
 };
