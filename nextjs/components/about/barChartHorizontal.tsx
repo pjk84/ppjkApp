@@ -61,13 +61,13 @@ const BarChartHorizontal = ({ data, title }: DetailsArray) => {
       </Header1>
       <BarGraphMain gapSize={gapSize}>
         {data.map((l) => (
-          <FlexBox align="center">
+          <FlexBox key={`bar-${l.label}`} align="center">
             <BarHorizontalLabel key={`bar-label-${l.label}`}>
               {l.label}
             </BarHorizontalLabel>
             <BarHorizontal
               height={`${barHeight}px`}
-              key={`bar-${l.label}`}
+              key={`bar-main-${l.label}`}
               style={{
                 animation: `grow 0.5s ease-out `,
                 width: `${(l.value / maxExp) * 100}%`,
