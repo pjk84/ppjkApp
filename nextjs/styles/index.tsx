@@ -107,7 +107,7 @@ export const appThemeLight = {
     borderColor: color.lightGray,
   },
   ribbon: {
-    color1: color.lightestGray,
+    color1: color.lightGreen,
     color2: color.green,
   },
   tag: {
@@ -152,6 +152,7 @@ export const appThemeLight = {
   barChart: {
     backgroundColor: color.green,
     textColor: color.darkGray,
+    labelColor: color.darkGray,
   },
 };
 
@@ -211,7 +212,7 @@ export const appThemeDark = {
     borderColor: color.lightGray,
   },
   ribbon: {
-    color1: color.lightestGray,
+    color1: color.lightGreen,
     color2: color.green,
   },
   tag: {
@@ -256,6 +257,7 @@ export const appThemeDark = {
   },
   barChart: {
     backgroundColor: color.lightGreen,
-    textColor: color.darkGray,
+    textColor: color.lightestGray,
+    labelColor: color.darkGray,
   },
 };

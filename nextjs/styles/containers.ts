@@ -28,12 +28,6 @@ export const Drop = styled.div`
   top: 0;
 `;
 
-export const Bar = styled.div`
-  background-color: ${(p) => p.theme.barChart.backgroundColor};
-  color: ${(p) => p.theme.barChart.textColor};
-  opacity: 0.5;
-`;
-
 export const Header = styled.header<{}>`
   display: flex;
   position: relative;
@@ -55,7 +49,7 @@ export const Header = styled.header<{}>`
   &:before {
     content: "";
     position: absolute;
-    height: 5px;
+    height: 10px;
     top: 0px;
     width: 100%;
     background-image: ${(p) =>
