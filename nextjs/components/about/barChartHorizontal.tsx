@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FlexBox } from "../../styles/containers";
 import { Header1 } from "../../styles/header";
-import { AxisX, AxisXPoint, BarHorizontal } from "../../styles/barGraph";
+import {
+  AxisX,
+  AxisXPoint,
+  BarGraphMain,
+  BarHorizontal,
+  BarHorizontalLabel,
+} from "../../styles/barGraph";
 
 interface BarChartDetails {
   name: string;
@@ -21,10 +27,11 @@ const OPTIONS = {
 };
 
 const BarChartHorizontal = ({ data, title }: DetailsArray) => {
-  var barHeight = 30;
+  var barHeight = 25;
+  var gapSize = 10;
   //container height should be roughtly equal to combined barheight
   // this way intersection threshold is close to chart height
-  const minHeight = data.length * barHeight + barHeight;
+  const minHeight = data.length * (barHeight + gapSize) + barHeight;
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -52,19 +59,23 @@ const BarChartHorizontal = ({ data, title }: DetailsArray) => {
       >
         {title}
       </Header1>
-      <FlexBox column gapSize={10} style={{ overflow: "hidden" }}>
+      <BarGraphMain gapSize={gapSize}>
         {data.map((l) => (
-          <BarHorizontal
-            text={l.label}
-            key={`bar-${l.label}`}
-            style={{
-              animation: `grow 0.5s ease-out `,
-              height: barHeight,
-              width: `${(l.value / maxExp) * 100}%`,
-            }}
-          ></BarHorizontal>
+          <FlexBox align="center">
+            <BarHorizontalLabel key={`bar-label-${l.label}`}>
+              {l.label}
+            </BarHorizontalLabel>
+            <BarHorizontal
+              height={`${barHeight}px`}
+              key={`bar-${l.label}`}
+              style={{
+                animation: `grow 0.5s ease-out `,
+                width: `${(l.value / maxExp) * 100}%`,
+              }}
+            ></BarHorizontal>
+          </FlexBox>
         ))}
-      </FlexBox>
+      </BarGraphMain>
       <AxisX text="years">
         {Array.from(Array(maxExp).keys()).map((e) => (
           <AxisXPoint

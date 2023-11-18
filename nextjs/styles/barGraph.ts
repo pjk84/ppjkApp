@@ -1,22 +1,33 @@
 import styled from "styled-components";
 
-export const BarHorizontal = styled.div<{ text: string }>`
+export const BarHorizontal = styled.div<{ height: string }>`
   background-color: ${(p) => p.theme.barChart.backgroundColor};
-  color: ${(p) => p.theme.barChart.textColor};
-  &:before {
-    content: "${(p) => p.text}";
-    color: ${(p) => p.theme.barChart.labelColor};
-    margin-left: 5px;
-    line-height: 30px;
-    font-size: 20px;
-  }
+  height: ${(p) => p.height};
+  z-index: 1;
+`;
+
+export const BarHorizontalLabel = styled.div`
+  color: ${(p) => p.theme.barChart.labelColor};
+  position: absolute;
+  left: 5px;
+  z-index: 2;
+`;
+
+export const BarGraphMain = styled.div<{ gapSize: number }>`
+  display: flex;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow: hidden;
+  flex-direction: column;
+  gap: ${(p) => `${p.gapSize}px`};
+  /* border-top: 1px solid; */
+  border-bottom: 1px solid;
+  border-color: ${(p) => p.theme.barChart.textColor};
 `;
 
 export const AxisX = styled.div<{ text: string }>`
   display: flex;
-  border-top: 1px solid;
   margin-top: 5px;
-  border-top-color: ${(p) => p.theme.barChart.textColor};
   color: ${(p) => p.theme.barChart.textColor};
   &:before {
     content: "${(p) => p.text}";
@@ -37,15 +48,3 @@ export const AxisXPoint = styled.div<{ width: string; text: string }>`
     font-size: 15px;
   }
 `;
-
-// <div
-//   key={`x-axis-${e}`}
-//   style={{
-//     border: "1px solid red",
-//     textAlign: "right",
-//     width: `${(1 / maxExp) * 100}% `,
-//     height: 10,
-//   }}
-// >
-//   {e + 1}
-// </div>;
