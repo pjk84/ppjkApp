@@ -67,6 +67,8 @@ const projects: Array<Project> = [
     code: "https://github.com/pjk84/cpp_tetris",
     libraries: ["ncurses"],
     description: "command line Tetris using ncurses",
+    image:
+      "https://user-images.githubusercontent.com/47746832/283947007-18334c99-2f63-44b4-af5c-5965eb13a470.png",
   },
   {
     id: "weather_api",
@@ -82,7 +84,7 @@ const projects: Array<Project> = [
     languages: ["cplusplus"],
     category: "algorithm",
     code: "https://github.com/pjk84/gameOfLife",
-    libraries: ["ncurses"],
+    libraries: ["SDL2"],
     image:
       "https://user-images.githubusercontent.com/47746832/229317033-5b89753f-7590-43dc-83af-afb994992df8.png",
     description:
