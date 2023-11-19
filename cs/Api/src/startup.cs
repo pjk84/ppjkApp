@@ -1,5 +1,4 @@
 
-using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -14,7 +13,6 @@ using Api.Common.GeoCoding;
 using Api.Common.IpApi;
 using Api.Features.WeatherApi;
 using Api.Database;
-using System.Reflection;
 
 
 public class Startup
@@ -43,7 +41,7 @@ public class Startup
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
         services.AddSingleton<IGeoCoding, GeoCoding>();
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
         services.AddHttpClient<IBaseApiClient, BaseApiClient>();
 
