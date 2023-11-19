@@ -14,6 +14,7 @@ using Api.Common.GeoCoding;
 using Api.Common.IpApi;
 using Api.Features.WeatherApi;
 using Api.Database;
+using System.Reflection;
 
 
 public class Startup
@@ -42,7 +43,7 @@ public class Startup
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
         services.AddSingleton<IGeoCoding, GeoCoding>();
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddHttpClient<IBaseApiClient, BaseApiClient>();
 
