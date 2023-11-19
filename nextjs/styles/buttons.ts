@@ -54,6 +54,35 @@ export const StdButton = styled.button<{
   }
 `;
 
+export const ProjectLaunchButton = styled.button<{ wasClicked: boolean }>`
+  position: relative;
+  border-radius: 4px;
+  height: max-content;
+  font-size: 20px;
+  width: max-content;
+  box-shadow: ${(p) => p.theme.button.boxShadow};
+  border: 1px solid;
+  border-color: ${(p) => p.theme.button.borderColor};
+  padding: 15px 20px 15px 20px;
+  color: ${(p) => p.theme.button.color};
+  background-color: ${(p) => p.theme.button.backgroundColor};
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+  animation: ${(p) => "0.2s slideUp ease-in"};
+  &:hover {
+    border-color: ${(p) => p.theme.button.hover.borderColor};
+  }
+  &:before {
+    animation: ${(p) => (p.wasClicked ? "0.5s sweep ease-out" : null)};
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 export const Btn1 = styled.button<{
   color?: "blue" | "green";
   size?: "small" | "large" | "medium";

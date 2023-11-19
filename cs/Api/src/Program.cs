@@ -8,11 +8,6 @@ builder.Services.AddControllers();
 var env = builder.Environment.EnvironmentName;
 Console.WriteLine($"environment is: {env}");
 
-builder.WebHost.ConfigureKestrel(opts =>
-{
-    opts.ListenAnyIP(5002);
-});
-
 var startup = new Startup();
 
 

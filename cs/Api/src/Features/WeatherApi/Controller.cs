@@ -28,7 +28,7 @@ public class WeatherController : ControllerBase
     }
     [HttpGet]
     [Route("~/weather/ip")]
-    public async Task<ActionResult<string>> getWeatherByIp()
+    public async Task<ActionResult<WeatherByIpView>> getWeatherByIp()
     {
         var clientIp = Request.HttpContext?.Connection?.RemoteIpAddress?.ToString();
         if (clientIp == null)

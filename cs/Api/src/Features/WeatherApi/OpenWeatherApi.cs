@@ -27,9 +27,8 @@ public class OpenWeatherApi : BaseApiClient, IOpenWeatherApi
     public async Task<WeatherView?> GetWeatherByCoords(double lat, double lon)
     {
         int measurementsRefreshRateInMinutes = 10;
-        string date = DateTime.Now.Date.ToString("dd/MM/yyyy");
         string cacheKey = $"weather:lat:{lat}-lon:{lon}";
-        WeatherView? weatherData = null;
+        WeatherView? weatherData;
         {
             try
             {

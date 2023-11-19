@@ -9,10 +9,8 @@ import projects from "../../data/projects";
 import { useRouter } from "next/router";
 import { RootState } from "../../state";
 import { FlexBoxCentered } from "../../styles/containers";
-import { Themes } from "../../styles";
 
 const Projects = () => {
-  const theme = useSelector((state: RootState) => state.main.theme);
   const selectedProject = useSelector((state: RootState) => state.main.project);
   const router = useRouter();
   const { id } = router.query;
@@ -33,14 +31,8 @@ const Projects = () => {
   return (
     <FlexBoxCentered gap={50}>
       <ProjectButtons miniaturized={true} />
-      <ProjectDetails
-        key={`projectDetails-${id}`}
-        animation={theme === Themes.light ? "slide" : "jitter"}
-        project={projectDetails}
-      />
-      <FlexBoxCentered>
-        {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
-      </FlexBoxCentered>
+      <ProjectDetails key={`projectDetails-${id}`} project={projectDetails} />
+      {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
     </FlexBoxCentered>
   );
 };

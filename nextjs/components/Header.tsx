@@ -28,7 +28,7 @@ const Title = () => {
                 1 === 1
                   ? tick > 0
                     ? undefined
-                    : `${i / 6}s 0.5s typeIn ease-in forwards, 10s ${
+                    : `${i / 5}s 0.5s typeIn ease-in forwards, 10s ${
                         1 + i / 10
                       }`
                   : undefined,

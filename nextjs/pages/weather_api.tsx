@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FlexBox } from "../styles/containers";
-import apiClient, { AuthResponse } from "../api/client";
-import { TableCell, TableHeader } from "../styles/table";
+import apiClient from "../api/client";
+import { TableCell } from "../styles/table";
+import Loader from "../components/Loaders";
 
 type WeahterData = {
   MeasurementTime: Date;
@@ -60,11 +61,11 @@ const WeatherApi = () => {
         var data = await apiClient().get<WeatherResponse>("/weather/ip");
         if (data) {
           setWeatherResponse(data);
+          setFetched(true);
         }
       };
 
       getWeather();
-      setFetched(true);
     }
   });
 
@@ -78,7 +79,13 @@ const WeatherApi = () => {
       }}
     >
       <FlexBox column gapSize={"large"}>
-        <div>{`weather data for ip address: ${weatherResponse?.ipAddress}`}</div>
+        {weatherResponse ? (
+          <div>{`weather data for ip address: ${weatherResponse?.ipAddress}`}</div>
+        ) : fetched ? (
+          "could not get weather data"
+        ) : (
+          <Loader type="round" text="loading weather data.." />
+        )}
         {weatherResponse && WeatherDetails(weatherResponse.weatherData)}
       </FlexBox>
     </FlexBox>

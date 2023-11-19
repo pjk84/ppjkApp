@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Btn1, StdButton } from "../../styles/buttons";
+import { Btn1, ProjectLaunchButton, StdButton } from "../../styles/buttons";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { actions } from "../../state/actiontypes";
@@ -10,10 +10,8 @@ interface Props {
 const LaunchProject = ({ projectId }: Props) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [firstRender, _] = useState(true);
   const [launching, setLaunching] = useState(false);
   const launchProject = () => {
-    console.log(projectId);
     setLaunching(true);
     setTimeout(() => {
       dispatch({ type: actions.SET_FOCUS, focus: projectId });
@@ -22,18 +20,13 @@ const LaunchProject = ({ projectId }: Props) => {
   };
 
   return (
-    <StdButton
-      animation={launching ? "sweep" : firstRender ? "slideUp" : ""}
-      size={"medium"}
+    <ProjectLaunchButton
+      wasClicked={launching}
       key={`launch-project-${projectId}`}
-      // sweep={launching}
-      // slideUp={firstRender}
-      color="blue"
       onClick={launchProject}
     >
       open project
-      <div style={{ fontSize: 10, opacity: "0.5" }}>(press enter)</div>
-    </StdButton>
+    </ProjectLaunchButton>
   );
 };
 
