@@ -193,12 +193,15 @@ export const Control = styled.button<{
   active?: boolean;
   color?: "red" | "blue" | "gray";
   border?: boolean;
+  fontSize?: number;
 }>`
-  padding: ${(p) => (p.border ? "5px" : 0)};
+  padding: ${(p) => (p.border ? "5px" : null)};
   background-color: transparent;
   text-align: left;
   transition: all 0.1s;
   border: 1px solid;
+  width: max-content;
+  font-size: ${(p) => (p.fontSize ? `${p.fontSize}px` : null)};
   border-color: ${(p) =>
     p.border ? p.theme.control.borderColor : "transparent"};
   color: ${(p) =>
@@ -212,6 +215,23 @@ export const Control = styled.button<{
   &:hover {
     color: ${(p) => !p.color && p.theme.control.hover.color};
   }
+`;
+
+export const SidebarSwitch = styled.button`
+  position: absolute;
+  right: -29px;
+  top: 20px;
+  border: none;
+  width: 30px;
+  height: 35px;
+  cursor: pointer;
+  background-color: ${(p) => p.theme.sideBar.backgroundColor};
+  color: ${(p) => p.theme.sideBar.textColor};
+  border: 1px solid;
+  border-left: transparent;
+  border-color: ${(p) => p.theme.sideBar.borderColor};
+  border-radius: 2px;
+  z-index: 10;
 `;
 
 export const NavItem = styled.a<{

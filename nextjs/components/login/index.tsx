@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FlexBox } from "../../styles/containers";
+import { Notification } from "../../styles/notifications";
 import { Control } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import apiClient, { AuthResponse } from "../../api/client";
@@ -7,7 +8,6 @@ import Cookies from "universal-cookie";
 import { actions } from "../../state/actiontypes";
 import { RootState } from "../../state";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
-import { Warning } from "../../styles/notifications";
 
 const cookie = new Cookies();
 
@@ -28,9 +28,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(
     (state: RootState) => state.main.auth.loggedIn
-  );
-  const loggedInIdentity = useSelector(
-    (state: RootState) => state.main.auth.loggedInIdentity
   );
   const loggedInError = useSelector(
     (state: RootState) => state.main.auth.error
@@ -66,8 +63,14 @@ const Login = () => {
         error: "not authorized",
       });
     }
+    setIsActive(!active);
     setAttempts(attempts + 1);
   };
+
+  const handleLoginError = () =>
+    dispatch({
+      error: "login failed",
+    });
 
   const handleLogOut = () => {
     cookie.remove(ACCESS_TOKEN_KEY, { path: "/" });
@@ -77,17 +80,6 @@ const Login = () => {
       loggedIn: false,
       identity: null,
     });
-  };
-
-  const toggle = () => {
-    setAttempts(0);
-    setIsActive(!active);
-    if (loggedInError) {
-      dispatch({
-        type: actions.SET_LOGGED_IN,
-        error: null,
-      });
-    }
   };
 
   useEffect(() => {
@@ -103,31 +95,21 @@ const Login = () => {
 
   const login = (
     <FlexBox column gapSize={2}>
-      <Control style={{ zIndex: 2 }} onClick={toggle}>
-        login
-      </Control>
-
-      {active && (
-        <FlexBox column gapSize={"small"}>
-          {loggedInError ? <Warning>{loggedInError}</Warning> : null}
-          <GoogleLogin
-            onSuccess={(res) => handleLogin(res, IdentityProvider.GOOGLE)}
-          />
-        </FlexBox>
-      )}
+      <FlexBox column gapSize={"small"}>
+        {loggedInError ? (
+          <Notification type={"warning"}>{loggedInError}</Notification>
+        ) : null}
+        <GoogleLogin
+          onError={handleLoginError}
+          onSuccess={(res) => handleLogin(res, IdentityProvider.GOOGLE)}
+        />
+      </FlexBox>
     </FlexBox>
   );
 
   const logOut = (
-    <FlexBox gapSize="small" align="center">
-      <Control onClick={handleLogOut}> {`log out ${loggedInIdentity}`}</Control>
-      <div
-        style={{
-          borderRadius: 50,
-          width: 10,
-          height: 10,
-        }}
-      ></div>
+    <FlexBox column gapSize="small">
+      <Control onClick={handleLogOut}>log out</Control>
     </FlexBox>
   );
 

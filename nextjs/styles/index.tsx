@@ -9,7 +9,8 @@ export const appTheme = {
   darkerGray: "#131314",
   gray: "#6d7275",
   mediumGray: "#3b3e40",
-  red: "#ff5d52",
+  red: "#e66e66",
+
   lightGray: "#8f9599",
   orange: "#d65900",
 };
@@ -44,6 +45,7 @@ export const color = {
   darkGray: "#3b3e40",
   mediumGray: "#525558",
   red: "#ff5d52",
+  lightRed: "#fe8b82",
   orange: "#ff6a00",
   white: "white",
   black: "black",
@@ -146,8 +148,8 @@ export const appThemeLight = {
   },
   sideBar: {
     backgroundColor: color.white,
-    borderColor: "transparent",
-    toggleColor: color.darkGray,
+    borderColor: color.lighterGray2,
+    textColor: color.darkGray,
   },
   barChart: {
     backgroundColor: color.green,
@@ -212,7 +214,7 @@ export const appThemeDark = {
     borderColor: color.lightGray,
   },
   ribbon: {
-    color1: color.lightGreen,
+    color1: color.green,
     color2: color.green,
   },
   tag: {
@@ -252,8 +254,9 @@ export const appThemeDark = {
   },
   sideBar: {
     backgroundColor: color.darkTheme.darkGray,
+    textColor: color.lightGreen,
     borderColor: color.mediumGray,
-    toggleColor: color.green,
+    toggleBorder: color.mediumGray,
   },
   barChart: {
     backgroundColor: color.lightGreen,

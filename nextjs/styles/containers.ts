@@ -31,7 +31,7 @@ export const Drop = styled.div`
 export const Header = styled.header<{}>`
   display: flex;
   position: relative;
-  padding: 20px;
+  padding-bottom: 15px;
   justify-content: center;
   flex-wrap: wrap;
   background-color: ${(p) => p.theme.header.backgroundColor};
@@ -46,15 +46,20 @@ export const Header = styled.header<{}>`
     height: 1px;
     background-color: ${(props) => props.theme.dividerColor};
   }
-  &:before {
-    content: "";
-    position: absolute;
-    height: 10px;
-    top: 0px;
-    width: 100%;
-    background-image: ${(p) =>
-      `linear-gradient(to right, ${p.theme.ribbon.color1}, ${p.theme.ribbon.color2}, ${p.theme.ribbon.color1})`};
-  }
+`;
+
+export const Ribbon = styled.div`
+  content: "";
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  height: max-content;
+  padding: 2px;
+  padding-left: 10px;
+  min-height: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: ${(p) => p.theme.ribbon.color1};
 `;
 
 export const Backdrop = styled.div`
@@ -74,6 +79,7 @@ export const SideBar = styled.div<{ active: boolean }>`
   flex-direction: column;
   gap: 20px;
   white-space: nowrap;
+  height: 100%;
   background-color: ${(p) => p.theme.sideBar.backgroundColor};
   border-right: ${(p) => (p.active ? "1px solid" : null)};
   border-color: ${(p) => p.theme.sideBar.borderColor};
@@ -81,8 +87,8 @@ export const SideBar = styled.div<{ active: boolean }>`
   /* -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   -o-transition: all 0.2s ease-in; */
-  width: ${(p) => (p.active ? "auto" : "0px")};
-  opacity: ${(p) => (p.active ? 1 : 0)};
+  width: ${(p) => (p.active ? "auto" : null)};
+  opacity: ${(p) => (p.active ? 1 : 1)};
   overflow: hidden;
 `;
 

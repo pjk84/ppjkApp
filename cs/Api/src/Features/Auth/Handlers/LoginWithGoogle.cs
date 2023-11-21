@@ -28,7 +28,10 @@ public class LoginWithGoogleHandler : IRequestHandler<LoginWithGoogleQuery, R>
         // 
         if (user == null)
         {
-            await _userService.CreateAsync(new User(Email: "ppjk84@gmail.com", DateTime.UtcNow, DateTime.UtcNow, DateTime.UtcNow));
+            if (res.Email == "ppjk84@gmail.com")
+            {
+                await _userService.CreateAsync(new User(Email: "ppjk84@gmail.com", DateTime.UtcNow, DateTime.UtcNow, DateTime.UtcNow));
+            }
             return Result.Failed<LoginResponse>(new ApiError("unauthorized"));
         }
 

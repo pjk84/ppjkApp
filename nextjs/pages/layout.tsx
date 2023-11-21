@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import Logo from "../components/Header";
-import { SBarToggle } from "../components/SideBar";
-import { Footer, Inner, Main, Header } from "../styles/containers";
+import { Footer, Inner, Main, Header, Ribbon } from "../styles/containers";
 import Nav from "../components/Nav";
 import SideBar from "../components/SideBar";
 import { Backdrop } from "../styles/containers";
+import LoggedInIdentityBadge from "../components/login/LoginBadge";
 
 const Home: NextPage = ({ children }) => {
   return (
@@ -12,7 +12,9 @@ const Home: NextPage = ({ children }) => {
       <div id="app">
         <SideBar />
         <Header>
-          <SBarToggle />
+          <Ribbon>
+            <LoggedInIdentityBadge />
+          </Ribbon>
           <Logo />
           <Nav />
         </Header>

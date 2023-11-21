@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
-export const Warning = styled.span<{}>`
+export const Notification = styled.span<{ type?: string }>`
   color: ${(props) => props.theme.darkGray};
-  background-color: ${(props) => props.theme.red};
+  background-color: ${(p) =>
+    p.type === "warning"
+      ? p.theme.lightRed
+      : p.type === "green"
+      ? p.theme.lightGreen
+      : null};
   font-size: 15px;
-  padding: 5px;
+  height: max-content;
   border-radius: 5px;
   text-align: center;
 `;

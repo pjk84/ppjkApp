@@ -9,6 +9,7 @@ services:
       - 3000
     env_file:
       - ./nextjs/.env.prod
+
   # flaskapp:
   #   build:
   #     context: ./flaskapp
@@ -49,7 +50,7 @@ services:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
 
-  cache:
+  redis:
     container_name: redis_cache
     image: redis:6.2-alpine
     restart: always

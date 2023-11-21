@@ -58,7 +58,7 @@ const WeatherApi = () => {
     if (!fetched) {
       // get weather data
       const getWeather = async () => {
-        var data = await apiClient().get<WeatherResponse>("/weather/ip");
+        var data = await apiClient().get<WeatherResponse>("weather/ip");
         if (data) {
           setWeatherResponse(data);
           setFetched(true);
