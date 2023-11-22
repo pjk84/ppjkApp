@@ -7,10 +7,13 @@ import { FlexBox } from "../styles/containers";
 const NavBar = () => {
   const focus = useSelector((state: RootState) => state.main.focus);
   const loggedIn = useSelector((state: RootState) => state.main.auth.loggedIn);
-  const pages = ["about", "projects", "blog", loggedIn && "settings"];
+  const pages = ["about", "projects"];
+  if (loggedIn) {
+    [...pages, "settings"];
+  }
 
   return (
-    <FlexBox wrap={"true"} justify="center" align="center">
+    <FlexBox gapSize={10} wrap={"true"} justify="center" align="center">
       {pages.map((p) => {
         const active = p === focus;
         return active ? (

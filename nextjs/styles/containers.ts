@@ -77,7 +77,6 @@ export const SideBar = styled.div<{ active: boolean }>`
   padding: ${(p) => (p.active ? "10px" : null)};
   padding-top: 25px;
   flex-direction: column;
-  gap: 20px;
   white-space: nowrap;
   height: 100%;
   background-color: ${(p) => p.theme.sideBar.backgroundColor};
@@ -258,7 +257,7 @@ export const Box1 = styled.div<{
 export const StdList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
 `;
 
 export const StdListItem = styled.li`

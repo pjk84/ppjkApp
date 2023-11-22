@@ -44,7 +44,7 @@ li {
   grid-template-columns: max-content 1fr;
   grid-template-areas:
     "head head"
-    "s main"
+    "sidebar main"
     "footer footer";
 }
 
@@ -53,7 +53,7 @@ li {
 }
 
 #app > #sideBar {
-  grid-area: s;
+  grid-area: sidebar;
 }
 
 #app > main {

@@ -18,7 +18,9 @@ const Theme = () => {
     });
   };
 
-  return <Control onClick={setTheme}>{`${otherTheme} theme`}</Control>;
+  return (
+    <Control onClick={setTheme}>{`switch to ${otherTheme} theme`}</Control>
+  );
 };
 
 export default Theme;

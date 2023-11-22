@@ -94,24 +94,13 @@ const Login = () => {
   });
 
   const login = (
-    <FlexBox column gapSize={2}>
-      <FlexBox column gapSize={"small"}>
-        {loggedInError ? (
-          <Notification type={"warning"}>{loggedInError}</Notification>
-        ) : null}
-        <GoogleLogin
-          onError={handleLoginError}
-          onSuccess={(res) => handleLogin(res, IdentityProvider.GOOGLE)}
-        />
-      </FlexBox>
-    </FlexBox>
+    <GoogleLogin
+      onError={handleLoginError}
+      onSuccess={(res) => handleLogin(res, IdentityProvider.GOOGLE)}
+    />
   );
 
-  const logOut = (
-    <FlexBox column gapSize="small">
-      <Control onClick={handleLogOut}>log out</Control>
-    </FlexBox>
-  );
+  const logOut = <Control onClick={handleLogOut}>log out</Control>;
 
   return isLoggedIn ? logOut : login;
 };

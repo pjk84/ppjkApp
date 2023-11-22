@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Logo from "../components/Header";
 import { Footer, Inner, Main, Header, Ribbon } from "../styles/containers";
 import Nav from "../components/Nav";
-import SideBar from "../components/SideBar";
+import SideBar, { ToggleSmallScreen } from "../components/SideBar";
 import { Backdrop } from "../styles/containers";
 import LoggedInIdentityBadge from "../components/login/LoginBadge";
 
@@ -13,6 +13,7 @@ const Home: NextPage = ({ children }) => {
         <SideBar />
         <Header>
           <Ribbon>
+            <ToggleSmallScreen />
             <LoggedInIdentityBadge />
           </Ribbon>
           <Logo />

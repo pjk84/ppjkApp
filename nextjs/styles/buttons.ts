@@ -201,7 +201,7 @@ export const Control = styled.button<{
   transition: all 0.1s;
   border: 1px solid;
   width: max-content;
-  font-size: ${(p) => (p.fontSize ? `${p.fontSize}px` : null)};
+  font-size: ${(p) => (p.fontSize ? `${p.fontSize}px` : "15px")};
   border-color: ${(p) =>
     p.border ? p.theme.control.borderColor : "transparent"};
   color: ${(p) =>
@@ -243,7 +243,6 @@ export const NavItem = styled.a<{
   background-color: ${(p) =>
     p.active ? p.theme.navItem.active.backgroundColor : null};
   font-size: 20px;
-
   border-radius: 8px;
   padding: 5px 20px 5px 20px;
   cursor: pointer;
@@ -256,4 +255,11 @@ export const NavItem = styled.a<{
 
 export const HyperLink = styled.a`
   color: ${(p) => p.theme.color};
+`;
+
+export const MenuDot = styled.span`
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background-color: ${(p) => p.theme.darkGray};
 `;

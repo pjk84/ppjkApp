@@ -10,6 +10,8 @@ export const Notification = styled.span<{ type?: string }>`
       : null};
   font-size: 15px;
   height: max-content;
+  width: max-content;
+  padding: 5px;
   border-radius: 5px;
   text-align: center;
 `;
