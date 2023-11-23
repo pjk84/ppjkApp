@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
-export const TableCell = styled.td.attrs<{
+interface TableCellProps {
   index: number;
   animation?: "jitter" | "slide";
-}>((props) => ({
+}
+
+export const TableCell = styled.td.attrs<TableCellProps>((props) => ({
   style: {
     animation:
       props.animation === "jitter"
@@ -14,7 +16,7 @@ export const TableCell = styled.td.attrs<{
         ? props.theme.table.rowLight
         : props.theme.table.rowDark,
   },
-}))`
+}))<TableCellProps>`
   position: relative;
   padding: 10px;
   color: ${(p) => p.theme.color};
