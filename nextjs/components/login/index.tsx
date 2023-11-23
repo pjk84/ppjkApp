@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { FlexBox } from "../../styles/containers";
-import { Notification } from "../../styles/notifications";
+import React, { useState } from "react";
 import { Control } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import apiClient, { AuthResponse } from "../../api/client";
@@ -29,9 +27,7 @@ const Login = () => {
   const isLoggedIn = useSelector(
     (state: RootState) => state.main.auth.loggedIn
   );
-  const loggedInError = useSelector(
-    (state: RootState) => state.main.auth.error
-  );
+
   const [active, setIsActive] = useState(false);
   const [attempts, setAttempts] = useState(0);
 
@@ -81,17 +77,6 @@ const Login = () => {
       identity: null,
     });
   };
-
-  useEffect(() => {
-    if (!isLoggedIn && cookie.get(ACCESS_TOKEN_KEY)) {
-      dispatch({
-        type: actions.SET_LOGGED_IN,
-        loggedIn: true,
-        error: null,
-        identity: cookie.get(ACCESS_IDENTITY_KEY),
-      });
-    }
-  });
 
   const login = (
     <GoogleLogin

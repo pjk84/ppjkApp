@@ -49,17 +49,18 @@ export const Header = styled.header<{}>`
 `;
 
 export const Ribbon = styled.div`
-  content: "";
   display: flex;
   gap: 25px;
   align-items: center;
-  height: max-content;
+  height: 30px;
   padding: 2px;
   padding-left: 10px;
   min-height: 10px;
   width: 100%;
-  margin-bottom: 10px;
   background-color: ${(p) => p.theme.ribbon.color1};
+  @media only screen and ${device.tablet} {
+    height: max-content;
+  }
 `;
 
 export const Backdrop = styled.div`

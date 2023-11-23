@@ -258,8 +258,8 @@ export const HyperLink = styled.a`
 `;
 
 export const MenuDot = styled.span`
-  height: 5px;
-  width: 5px;
+  height: 7px;
+  width: 7px;
   border-radius: 50%;
   background-color: ${(p) => p.theme.darkGray};
 `;

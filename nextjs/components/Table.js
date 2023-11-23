@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 const withIcon = ["languages", "frameworks_and_tools", "database", "hosting"];
 
 const T = ({ details }) => {
+  const id = details.id;
   const theme = useSelector((state) => state.main.theme);
   const exclude = ["id", "title", "demo", "image"];
 
@@ -19,8 +20,9 @@ const T = ({ details }) => {
   const getTable = (d, i) => {
     var animation = theme == "dark" ? "jitter" : null;
     return (
-      <tr key={`section-row-jitter-${d}-${i}`}>
+      <tr key={`section-row-jitter-${id}-${i}`}>
         <TableCell
+          key={`tablecell-left-${id}-${i}`}
           index={i}
           animation={animation}
           style={{
@@ -29,7 +31,11 @@ const T = ({ details }) => {
         >
           {d.replace(/_/g, " ")}
         </TableCell>
-        <TableCell key={`tablecell-right-${i}`} index={i} animation={animation}>
+        <TableCell
+          key={`tablecell-right-${id}-${i}`}
+          index={i}
+          animation={animation}
+        >
           {isURL(details[d]) ? (
             <HyperLink href={details[d]}>click here</HyperLink>
           ) : withIcon.includes(d) ? (
@@ -56,7 +62,7 @@ const T = ({ details }) => {
   };
 
   return (
-    <Table style={{ fontSize: 18 }}>
+    <Table key={`table-${id}`} style={{ fontSize: 18 }}>
       <tbody>
         {Object.keys(details).map(
           (d, i) => !exclude.includes(d) && getTable(d, i)

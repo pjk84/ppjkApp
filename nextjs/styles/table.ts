@@ -1,20 +1,23 @@
 import styled from "styled-components";
 
-export const TableCell = styled.td<{
+export const TableCell = styled.td.attrs<{
   index: number;
   animation?: "jitter" | "slide";
-}>`
+}>((props) => ({
+  style: {
+    animation:
+      props.animation === "jitter"
+        ? `0.${Math.random() + 7}s jitterIn ease-out`
+        : null,
+    backgroundColor:
+      props.index % 2 === 0
+        ? props.theme.table.rowLight
+        : props.theme.table.rowDark,
+  },
+}))`
   position: relative;
-  background-color: ${(p) =>
-    p.index % 2 === 0 ? p.theme.table.rowLight : p.theme.table.rowDark};
   padding: 10px;
   color: ${(p) => p.theme.color};
-  animation: ${(p) =>
-    p.animation === "jitter"
-      ? `0.${Math.random() + 7}s jitterIn ease-out`
-      : p.animation === "slide"
-      ? `${1 / p.index}s slideRight ease-out`
-      : null};
 `;
 
 export const TableHeader = styled.th<{}>`
