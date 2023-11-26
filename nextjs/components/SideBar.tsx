@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { actions } from "../state/actiontypes";
 import { Control, MenuDot, SidebarSwitch } from "../styles/buttons";
 import dynamic from "next/dynamic";
-import ApiPicker from "./apiControls";
+import ApiPicker from "./ApiControls";
 
 const Login = dynamic(() => import("./login"));
 const smallSizeThreshold = 800;

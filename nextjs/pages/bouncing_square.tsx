@@ -12,7 +12,6 @@ const Squares = () => {
   const [color, setColor] = useState(getRandomColor());
   const [grabbed, setGrabbed] = useState(false);
   const [collisionCounter, setCollisionCounter] = useState(0);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   function getRandomColor() {
     const letters = "0123456789ABCDEF";
@@ -63,12 +62,6 @@ const Squares = () => {
         setCollisionCounter(200);
       } else {
         setCollisionCounter(collisionCounter - 1);
-      }
-
-      if (window.innerWidth < 800) {
-        setIsSmallScreen(true);
-      } else {
-        setIsSmallScreen(false);
       }
 
       setCoords((coords) => [
