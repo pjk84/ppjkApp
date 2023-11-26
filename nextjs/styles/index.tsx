@@ -41,6 +41,7 @@ export const color = {
   darkerBlue: "#003b4d",
   darkestBlue: "#04232c",
   darkerGray: "black",
+  charcoal: "#282222",
   gray: "#6d7275",
   darkGray: "#3b3e40",
   mediumGray: "#525558",
@@ -91,6 +92,7 @@ export const appThemeLight = {
   header: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
     backgroundColor: color.offWhite,
+    borderColor: "transparent",
   },
   footer: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
@@ -195,7 +197,8 @@ export const appThemeDark = {
   },
   header: {
     boxShadow: "none",
-    backgroundColor: color.darkTheme.darkGray,
+    backgroundColor: color.charcoal,
+    borderColor: color.mediumGray,
   },
   footer: {
     boxShadow: "none",
@@ -253,7 +256,7 @@ export const appThemeDark = {
     },
   },
   sideBar: {
-    backgroundColor: color.darkTheme.darkGray,
+    backgroundColor: color.charcoal,
     textColor: color.lightGreen,
     borderColor: color.mediumGray,
     toggleBorder: color.mediumGray,

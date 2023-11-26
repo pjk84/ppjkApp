@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Control } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import apiClient, { AuthResponse } from "../../api/client";
@@ -6,6 +6,8 @@ import Cookies from "universal-cookie";
 import { actions } from "../../state/actiontypes";
 import { RootState } from "../../state";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { FlexBox } from "../../styles/containers";
+import { Notification } from "../../styles/notifications";
 
 const cookie = new Cookies();
 
@@ -28,6 +30,8 @@ const Login = () => {
     (state: RootState) => state.main.auth.loggedIn
   );
 
+  const authError = useSelector((state: RootState) => state.main.auth.error);
+
   const [active, setIsActive] = useState(false);
   const [attempts, setAttempts] = useState(0);
 
@@ -44,6 +48,7 @@ const Login = () => {
         payload
       );
     }
+
     if (creds) {
       cookie.set(ACCESS_TOKEN_KEY, creds.token);
       cookie.set(ACCESS_IDENTITY_KEY, creds.identity);
@@ -54,6 +59,7 @@ const Login = () => {
         error: null,
       });
     } else {
+      console.log("oops");
       dispatch({
         type: actions.SET_LOGGED_IN,
         error: "not authorized",
@@ -78,6 +84,15 @@ const Login = () => {
     });
   };
 
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: actions.SET_LOGGED_IN,
+        error: null,
+      });
+    };
+  }, []);
+
   const login = (
     <GoogleLogin
       onError={handleLoginError}
@@ -87,7 +102,14 @@ const Login = () => {
 
   const logOut = <Control onClick={handleLogOut}>log out</Control>;
 
-  return isLoggedIn ? logOut : login;
+  return (
+    <FlexBox column gapSize={10}>
+      {authError ? (
+        <Notification type="warning">{authError}</Notification>
+      ) : null}
+      {isLoggedIn ? logOut : login}
+    </FlexBox>
+  );
 };
 
 export default Login;

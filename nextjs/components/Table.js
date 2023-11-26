@@ -37,7 +37,9 @@ const T = ({ details }) => {
           animation={animation}
         >
           {isURL(details[d]) ? (
-            <HyperLink href={details[d]}>click here</HyperLink>
+            <HyperLink target="_blank" href={details[d]}>
+              click here
+            </HyperLink>
           ) : withIcon.includes(d) ? (
             details[d].map((language) => (
               <img
@@ -64,9 +66,9 @@ const T = ({ details }) => {
   return (
     <Table key={`table-${id}`} style={{ fontSize: 18 }}>
       <tbody>
-        {Object.keys(details).map(
-          (d, i) => !exclude.includes(d) && getTable(d, i)
-        )}
+        {Object.keys(details)
+          .filter((d) => !exclude.includes(d))
+          .map((d, i) => getTable(d, i))}
       </tbody>
     </Table>
   );

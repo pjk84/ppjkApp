@@ -1,31 +1,15 @@
-import React, { ReactElement, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
 import { FlexBox } from "../styles/containers";
-import { config } from "process";
-import { actions } from "../state/actiontypes";
-import { RootState } from "../state";
 
-const Settings = () => {
-  const dispatch = useDispatch();
-  const focus = useSelector((state: RootState) => state.main.focus);
-
+const ApiPicker = () => {
   useEffect(() => {
     if (!localStorage.getItem("API")) {
       const v = process.env["NEXT_PUBLIC_API"] || "DOTNET";
       setApi(v);
     }
-    if (focus !== "settings")
-      dispatch({ type: actions.SET_FOCUS, focus: "settings" });
+    // if (focus !== "settings")
+    //   dispatch({ type: actions.SET_FOCUS, focus: "settings" });
   });
-
-  const Section = ({ title, elem }: { title: string; elem: ReactElement }) => {
-    return (
-      <FlexBox column>
-        <h3>{title}</h3>
-        {elem}
-      </FlexBox>
-    );
-  };
 
   const setApi = (api: string) => {
     localStorage.setItem("API", api);
@@ -33,7 +17,7 @@ const Settings = () => {
 
   const api = localStorage.getItem("API");
 
-  const apiControls = (
+  const apiPicker = (
     <form key="config_api" style={{ display: "flex", gap: 10 }}>
       <label>
         <input
@@ -58,11 +42,7 @@ const Settings = () => {
     </form>
   );
 
-  return (
-    <FlexBox column>
-      <Section title="api" elem={apiControls} />
-    </FlexBox>
-  );
+  return apiPicker;
 };
 
-export default Settings;
+export default ApiPicker;

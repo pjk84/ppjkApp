@@ -80,6 +80,14 @@ const projects: Array<Project> = [
     demo: true,
   },
   {
+    id: "bouncing_square",
+    languages: ["typescript"],
+    category: "game",
+    code: "https://github.com/pjk84",
+    description: "it bounces",
+    demo: true,
+  },
+  {
     id: "game_of_life",
     languages: ["cplusplus"],
     category: "algorithm",

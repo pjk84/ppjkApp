@@ -20,7 +20,6 @@ type Istate = {
   focus?: string;
   theme?: string;
   showSideBar: boolean;
-  isSmallScreen: boolean;
 };
 
 type IblogState = {
@@ -52,7 +51,6 @@ const initialState: Istate & IblogState = {
   addedTags: [],
   selectedTags: [],
   showSideBar: false,
-  isSmallScreen: false,
 };
 
 const appReducer = (state = initialState, action: Action) => {
@@ -74,10 +72,6 @@ const appReducer = (state = initialState, action: Action) => {
     }
     case actions.SELECT_PROJECT: {
       return { ...state, project: action.id };
-    }
-
-    case actions.IS_SMALL_SCREEN: {
-      return { ...state, isSmallScreen: action.isSmallScreen };
     }
     case actions.SET_LOGGED_IN: {
       return {

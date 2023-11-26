@@ -12,6 +12,7 @@ import Nav from "../components/Nav";
 import SideBar, { ToggleSmallScreen } from "../components/SideBar";
 import { Backdrop } from "../styles/containers";
 import LoggedInIdentityBadge from "../components/login/LoginBadge";
+import Drops from "../components/drops";
 
 const Home: NextPage = ({ children }) => {
   return (
@@ -23,7 +24,13 @@ const Home: NextPage = ({ children }) => {
             <ToggleSmallScreen />
             <LoggedInIdentityBadge />
           </Ribbon>
-          <FlexBox align="center" justify="center" gapSize={25} wrap={"true"}>
+          <FlexBox
+            style={{ padding: 20 }}
+            align="center"
+            justify="center"
+            gapSize={25}
+            wrap={"true"}
+          >
             <Logo />
             <Nav />
           </FlexBox>

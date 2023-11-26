@@ -31,12 +31,12 @@ export const Drop = styled.div`
 export const Header = styled.header<{}>`
   display: flex;
   position: relative;
-  padding-bottom: 15px;
   justify-content: center;
   flex-wrap: wrap;
   background-color: ${(p) => p.theme.header.backgroundColor};
+  border-bottom: 1px solid;
+  border-color: ${(p) => p.theme.header.borderColor};
   box-shadow: ${(p) => p.theme.header.boxShadow};
-  gap: 20px;
   z-index: 1;
   &:after {
     animation: 1s stretch ease-out forwards, 0.1s fadeIn ease-out;
@@ -53,14 +53,13 @@ export const Ribbon = styled.div`
   gap: 25px;
   align-items: center;
   height: 30px;
-  padding: 2px;
+  /* padding: 2px; */
   padding-left: 10px;
-  min-height: 10px;
   width: 100%;
   background-color: ${(p) => p.theme.ribbon.color1};
-  @media only screen and ${device.tablet} {
+  /* @media only screen and ${device.tablet} {
     height: max-content;
-  }
+  } */
 `;
 
 export const Backdrop = styled.div`
@@ -87,7 +86,6 @@ export const SideBar = styled.div<{ active: boolean }>`
   /* -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   -o-transition: all 0.2s ease-in; */
-  width: ${(p) => (p.active ? "auto" : null)};
   opacity: ${(p) => (p.active ? 1 : 1)};
   overflow: hidden;
 `;
