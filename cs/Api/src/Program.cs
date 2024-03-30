@@ -22,11 +22,11 @@ var app = builder.Build();
 app.UseCors();
 
 app.UseSwagger();
-app.UseSwaggerUI(swaggerUiOptions =>
+app.UseSwaggerUI(opts =>
 {
-    swaggerUiOptions.DocumentTitle = "ppjk api";
-    swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "ppjk api");
-    swaggerUiOptions.RoutePrefix = string.Empty;
+    opts.DocumentTitle = "ppjk api";
+    opts.SwaggerEndpoint("/swagger/v1/swagger.json", "ppjk api");
+    opts.RoutePrefix = string.Empty;
 });
 
 if (env != "Local")
