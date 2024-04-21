@@ -16,6 +16,7 @@ IConfiguration config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
+
 startup.ConfigureServices(builder.Services, config);
 
 var app = builder.Build();
@@ -28,6 +29,8 @@ app.UseSwaggerUI(opts =>
     opts.SwaggerEndpoint("/swagger/v1/swagger.json", "ppjk api");
     opts.RoutePrefix = string.Empty;
 });
+
+app.UsePathBase(new PathString("/api/v1"));
 
 if (env != "Local")
 {

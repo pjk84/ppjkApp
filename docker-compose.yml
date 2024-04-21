@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   nextjs:
-    container_name: nextjs_app
+    container_name: nextjs
     build: ./nextjs
     restart: always
     expose:
@@ -10,22 +10,11 @@ services:
     env_file:
       - ./nextjs/.env.production
 
-  # flaskapp:
-  #   build:
-  #     context: ./flaskapp
-  #     dockerfile: dockerfile.prod
-  #   container_name: flask_api
-  #   command: gunicorn --bind 0.0.0.0:5000 wsgi:my_app
-  #   expose:
-  #     - 5000
-  #   env_file:
-  #     - ./flaskapp/build/.env.prod
-
   dotnet:
     build:
       context: ./cs
       dockerfile: dockerfile.prod
-    container_name: dotnet_api
+    container_name: dotnet
     expose:
       - 5002
     depends_on:
@@ -51,7 +40,7 @@ services:
       - ./certbot/conf/:/etc/letsencrypt/:rw
 
   redis:
-    container_name: redis_cache
+    container_name: redis
     image: redis:6.2-alpine
     restart: always
     ports:

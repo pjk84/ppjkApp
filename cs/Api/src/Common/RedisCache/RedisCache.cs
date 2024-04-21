@@ -3,17 +3,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Api.Common.RedisCache
 {
-    public class RedisCache : IRedisCache
+    public class RedisCache(IDistributedCache cache) : IRedisCache
     {
-        private readonly IDistributedCache _cache;
-        public RedisCache(IDistributedCache cache)
-        {
-            _cache = cache;
-        }
-
         public async Task<T?> GetAsync<T>(string key)
         {
-            var cachedAsBytesArray = await _cache.GetAsync(key);
+
+            var cachedAsBytesArray = await cache.GetAsync(key);
 
             if ((cachedAsBytesArray?.Count() ?? 0) > 0)
             {
@@ -21,7 +16,7 @@ namespace Api.Common.RedisCache
                 var serialized = Encoding.UTF8.GetString(cachedAsBytesArray!);
                 return JsonSerializer.Deserialize<T>(serialized);
             }
-            throw new KeyNotFoundException();
+            return default;
         }
 
         public async Task SetAsync<T>(string key, T value)
@@ -29,7 +24,7 @@ namespace Api.Common.RedisCache
             var serialized = JsonSerializer.Serialize(value);
             Console.WriteLine($"setting cache key {key}");
             var asBytesArray = Encoding.UTF8.GetBytes(serialized);
-            await _cache.SetAsync(key, asBytesArray);
+            await cache.SetAsync(key, asBytesArray);
         }
     }
 }
