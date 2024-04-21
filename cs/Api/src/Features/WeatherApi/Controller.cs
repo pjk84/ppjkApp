@@ -30,7 +30,7 @@ public class WeatherController : ControllerBase
     [Route("~/weather/ip")]
     public async Task<ActionResult<WeatherByIpView>> getWeatherByIp()
     {
-        var clientIp = Request.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+        string? clientIp = Request.Headers["X-Forwarded-For"];
         if (clientIp == null)
         {
             return BadRequest();
