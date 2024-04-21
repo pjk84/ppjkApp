@@ -47,6 +47,10 @@ public class WeatherController : ControllerBase
         try
         {
             var weather = await _weatherApi.GetWeatherByCoords(lat, lon);
+            if (weather == null)
+            {
+                return BadRequest();
+            }
             return Ok(new WeatherByIpView(clientIp, weather));
         }
         catch (UnauthorizedAccessException)
