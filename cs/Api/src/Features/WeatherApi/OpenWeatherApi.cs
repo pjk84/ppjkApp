@@ -31,7 +31,7 @@ public class OpenWeatherApi : BaseApiClient, IOpenWeatherApi
         var weatherData = await _cache.GetAsync<WeatherView>(cacheKey);
 
         // diff in seconds between now and datetime of latest measurements.
-        var mustRefresh = (DateTime.UtcNow - weatherData?.MeasurementTime) > TimeSpan.FromMinutes(measurementsRefreshRateInMinutes);
+        var mustRefresh = weatherData == null || (DateTime.UtcNow - weatherData?.MeasurementTime) > TimeSpan.FromMinutes(measurementsRefreshRateInMinutes);
 
         if (mustRefresh)
         {
