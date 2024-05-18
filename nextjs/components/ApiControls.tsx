@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import { FlexBox } from "../styles/containers";
 
+enum ApiFramework {
+  dotnet,
+  flask,
+}
+
 const ApiPicker = () => {
   useEffect(() => {
     if (!localStorage.getItem("API")) {
-      const v = process.env["NEXT_PUBLIC_API"] || "DOTNET";
-      setApi(v);
+      setApi(ApiFramework.dotnet);
     }
-    // if (focus !== "settings")
-    //   dispatch({ type: actions.SET_FOCUS, focus: "settings" });
   });
 
-  const setApi = (api: string) => {
-    localStorage.setItem("API", api);
+  const setApi = (api: ApiFramework) => {
+    localStorage.setItem("API", api.toString());
   };
 
   const api = localStorage.getItem("API");
@@ -22,8 +24,8 @@ const ApiPicker = () => {
       <label>
         <input
           key="config_api_dotnet"
-          defaultChecked={api === "DOTNET"}
-          onChange={() => setApi("DOTNET")}
+          defaultChecked={api === ApiFramework.dotnet.toString()}
+          onChange={() => setApi(ApiFramework.dotnet)}
           type="radio"
           name="api"
         />
@@ -32,8 +34,8 @@ const ApiPicker = () => {
       <label>
         <input
           key="config_api_flask"
-          defaultChecked={api === "FLASK"}
-          onChange={() => setApi("FLASK")}
+          defaultChecked={api === ApiFramework.flask.toString()}
+          onChange={() => setApi(ApiFramework.flask)}
           type="radio"
           name="api"
         />
