@@ -1,10 +1,5 @@
 import React, { useEffect } from "react";
-import { FlexBox } from "../styles/containers";
-
-enum ApiFramework {
-  dotnet,
-  flask,
-}
+import { ApiFramework } from "../api/client";
 
 const ApiPicker = () => {
   useEffect(() => {

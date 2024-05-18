@@ -5,8 +5,13 @@ import { Post } from "../components/blog/types";
 
 export type AuthResponse = { token: string; identity: string };
 
+export enum ApiFramework {
+  dotnet = "dotnet",
+  flask = "flask",
+}
+
 const apiClient = () => {
-  const apiFramework = localStorage.getItem("API") || "dotnet";
+  const apiFramework = localStorage.getItem("API") || ApiFramework.dotnet;
   const apiPrefix = `/api/${apiFramework}/`;
   const cookie = new Cookies();
   const token = cookie.get("access_token");
@@ -32,7 +37,7 @@ const apiClient = () => {
 
   const fetchBlogMessages = async () => {
     try {
-      if (process.env.API == "DOTNET") {
+      if (process.env.API == ApiFramework.dotnet) {
       }
       const messages = await axios.get(`${apiPrefix}/blog/posts`, {
         withCredentials: true,
