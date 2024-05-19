@@ -35,7 +35,7 @@ public class WeatherController : ControllerBase
         {
             return BadRequest();
         }
-        var ipApiResponse = await _ipApi.GetCoordsByIp(clientIp);
+        var ipApiResponse = await _ipApi.GetCoordsByIp("86.83.105.101");
 
         if (ipApiResponse == null)
         {

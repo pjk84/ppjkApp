@@ -16,7 +16,6 @@ IConfiguration config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-
 startup.ConfigureServices(builder.Services, config);
 
 var app = builder.Build();

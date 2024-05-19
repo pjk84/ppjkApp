@@ -1,13 +1,13 @@
-import { Post, Tag } from "../components/blog/types";
 import { combineReducers } from "redux";
 import { actions, blogActions } from "./actiontypes";
+import { now } from "lodash";
 
 type Action = {
   type: string;
   [Key: string]: any;
 };
 
-type Istate = {
+type IAppState = {
   active: Array<string>;
   project?: string;
   loggedIn?: boolean;
@@ -22,38 +22,24 @@ type Istate = {
   showSideBar: boolean;
 };
 
-type IblogState = {
-  addingPost?: boolean;
-  activePost?: Post;
-  posts: Array<Post>;
-  focussedPost?: Post;
-  editingPost?: boolean;
-  deletingPost?: boolean;
-  title?: string;
-  warning?: string;
-  isPosting?: boolean;
-  loader?: string;
-  body?: string;
-  loaded?: boolean;
-  draft?: Post;
-  addedTags: Array<string>;
-  reload: boolean;
-  selectedTags: Array<string>;
-};
-
-const initialState: Istate & IblogState = {
-  reload: true,
+const initialAppState: IAppState = {
   active: [],
-  posts: [],
   auth: {
     loggedIn: false,
   },
-  addedTags: [],
-  selectedTags: [],
   showSideBar: false,
 };
 
-const appReducer = (state = initialState, action: Action) => {
+type IBitvavState = {
+  timeFetched?: Date;
+  portfolio?: Portfolio;
+};
+
+const initialBitvavoState: IBitvavState = {
+  portfolio: { total: 100, assets: [], currency: "EUR" },
+};
+
+const appReducer = (state = initialAppState, action: Action): IAppState => {
   switch (action.type) {
     case actions.SET_ACTIVE: {
       return {
@@ -94,91 +80,23 @@ const appReducer = (state = initialState, action: Action) => {
   }
 };
 
-const blogReducer = (state = initialState, action: Action) => {
+const bitvavoReducer = (
+  state = initialBitvavoState,
+  action: Action
+): IBitvavState => {
   switch (action.type) {
-    case blogActions.SET_POSTS: {
+    case actions.SET_BITVAVO_PORTFOLIO: {
       return {
         ...state,
-        posts: action.posts,
-        loader: undefined,
-        editingPost: undefined,
-        loaded: true,
-        draft: undefined,
-        deletingPost: undefined,
-        focussedPost: undefined,
-        reload: false,
-        warning: undefined,
-        selectedTags: [],
+        portfolio: action.portfolio,
+        timeFetched: new Date(), // Use new Date() to get the current date-time
       };
-    }
-    case actions.ADDING_BLOG_POST: {
-      return {
-        ...state,
-        addingPost: !state.addingPost,
-        body: state.body && undefined,
-        warning: state.addingPost && undefined,
-        title: undefined,
-        loader: "posting",
-      };
-    }
-    case blogActions.FOCUS_POST: {
-      return { ...state, reload: true, focussedPost: action.post };
-    }
-    case blogActions.RELOAD_REQUIRED: {
-      return {
-        ...state,
-        reload: true,
-      };
-    }
-    case actions.IS_EDITING: {
-      return { ...state, editingPost: !state.editingPost };
-    }
-    case blogActions.DELETE_POST: {
-      return {
-        ...state,
-        deletingPost: false,
-        posts: state.posts.filter((p) => p.id !== action.id),
-      };
-    }
-    case blogActions.SET_DRAFT: {
-      if (action.draft === null) {
-        return { ...state, draft: null };
-      }
-      if (!state.draft) {
-        return { ...state, draft: action.draft };
-      }
-      return { ...state, draft: { ...state.draft, ...action.draft } };
-    }
-    case blogActions.IS_DELETING: {
-      return { ...state, deletingPost: !state.deletingPost };
-    }
-    case blogActions.RESET_POST: {
-      return {
-        ...state,
-        addedTags: [],
-        draft: undefined,
-        editingPost: undefined,
-        deletingPost: undefined,
-      };
-    }
-    case blogActions.REMOVE_TAG: {
-      return {
-        ...state,
-        addedTags: state.addedTags.filter((t) => t !== action.tag),
-      };
-    }
-    case blogActions.SET_SELECTED_TAGS: {
-      return { ...state, selectedTags: action.tags };
-    }
-    case actions.SET_WARNING: {
-      return { ...state, warning: action.message };
-    }
-    case actions.SET_LOADER: {
-      return { ...state, loader: action.action };
     }
     default:
       return state;
   }
 };
-
-export default combineReducers({ main: appReducer, blog: blogReducer });
+export default combineReducers({
+  bitvavo: bitvavoReducer,
+  main: appReducer,
+});

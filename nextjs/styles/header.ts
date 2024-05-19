@@ -20,5 +20,6 @@ export const Header2 = styled.h1`
   border: none;
   display: flex;
   font-weight: normal;
+
   /* justify-content: center; */
 `;

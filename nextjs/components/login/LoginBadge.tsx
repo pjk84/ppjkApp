@@ -27,7 +27,7 @@ const LoggedInIdentityBadge = () => {
     }
   });
   return loggedInIdentity ? (
-    <Notification>{`logged in as: ${loggedInIdentity}`}</Notification>
+    <Notification>{`logged in as ${loggedInIdentity}`}</Notification>
   ) : null;
 };
 

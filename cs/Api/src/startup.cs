@@ -13,6 +13,7 @@ using Api.Common.GeoCoding;
 using Api.Common.IpApi;
 using Api.Features.WeatherApi;
 using Api.Database;
+using Api.Features.Bitvavo;
 
 
 public class Startup
@@ -40,6 +41,7 @@ public class Startup
         services.AddSingleton<IIpApi, IpApi>();
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
         services.AddSingleton<IGeoCoding, GeoCoding>();
+        services.AddSingleton<IBitvavoClient, BitvavoClient>();
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
 
@@ -68,22 +70,22 @@ public class Startup
 
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //     .AddJwtBearer(opts =>
-        //     {
-        //         opts.TokenValidationParameters = new TokenValidationParameters
-        //         {
-        //             ValidateIssuerSigningKey = true,
-        //             ValidateIssuer = false,
-        //             ValidateAudience = false,
-        //             RequireExpirationTime = false,
-        //             IssuerSigningKey = new SymmetricSecurityKey(
-        //                 Encoding.UTF8.GetBytes(
-        //                     Environment.GetEnvironmentVariable(config["Auth:SecretKey"])
-        //                 )
-        //             )
-        //         };
-        //     });
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opts =>
+            {
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    RequireExpirationTime = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(
+                            config["Auth:SecretKey"]
+                            )
+                        )
+                };
+            });
 
         services.AddCors(options =>
         {

@@ -263,3 +263,15 @@ export const MenuDot = styled.span`
   border-radius: 50%;
   background-color: ${(p) => p.theme.darkGray};
 `;
+
+const StyledLink = styled.li`
+  text-decoration: none;
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+`;

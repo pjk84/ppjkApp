@@ -12,7 +12,6 @@ import Nav from "../components/Nav";
 import SideBar, { ToggleSmallScreen } from "../components/SideBar";
 import { Backdrop } from "../styles/containers";
 import LoggedInIdentityBadge from "../components/login/LoginBadge";
-import Drops from "../components/drops";
 
 const Home: NextPage = ({ children }) => {
   return (

@@ -8,12 +8,14 @@ import { actions } from "../state/actiontypes";
 import { Control, MenuDot, SidebarSwitch } from "../styles/buttons";
 import dynamic from "next/dynamic";
 import ApiPicker from "./ApiControls";
+import { useRouter } from "next/router";
 
 const Login = dynamic(() => import("./login"));
 const smallSizeThreshold = 800;
 
 export const ToggleSmallScreen = () => {
   const dispatch = useDispatch();
+
   return (
     <FlexBox
       style={{ cursor: "pointer" }}
@@ -28,11 +30,13 @@ export const ToggleSmallScreen = () => {
 };
 
 const SBar = () => {
+  const router = useRouter();
   const active = useSelector((s: RootState) => s.main.showSideBar);
 
   const list = (
     <StdList>
       <Login />
+      <Control onClick={() => router.push("/private/bitvavo")}>bitvavo</Control>
       <Theme />
       <ApiPicker />
     </StdList>

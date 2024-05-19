@@ -15,7 +15,11 @@ const Title = () => {
     );
   });
   return (
-    <Link href={"/"} passHref={true}>
+    <Link
+      style={{ color: "inherit", textDecoration: "inherit" }}
+      href={"/"}
+      passHref={true}
+    >
       <FlexBox key={tick.toString()}>
         {Array.from(title).map((l, i) => (
           <Header2

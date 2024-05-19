@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface TableCellProps {
   index: number;
   animation?: "jitter" | "slide";
+  transparent?: boolean;
 }
 
 export const TableCell = styled.td.attrs<TableCellProps>((props) => ({
@@ -11,10 +12,11 @@ export const TableCell = styled.td.attrs<TableCellProps>((props) => ({
       props.animation === "jitter"
         ? `0.${Math.random() + 7}s jitterIn ease-out`
         : null,
-    backgroundColor:
-      props.index % 2 === 0
-        ? props.theme.table.rowLight
-        : props.theme.table.rowDark,
+    backgroundColor: props.transparent
+      ? "transparent"
+      : props.index % 2 === 0
+      ? props.theme.table.rowLight
+      : props.theme.table.rowDark,
   },
 }))<TableCellProps>`
   position: relative;

@@ -24,6 +24,7 @@ export const color = {
   darkTheme: {
     darkGray: "#282222",
     darkGray2: "#332d2d",
+    darkGray3: "#2d2727",
     mediumGray: "#4b4545",
     mediumGray2: "#776d6d",
     lightGray: "#aca3a3",
@@ -166,7 +167,7 @@ export const appThemeDark = {
   color: color.darkTheme.lighterGray,
   table: {
     rowLight: color.darkTheme.darkGray2,
-    rowDark: null,
+    rowDark: color.darkTheme.darkGray3,
     header: color.darkTheme.mediumGray,
   },
   posts: {

@@ -21,7 +21,12 @@ const NavBar = () => {
             {p}
           </NavItem>
         ) : (
-          <Link key={`page-link-${p}`} href={`/${p}`} passHref>
+          <Link
+            style={{ color: "inherit", textDecoration: "inherit" }}
+            key={`page-link-${p}`}
+            href={`/${p}`}
+            passHref
+          >
             <NavItem active={active}>{p}</NavItem>
           </Link>
         );
