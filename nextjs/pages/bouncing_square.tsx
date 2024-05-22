@@ -1,7 +1,7 @@
 import { dir } from "console";
 import { size } from "../styles/devices";
 import { useEffect, useRef, useState } from "react";
-import { FlexBox } from "../styles/containers";
+import { FlexBox, PageWrapper } from "../styles/containers";
 
 const Squares = () => {
   var maxSquareSize = 100;
@@ -185,50 +185,52 @@ const Squares = () => {
   };
 
   return (
-    <FlexBox
-      gapSize={10}
-      column
-      style={{ height: "100%", position: "relative" }}
-    >
-      <FlexBox column gapSize={10}>
-        <div>grab and move to change position and direction</div>
-        <div>{`square size: ${squareSize} (scroll to change)`}</div>
-      </FlexBox>
-      <div
-        ref={ref}
-        onMouseDown={getCoords}
-        onTouchStart={getCoords}
-        onTouchMove={move}
-        onMouseMove={move}
-        onTouchEnd={() => setGrabbed(false)}
-        onMouseUp={() => setGrabbed(false)}
-        onWheel={resize}
-        id="squares"
-        style={{
-          border:
-            collisionCounter > 0
-              ? `1px solid ${color}`
-              : "1px solid transparent",
-          transition: "1s",
-          position: "relative",
-          padding: 0,
-          height: "100%",
-        }}
+    <PageWrapper>
+      <FlexBox
+        gapSize={10}
+        column
+        style={{ height: "100%", position: "relative" }}
       >
+        <FlexBox column gapSize={10}>
+          <div>grab and move to change position and direction</div>
+          <div>{`square size: ${squareSize} (scroll to change)`}</div>
+        </FlexBox>
         <div
+          ref={ref}
+          onMouseDown={getCoords}
+          onTouchStart={getCoords}
+          onTouchMove={move}
+          onMouseMove={move}
+          onTouchEnd={() => setGrabbed(false)}
+          onMouseUp={() => setGrabbed(false)}
+          onWheel={resize}
+          id="squares"
           style={{
-            borderRadius: 4,
-            position: "absolute",
-            left: coords[0],
-            top: coords[1],
-
-            height: squareSize,
-            width: squareSize,
-            backgroundColor: color,
+            border:
+              collisionCounter > 0
+                ? `1px solid ${color}`
+                : "1px solid transparent",
+            transition: "1s",
+            position: "relative",
+            padding: 0,
+            height: "100%",
           }}
-        ></div>
-      </div>
-    </FlexBox>
+        >
+          <div
+            style={{
+              borderRadius: 4,
+              position: "absolute",
+              left: coords[0],
+              top: coords[1],
+
+              height: squareSize,
+              width: squareSize,
+              backgroundColor: color,
+            }}
+          ></div>
+        </div>
+      </FlexBox>
+    </PageWrapper>
   );
 };
 

@@ -118,18 +118,19 @@ export const Main = styled.main<{}>`
   background-color: ${(p) => p.theme.main.backgroundColor};
 `;
 
-export const Inner = styled.div<{}>`
+export const PageWrapper = styled.div<{ maxWidth?: number; center?: boolean }>`
   position: relative;
   display: flex;
   width: 95%;
   padding: 5px;
   padding-bottom: 25px;
   padding-top: 25px;
+  justify-content: ${(props) => (props.center ? "center" : null)};
 
   @media only screen and ${device.tablet} {
-    width: ${size.tablet};
+    max-width: ${(props) => `${props.maxWidth ?? 800}px`};
     padding: 20px;
-    padding-top: 150px;
+    padding-top: 50px;
   }
   background-color: ${(p) => p.theme.inner.backgroundColor};
   flex-direction: column;
@@ -153,7 +154,6 @@ export const ButtonBox = styled.div<{ column?: boolean }>`
   flex-wrap: wrap;
   gap: 10px;
   width: 80%;
-  margin-top: 30px;
   flex-direction: ${(props) => props.column && "column"};
 `;
 

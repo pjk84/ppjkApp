@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlexBox } from "../styles/containers";
+import { FlexBox, PageWrapper } from "../styles/containers";
 import apiClient from "../api/client";
 import { TableCell } from "../styles/table";
 import Loader from "../components/Loaders";
@@ -70,25 +70,27 @@ const WeatherApi = () => {
   });
 
   return (
-    <FlexBox
-      justify="center"
-      id="weather_api_main"
-      style={{
-        overflow: "hidden",
-        transition: "all 0.1s",
-      }}
-    >
-      <FlexBox column gapSize={"large"}>
-        {weatherResponse ? (
-          <div>{`weather data for ip address: ${weatherResponse?.ipAddress}`}</div>
-        ) : fetched ? (
-          "could not get weather data"
-        ) : (
-          <Loader type="round" text="loading weather data.." />
-        )}
-        {weatherResponse && WeatherDetails(weatherResponse.weatherData)}
+    <PageWrapper>
+      <FlexBox
+        justify="center"
+        id="weather_api_main"
+        style={{
+          overflow: "hidden",
+          transition: "all 0.1s",
+        }}
+      >
+        <FlexBox column gapSize={"large"}>
+          {weatherResponse ? (
+            <div>{`weather data for ip address: ${weatherResponse?.ipAddress}`}</div>
+          ) : fetched ? (
+            "could not get weather data"
+          ) : (
+            <Loader type="round" text="loading weather data.." />
+          )}
+          {weatherResponse && WeatherDetails(weatherResponse.weatherData)}
+        </FlexBox>
       </FlexBox>
-    </FlexBox>
+    </PageWrapper>
   );
 };
 export default WeatherApi;

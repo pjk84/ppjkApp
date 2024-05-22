@@ -36,7 +36,7 @@ type IBitvavState = {
 };
 
 const initialBitvavoState: IBitvavState = {
-  portfolio: { total: 100, assets: [], currency: "EUR" },
+  portfolio: undefined,
 };
 
 const appReducer = (state = initialAppState, action: Action): IAppState => {
@@ -89,7 +89,6 @@ const bitvavoReducer = (
       return {
         ...state,
         portfolio: action.portfolio,
-        timeFetched: new Date(), // Use new Date() to get the current date-time
       };
     }
     default:

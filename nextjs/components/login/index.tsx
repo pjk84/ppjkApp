@@ -50,8 +50,8 @@ const Login = () => {
     }
 
     if (creds) {
-      cookie.set(ACCESS_TOKEN_KEY, creds.token, { path: "/" });
-      cookie.set(ACCESS_IDENTITY_KEY, creds.identity, { path: "/" });
+      cookie.set(ACCESS_TOKEN_KEY, creds.token,  { path: "/" });
+      cookie.set(ACCESS_IDENTITY_KEY, creds.identity,  { path: "/" });
       dispatch({
         type: actions.SET_LOGGED_IN,
         loggedIn: true,

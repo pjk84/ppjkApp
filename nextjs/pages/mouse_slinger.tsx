@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FlexBox } from "../styles/containers";
+import { FlexBox, PageWrapper } from "../styles/containers";
 import { getRandomNumber } from "../helpers";
 
 const fieldStyle = {
@@ -243,45 +243,47 @@ const MouseSlinger = () => {
     };
   });
   return (
-    <FlexBox
-      id="mouse_slinger_main"
-      style={{
-        height: "100%",
-        overflow: "hidden",
-        transition: "all 0.1s",
-      }}
-      ref={ref}
-    >
-      <FlexBox column gapSize={5} style={{ padding: 5 }}>
-        {game.status === 2 && <div>gameover</div>}
-        <div>hp: {game.health}</div>
-        <div>body count: {game.bodyCount}</div>
-      </FlexBox>
-      <div
-        ref={blood}
+    <PageWrapper>
+      <FlexBox
+        id="mouse_slinger_main"
         style={{
-          transition: `5s all`,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "red",
-          zIndex: game.status === 2 ? 1 : 0,
-          opacity: game.status === 2 ? 0.5 : 0,
+          height: "100%",
+          overflow: "hidden",
+          transition: "all 0.1s",
         }}
-      ></div>
-      {game.targets.map((t) => {
-        return (
-          <Target
-            props={t}
-            id={String(t.id)}
-            kill={killTarget}
-            key={`target-${t.id}`}
-          />
-        );
-      })}
-    </FlexBox>
+        ref={ref}
+      >
+        <FlexBox column gapSize={5} style={{ padding: 5 }}>
+          {game.status === 2 && <div>gameover</div>}
+          <div>hp: {game.health}</div>
+          <div>body count: {game.bodyCount}</div>
+        </FlexBox>
+        <div
+          ref={blood}
+          style={{
+            transition: `5s all`,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "red",
+            zIndex: game.status === 2 ? 1 : 0,
+            opacity: game.status === 2 ? 0.5 : 0,
+          }}
+        ></div>
+        {game.targets.map((t) => {
+          return (
+            <Target
+              props={t}
+              id={String(t.id)}
+              kill={killTarget}
+              key={`target-${t.id}`}
+            />
+          );
+        })}
+      </FlexBox>
+    </PageWrapper>
   );
 };
 export default MouseSlinger;

@@ -8,7 +8,7 @@ import ProjectDetails from "../../components/projects/Details";
 import projects from "../../data/projects";
 import { useRouter } from "next/router";
 import { RootState } from "../../state";
-import { FlexBoxCentered } from "../../styles/containers";
+import { FlexBoxCentered, PageWrapper } from "../../styles/containers";
 
 const Projects = () => {
   const selectedProject = useSelector((state: RootState) => state.main.project);
@@ -29,11 +29,13 @@ const Projects = () => {
   if (!projectDetails) return null;
 
   return (
-    <FlexBoxCentered gap={50}>
-      <ProjectButtons miniaturized={true} />
-      <ProjectDetails key={`projectDetails-${id}`} project={projectDetails} />
-      {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
-    </FlexBoxCentered>
+    <PageWrapper>
+      <FlexBoxCentered gap={50}>
+        <ProjectButtons miniaturized={true} />
+        <ProjectDetails key={`projectDetails-${id}`} project={projectDetails} />
+        {projectDetails.demo && <LaunchProject projectId={projectDetails.id} />}
+      </FlexBoxCentered>
+    </PageWrapper>
   );
 };
 

@@ -67,6 +67,19 @@ li {
   animation: 2s breathe infinite ease-in;
 }
 
+.IntableButton:hover {
+  opacity: 0.5;
+}
+.IntableButton {
+  position: absolute;
+  opacity: 0;
+  right: 0px;
+  left: 0px;
+  top: 0;
+  cursor: pointer;
+  text-align: right;
+}
+
 #top {
   display: flex;
   justify-content: center;

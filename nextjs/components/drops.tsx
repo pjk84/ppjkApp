@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { ReactElement, useEffect, useRef, useState } from "react";
-import { Drop } from "../styles/containers";
+import { Drop, PageWrapper } from "../styles/containers";
 import { useSelector, useDispatch } from "react-redux";
 import { actions } from "../state/actiontypes";
 import { RootState } from "../state";
@@ -52,18 +52,19 @@ const Drops: NextPage = () => {
     }
   }, [addElem, elem, dispatch, focus]);
   return (
-    // <div>boingg</div>
-    <div
-      ref={myRef}
-      id="rain"
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        height: "100%",
-      }}
-    >
-      {elem && elem.map((e) => e)}
-    </div>
+    <PageWrapper>
+      <div
+        ref={myRef}
+        id="rain"
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          height: "100%",
+        }}
+      >
+        {elem && elem.map((e) => e)}
+      </div>
+    </PageWrapper>
   );
 };
 

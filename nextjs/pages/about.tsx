@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { RootState } from "../state";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../state/actiontypes";
-import { FlexBox } from "../styles/containers";
+import { FlexBox, PageWrapper } from "../styles/containers";
 import ppjk from "../public/ppjk.png";
 import Languages from "../components/about/languages";
 import Basics from "../components/about/basics";
@@ -23,7 +23,7 @@ const AboutMe = () => {
   });
 
   return (
-    <div>
+    <PageWrapper>
       <FlexBox gapSize={40} column>
         <img
           style={{ width: "50%" }}
@@ -35,7 +35,7 @@ const AboutMe = () => {
         <Languages />
         <Tools />
       </FlexBox>
-    </div>
+    </PageWrapper>
   );
 };
 
