@@ -1,7 +1,7 @@
 using Api.Database.Models;
 namespace Api.Database;
 
-public interface IUserService
+public interface IUserContext
 {
     public Task<List<User>> GetAsync();
     public Task<User?> GetAsync(string id);

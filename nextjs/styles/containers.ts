@@ -121,6 +121,7 @@ export const Main = styled.main<{}>`
 export const PageWrapper = styled.div<{ maxWidth?: number; center?: boolean }>`
   position: relative;
   display: flex;
+  gap: 50px;
   width: 95%;
   padding: 5px;
   padding-bottom: 25px;

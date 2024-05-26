@@ -13,7 +13,6 @@ public class BitvavoClient : BaseApiClient, IBitvavoClient
 {
     private readonly string _apiKey;
     private readonly string _apiSecret;
-    private readonly string _creds;
 
     public BitvavoClient(HttpClient http, IRedisCache cache, IConfiguration config) : base(http, config, cache)
     {

@@ -38,6 +38,7 @@ export const color = {
   darkGreen: "#347940",
   lightGreen: "#cbf1d2",
   blue: "#2fb7e0",
+  lightBlue: "#73d4f1",
   darkBlue: "#007498",
   darkerBlue: "#003b4d",
   darkestBlue: "#04232c",
@@ -126,7 +127,11 @@ export const appThemeLight = {
       color: color.lightGray,
     },
     hover: {
-      color: color.darkGray,
+      color: {
+        blue: color.lightBlue,
+        red: color.lightGreen,
+        default: color.darkGray,
+      },
     },
     backgroundColor: color.lighterGray,
     boxShadow: color.lightGray,
@@ -155,7 +160,14 @@ export const appThemeLight = {
     textColor: color.darkGray,
   },
   barChart: {
-    backgroundColor: color.green,
+    backgroundColor: {
+      active: color.mediumGray,
+      inactive: color.green,
+    },
+    label: {
+      text: color.darkGray,
+    },
+    lineColor: color.lighterGray2,
     textColor: color.darkGray,
     labelColor: color.darkGray,
   },
@@ -232,7 +244,11 @@ export const appThemeDark = {
       color: color.lightGray,
     },
     hover: {
-      color: color.offWhite,
+      color: {
+        blue: color.lightBlue,
+        red: color.lightGreen,
+        default: color.lightestGray,
+      },
     },
     backgroundColor: color.lighterGray,
     boxShadow: color.lightGray,
@@ -263,7 +279,14 @@ export const appThemeDark = {
     toggleBorder: color.mediumGray,
   },
   barChart: {
-    backgroundColor: color.lightGreen,
+    backgroundColor: {
+      active: color.lightGreen,
+      inactive: color.green,
+    },
+    label: {
+      text: color.offWhite,
+    },
+    lineColor: color.darkGray,
     textColor: color.lightestGray,
     labelColor: color.darkGray,
   },

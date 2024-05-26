@@ -19,7 +19,14 @@ public record BitvavoPortfolioView(
     double TotalValue,
     double TotalResult,
     double TotalSpent,
-    double TotalReturnOnInvestment
+    double TotalReturnOnInvestment,
+    bool hasMissingValues
 );
 
 public record BitvavoTransactionHistoryView(string Date, double AmountSpent, double Fees);
+
+public record BitvavoPortfolioSnapshotView(int Year, int Month, string MonthName, BitvavoPortfolioSnapshotDayView[] Days);
+
+public record BitvavoPortfolioSnapshotDayView(int Day, double total, BitvavoAssetSnapshotView[] assets);
+
+public record BitvavoAssetSnapshotView(string Market, double Value);

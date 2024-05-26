@@ -1,5 +1,7 @@
 using System.Globalization;
 using Api.Common.Result;
+using Api.Database;
+using Api.Database.Models;
 
 namespace Api.Features.Bitvavo;
 
@@ -7,7 +9,7 @@ using R = Result<BitvavoPortfolioView>;
 
 public record GetBitvavoBalanceQuery() : IRequest<R>;
 
-public class BitvavoBalanceHandler(IBitvavoClient client) : IRequestHandler<GetBitvavoBalanceQuery, R>
+public class BitvavoBalanceHandler(IBitvavoClient client, IBitvavoContext database) : IRequestHandler<GetBitvavoBalanceQuery, R>
 {
 
     public async Task<R> Handle(GetBitvavoBalanceQuery request, CancellationToken cancellationToken)
@@ -18,13 +20,22 @@ public class BitvavoBalanceHandler(IBitvavoClient client) : IRequestHandler<GetB
             return Result.Failed<BitvavoPortfolioView>();
         }
         var history = await client.GetTransactionHistoryAsync(cancellationToken);
-        var view = await ToView(balance, history!, cancellationToken);
+        if (history == null)
+        {
+            return Result.Failed<BitvavoPortfolioView>();
+        }
+        var view = await ToView(balance, history, cancellationToken);
+        if (!view.hasMissingValues)
+        {
+            await CreateSnapshot(view);
+        }
         return Result.Ok(view);
 
     }
 
     private async Task<BitvavoPortfolioView> ToView(BitvavoBalance[] balance, BitvavoTransactionHistory transactionHistory, CancellationToken ct)
     {
+        var hasMissingValues = false;
         List<BitvavoAssetView> assets = [];
         foreach (var market in balance)
         {
@@ -33,27 +44,11 @@ public class BitvavoBalanceHandler(IBitvavoClient client) : IRequestHandler<GetB
             var p24h = await client.Get24hPriceAsync(m, ct);
             if (p == null || p24h == null)
             {
+                hasMissingValues = true;
                 continue;
             }
-            var price = ParseDouble(p.Price);
-            var price24h = ParseDouble(p24h.Open);
-            var priceAction24h = GetRoi(price, price24h);
-            var spent = transactionHistory.Items.Where(i => i.ReceivedCurrency == market.Symbol).Sum(i => ParseDouble(i.SentAmount) + ParseDouble(i.FeesAmount));
-            var transactionHistoryView = GetTransactionHistory(market.Symbol, transactionHistory);
-            var availability = ParseDouble(market.Available);
-            var value = RoundDouble(price * availability);
-            assets.Add(new(
-                market.Symbol,
-                Available: availability,
-                Price: price,
-                Price24h: price24h,
-                priceAction24h: GetRoi(price, price24h),
-                Value: value,
-                TransactionHistory: transactionHistoryView,
-                AmountSpent: RoundDouble(spent),
-                Result: RoundDouble(value - spent, false),
-                ReturnOnInvestment: spent == 0 ? 100 : GetRoi(value, spent)
-            ));
+            var assetView = GetAssetView(market, p, p24h, transactionHistory);
+            assets.Add(assetView);
         }
         var totalValue = assets.Sum(a => a.Value);
         var TotalResult = assets.Sum(a => a.Result);
@@ -64,8 +59,56 @@ public class BitvavoBalanceHandler(IBitvavoClient client) : IRequestHandler<GetB
             TotalResult: RoundDouble(TotalResult),
             TotalSpent: RoundDouble(totalSpent),
             FetchedAt: DateTime.Now.ToString("hh:mm:ss"),
-            TotalReturnOnInvestment: GetRoi(totalValue, totalSpent)
+            TotalReturnOnInvestment: GetRoi(totalValue, totalSpent),
+            hasMissingValues: hasMissingValues
         );
+    }
+
+    private BitvavoAssetView GetAssetView(BitvavoBalance market, BitVavoMarketPrice p, BitVavo24hPrice p24h, BitvavoTransactionHistory transactionHistory)
+    {
+        var price = ParseDouble(p.Price);
+        var price24h = ParseDouble(p24h.Open);
+        var priceAction24h = GetRoi(price, price24h);
+        var spent = transactionHistory.Items.Where(i => i.ReceivedCurrency == market.Symbol).Sum(i => ParseDouble(i.SentAmount) + ParseDouble(i.FeesAmount));
+        var transactionHistoryView = GetTransactionHistory(market.Symbol, transactionHistory);
+        var availability = ParseDouble(market.Available);
+        var value = RoundDouble(price * availability);
+        return new(
+            market.Symbol,
+            Available: availability,
+            Price: price,
+            Price24h: price24h,
+            priceAction24h: GetRoi(price, price24h),
+            Value: value,
+            TransactionHistory: transactionHistoryView,
+            AmountSpent: RoundDouble(spent),
+            Result: RoundDouble(value - spent, false),
+            ReturnOnInvestment: spent == 0 ? 100 : GetRoi(value, spent)
+        );
+    }
+
+    private async Task CreateSnapshot(BitvavoPortfolioView view)
+    {
+        var now = DateTime.UtcNow;
+        var hasSnapshot = await database.HasSnapshotForTodayAsync(now);
+
+        if (hasSnapshot)
+        {
+            // already exists. do nothing
+            return;
+        }
+
+        var snapshot = new BitvavoPortfolioSnapshot(
+            now,
+            view.TotalValue,
+            view.Assets.Select(a => new BitvavoAssetSnapshot(a.Market, a.Value)).ToArray()
+        );
+
+        if (snapshot.total > 0)
+        {
+            await database.CreateSnapshotAsync(snapshot);
+        }
+
     }
 
     private BitvavoTransactionHistoryView[] GetTransactionHistory(string market, BitvavoTransactionHistory transactionHistory) =>

@@ -1,13 +1,14 @@
 using Api.Database.Models;
+using Api.Features.Bitvavo;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 namespace Api.Database;
 
-public class UserService : IUserService
+public class UserContext : IUserContext
 {
     private readonly IMongoCollection<User> _users;
 
-    public UserService(
+    public UserContext(
         IOptions<ApiDatabaseSettings> settings)
     {
         var mongoClient = new MongoClient(
@@ -25,11 +26,11 @@ public class UserService : IUserService
     public async Task<User?> GetAsync(string id) =>
         await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
 
-    public async Task CreateAsync(User newBook) =>
-        await _users.InsertOneAsync(newBook);
+    public async Task CreateAsync(User user) =>
+        await _users.InsertOneAsync(user);
 
-    public async Task UpdateAsync(string id, User updatedBook) =>
-        await _users.ReplaceOneAsync(u => u.Id == id, updatedBook);
+    public async Task UpdateAsync(string id, User user) =>
+        await _users.ReplaceOneAsync(u => u.Id == id, user);
 
     public async Task RemoveAsync(string id) =>
         await _users.DeleteOneAsync(u => u.Id == id);

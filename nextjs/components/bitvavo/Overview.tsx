@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../state";
+import { useDispatch } from "react-redux";
 import { actions } from "../../state/actiontypes";
 import apiClient from "../../api/client";
 import { TableCell, TableHeader } from "../../styles/table";
-import { FlexBox, PageWrapper } from "../../styles/containers";
-import { StdButton } from "../../styles/buttons";
+import { FlexBox } from "../../styles/containers";
 import Loader from "../Loaders";
+import { Control } from "../../styles/buttons";
 
-const Bitvavo = () => {
+type Props = {
+  portfolio?: Portfolio;
+};
+
+const Overview = ({ portfolio }: Props) => {
   const [showPurchaseHistoryFor, togglePurchaseHistoryFor] = useState<
     string | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
-  const portfolio = useSelector((state: RootState) => state.bitvavo.portfolio);
+  const [withFlash, setFlash] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!portfolio) {
       // get portfolio
-
       getPortfolio();
     }
   });
@@ -38,15 +40,29 @@ const Bitvavo = () => {
   };
 
   const refreshButton = (
-    <StdButton size="small" onClick={() => getPortfolio()}>
+    <Control
+      onClick={() => {
+        getPortfolio();
+        setFlash(true);
+      }}
+    >
       refresh
-    </StdButton>
+    </Control>
+  );
+
+  const GetCell = (value: any, index: number, key: string, color?: string) => (
+    <TableCell
+      color={color}
+      animation={withFlash ? "flash" : undefined}
+      key={`${key}-{${value}}`}
+      index={index}
+    >
+      {value}
+    </TableCell>
   );
 
   const getAssetComponent = (asset: Asset, index: number) => {
     var {
-      price,
-      price24h,
       priceAction24h,
       available,
       market,
@@ -60,29 +76,21 @@ const Bitvavo = () => {
       <tr>
         <TableCell index={index}>{market}</TableCell>
         <TableCell index={index}>{available}</TableCell>
-        <TableCell animation={"flash"} key={`price-{${price}}`} index={index}>
-          {price}
-        </TableCell>
+        {GetCell(asset.price, index, "price")}
+        {GetCell(asset.price24h, index, "price24h")}
+        {GetCell(
+          `${asset.priceAction24h} %`,
+          index,
+          "priceAction24h",
+          asset.priceAction24h > 0
+            ? "green"
+            : asset.priceAction24h < 0
+            ? "red"
+            : ""
+        )}
+        {GetCell(value, index, "value")}
         <TableCell
-          animation={"flash"}
-          key={`price24h-{${price24h}}`}
-          index={index}
-        >
-          {price24h}
-        </TableCell>
-        <TableCell
-          color={priceAction24h > 0 ? "green" : priceAction24h < 0 ? "red" : ""}
-          animation={"flash"}
-          key={`price24h-{${priceAction24h}}`}
-          index={index}
-        >
-          {`${priceAction24h} %`}
-        </TableCell>
-        <TableCell animation={"flash"} key={`value-{${value}}`} index={index}>
-          {value}
-        </TableCell>
-        <TableCell
-          animation={"flash"}
+          animation={withFlash ? "flash" : undefined}
           key={`spent-{${amountSpent}}`}
           index={index}
         >
@@ -104,21 +112,17 @@ const Bitvavo = () => {
             </div>
           )}
         </TableCell>
-        <TableCell
-          animation={"flash"}
-          key={`result-value-{${value}}`}
-          index={index}
-        >
-          {result}
-        </TableCell>
-        <TableCell
-          color={roi > 0 ? "green" : roi < 0 ? "red" : ""}
-          animation={"flash"}
-          key={`result-percentage-{${roi}}`}
-          index={index}
-        >
-          {`${roi} %`}
-        </TableCell>
+        {GetCell(asset.result, index, "result-value")}
+        {GetCell(
+          asset.returnOnInvestment,
+          index,
+          "return-on-investment",
+          asset.returnOnInvestment > 0
+            ? "green"
+            : asset.returnOnInvestment < 0
+            ? "red"
+            : ""
+        )}
       </tr>
     );
   };
@@ -190,48 +194,44 @@ const Bitvavo = () => {
 
   if (!portfolio) {
     return (
-      <PageWrapper center>
-        <Loader type="round" text="fetching assets..." />
-      </PageWrapper>
+      <FlexBox justify="center">
+        <Loader text="loading assetes..." type="round" />
+      </FlexBox>
     );
   }
 
   return (
-    <PageWrapper center maxWidth={1200}>
-      <FlexBox column gapSize={10}>
-        <FlexBox gapSize={25}>
-          <div> currency: Euro</div>
-          <div> last updated: {portfolio.fetchedAt}</div>
-        </FlexBox>
-        <table>
-          <tbody>
-            <tr>
-              {[
-                "asset",
-                "available",
-                "price",
-                "price 24h",
-                "24h",
-                "value",
-                "spent",
-                "result",
-                "Roi",
-              ].map((s) => (
-                <TableHeader>{s}</TableHeader>
-              ))}
-            </tr>
-
-            {portfolio?.assets.map((a, i) => getAssetComponent(a, i))}
-            {total()}
-          </tbody>
-        </table>
-        <FlexBox color="blue" align="center" gapSize={25}>
-          {refreshButton}
-          {isLoading ? "fetching assets..." : null}
-        </FlexBox>
+    <FlexBox column gapSize={10}>
+      <FlexBox style={{ opacity: "0.5" }} gapSize={25}>
+        <div> last updated: {portfolio.fetchedAt}</div>
       </FlexBox>
-    </PageWrapper>
+      <table>
+        <tbody>
+          <tr>
+            {[
+              "asset",
+              "available",
+              "price",
+              "price 24h",
+              "24h",
+              "value",
+              "spent",
+              "result",
+              "Roi",
+            ].map((s) => (
+              <TableHeader>{s}</TableHeader>
+            ))}
+          </tr>
+
+          {portfolio?.assets.map((a, i) => getAssetComponent(a, i))}
+          {total()}
+        </tbody>
+      </table>
+      <FlexBox color="blue" align="center" gapSize={25}>
+        {isLoading ? "fetching assets..." : refreshButton}
+      </FlexBox>
+    </FlexBox>
   );
 };
 
-export default Bitvavo;
+export default Overview;

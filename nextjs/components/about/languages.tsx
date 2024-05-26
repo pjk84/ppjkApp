@@ -1,5 +1,5 @@
 import React from "react";
-import BarChartHorizontal from "./barChartHorizontal";
+import ChartBar from "./barChartHorizontal";
 
 const languages = [
   { name: "cSharp", label: "c#", value: 1 },
@@ -10,8 +10,6 @@ const languages = [
   { name: "javascript", label: "Javascript", value: 5 },
 ];
 
-const Languages = () => (
-  <BarChartHorizontal title={"languages"} data={languages} />
-);
+const Languages = () => <ChartBar title={"languages"} data={languages} />;
 
 export default Languages;

@@ -66,7 +66,8 @@ public class Startup
 
         // mongoDB
         services.Configure<ApiDatabaseSettings>(config.GetSection("Database"));
-        services.AddSingleton<IUserService, UserService>();
+        services.AddSingleton<IUserContext, UserContext>();
+        services.AddSingleton<IBitvavoContext, BitvavoContext>();
 
         services.AddRouting(options => options.LowercaseUrls = true);
 

@@ -1,5 +1,5 @@
 import React from "react";
-import BarChartHorizontal from "./barChartHorizontal";
+import ChartBar from "./barChartHorizontal";
 
 const tools = [
   { name: "react", label: "React", value: 3.5 },
@@ -10,8 +10,6 @@ const tools = [
   { name: "flask", label: "Flask", value: 2 },
 ];
 
-const ToolsAndFrameworks = () => (
-  <BarChartHorizontal title={"tools"} data={tools} />
-);
+const ToolsAndFrameworks = () => <ChartBar title={"tools"} data={tools} />;
 
 export default ToolsAndFrameworks;

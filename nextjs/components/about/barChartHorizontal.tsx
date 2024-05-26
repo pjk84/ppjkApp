@@ -5,7 +5,7 @@ import {
   AxisX,
   AxisXPoint,
   BarGraphMain,
-  BarHorizontal,
+  ChartBar,
   BarHorizontalLabel,
 } from "../../styles/barGraph";
 
@@ -65,14 +65,14 @@ const BarChartHorizontal = ({ data, title }: DetailsArray) => {
             <BarHorizontalLabel key={`bar-label-${l.label}`}>
               {l.label}
             </BarHorizontalLabel>
-            <BarHorizontal
-              height={`${barHeight}px`}
+            <ChartBar
+              height={barHeight}
               key={`bar-main-${l.label}`}
               style={{
                 animation: `grow 0.5s ease-out `,
                 width: `${(l.value / maxExp) * 100}%`,
               }}
-            ></BarHorizontal>
+            ></ChartBar>
           </FlexBox>
         ))}
       </BarGraphMain>

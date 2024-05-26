@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Btn1, ProjectLaunchButton, StdButton } from "../../styles/buttons";
+import React, { useState } from "react";
+import { ProjectLaunchButton } from "../../styles/buttons";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { actions } from "../../state/actiontypes";

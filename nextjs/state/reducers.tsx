@@ -33,10 +33,14 @@ const initialAppState: IAppState = {
 type IBitvavState = {
   timeFetched?: Date;
   portfolio?: Portfolio;
+  snapshots?: PortfolioSnapshot[];
+  page?: string;
 };
 
 const initialBitvavoState: IBitvavState = {
   portfolio: undefined,
+  snapshots: undefined,
+  page: "overview",
 };
 
 const appReducer = (state = initialAppState, action: Action): IAppState => {
@@ -89,6 +93,19 @@ const bitvavoReducer = (
       return {
         ...state,
         portfolio: action.portfolio,
+      };
+    }
+    case actions.SET_BITVAVO_SNAPSHOTS: {
+      console.log("action --->", action.snapshots);
+      return {
+        ...state,
+        snapshots: action.snapshots,
+      };
+    }
+    case actions.SET_BITVAVO_PAGE: {
+      return {
+        ...state,
+        page: action.page,
       };
     }
     default:

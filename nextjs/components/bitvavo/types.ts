@@ -25,3 +25,21 @@ interface TransactionHistoryItem {
   amountSpent: number;
   fees: number;
 }
+
+interface PortfolioSnapshot {
+  year: number;
+  month: number;
+  monthName: string;
+  days: PortfolioSnapshotDay[];
+}
+
+interface PortfolioSnapshotDay {
+  total: number;
+  day: number;
+  assets: AssetSnapshot[];
+}
+
+interface AssetSnapshot {
+  market: string;
+  value: number;
+}

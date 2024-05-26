@@ -15,6 +15,14 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Title.js", "components/Header.js", "pages/wordHunt.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/Title.js",
+    "components/Header.js",
+    "pages/wordHunt.js",
+    "components/Bitvavo/purchaseHistory.tsc"
+  ],
   "exclude": ["node_modules"]
 }

@@ -21,4 +21,15 @@ public class BitvavoController(IMediator mediator) : ControllerBase
         }
         return Ok(res.Value);
     }
+    [HttpGet("snapshots")]
+    public async Task<ActionResult<BitvavoPortfolioSnapshotView[]>> GetPortfolioSnapshots()
+    {
+        var query = new BitvavoPortfolioSnapshotQuery();
+        var res = await mediator.Send(query);
+        if (!res.Success)
+        {
+            return BadRequest();
+        }
+        return Ok(res.Value);
+    }
 }
