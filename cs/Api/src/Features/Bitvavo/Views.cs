@@ -25,7 +25,7 @@ public record BitvavoPortfolioView(
 
 public record BitvavoTransactionHistoryView(string Date, double AmountSpent, double Fees);
 
-public record BitvavoPortfolioSnapshotView(int Year, int Month, string MonthName, BitvavoPortfolioSnapshotDayView[] Days);
+public record BitvavoPortfolioSnapshotView(int Year, int Month, int DaysInMonth, string MonthName, BitvavoPortfolioSnapshotDayView[] Days);
 
 public record BitvavoPortfolioSnapshotDayView(int Day, double total, BitvavoAssetSnapshotView[] assets);
 

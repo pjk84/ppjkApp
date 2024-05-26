@@ -9,14 +9,13 @@ interface DayValue {
 }
 
 interface Snapshot {
-  market: string;
+  daysInMonth: number;
   days: DayValue[];
 }
 
 const CHART_HEIGHT = 250;
-const INVERTVAL_Y = 10000;
 
-const BitvavoPortfolioChart = ({ days, market }: Snapshot) => {
+const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
   var barHeight = 25;
   var gapSize = 10;
   //container height should be roughtly equal to combined barheight
@@ -26,7 +25,19 @@ const BitvavoPortfolioChart = ({ days, market }: Snapshot) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const max = Math.max(...days.map((d) => d.value));
-  const maxY = Math.round(max / INVERTVAL_Y) * INVERTVAL_Y + INVERTVAL_Y;
+
+  const getInterval = (max: number) => {
+    var n = 1;
+    while (true) {
+      if (max < 10 ** n) {
+        return 10 ** (n - 1);
+      }
+      n++;
+    }
+  };
+  var intervalY = getInterval(max);
+
+  const maxY = Math.round(max / intervalY) * intervalY + intervalY;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,11 +66,11 @@ const BitvavoPortfolioChart = ({ days, market }: Snapshot) => {
         height: CHART_HEIGHT,
       }}
     >
-      {[...Array(maxY / INVERTVAL_Y)].map((y, i) => (
+      {[...Array(maxY / intervalY)].map((y, i) => (
         <ChartLine
-          label={maxY - i * INVERTVAL_Y}
+          label={maxY - i * intervalY}
           height={CHART_HEIGHT}
-          position={i * (CHART_HEIGHT / (maxY / INVERTVAL_Y))}
+          position={i * (CHART_HEIGHT / (maxY / intervalY))}
         ></ChartLine>
       ))}
     </div>
@@ -73,7 +84,7 @@ const BitvavoPortfolioChart = ({ days, market }: Snapshot) => {
           height: CHART_HEIGHT,
         }}
       >
-        {[...Array(32)].map((_, i) => {
+        {[...Array(daysInMonth + 1)].map((_, i) => {
           const d = days.find((d) => d.day == i);
           return (
             <FlexBox style={{ width: 20 }} column justify="end">
@@ -100,7 +111,7 @@ const BitvavoPortfolioChart = ({ days, market }: Snapshot) => {
           justifyContent: "space-around",
         }}
       >
-        {[...Array(32)].map((_, i) => {
+        {[...Array(daysInMonth + 1)].map((_, i) => {
           return (
             <FlexBox
               justify="center"

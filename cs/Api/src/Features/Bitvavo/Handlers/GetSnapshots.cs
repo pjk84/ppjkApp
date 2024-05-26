@@ -26,12 +26,13 @@ public class BitvavoPortfolioSnapshotHandler(IBitvavoContext database) : IReques
             foreach (var month in months)
             {
                 var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month.Key);
+                var daysInMonth = DateTime.DaysInMonth(year.Key, month.Key);
                 var days = month.Select(day => new BitvavoPortfolioSnapshotDayView(
                     Day: day.Date.Day,
                     total: day.total,
                     assets: day.Assets.Select(a => new BitvavoAssetSnapshotView(a.Market, a.Value)).ToArray()
                 )).ToArray();
-                var monthView = new BitvavoPortfolioSnapshotView(year.Key, month.Key, monthName, days);
+                var monthView = new BitvavoPortfolioSnapshotView(year.Key, month.Key, daysInMonth, monthName, days);
                 res.Add(monthView);
             };
 

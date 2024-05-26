@@ -29,6 +29,7 @@ interface TransactionHistoryItem {
 interface PortfolioSnapshot {
   year: number;
   month: number;
+  daysInMonth: number;
   monthName: string;
   days: PortfolioSnapshotDay[];
 }

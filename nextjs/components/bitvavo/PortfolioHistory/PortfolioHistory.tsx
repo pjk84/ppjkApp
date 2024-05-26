@@ -12,7 +12,9 @@ type Props = {
   snapshots?: PortfolioSnapshot[];
 };
 const PortfolioHistory = ({ snapshots }: Props) => {
-  const [cursor, setCursor] = useState<number>(0);
+  const [cursor, setCursor] = useState<number>(
+    snapshots ? snapshots.length - 1 : 0
+  );
   const [market, selectMarket] = useState<string | null>(null);
   const dispatch = useDispatch();
 
@@ -52,7 +54,7 @@ const PortfolioHistory = ({ snapshots }: Props) => {
       {month.days[0].assets.map((a) => (
         <StdButton
           active={market == a.market}
-          onClick={() => selectMarket(market ? null : a.market)}
+          onClick={() => selectMarket(market == a.market ? null : a.market)}
           size="tiny"
         >
           {a.market}
@@ -71,7 +73,7 @@ const PortfolioHistory = ({ snapshots }: Props) => {
       </Header1>
       {markets}
       <BarChartVertical
-        market="all"
+        daysInMonth={month.daysInMonth}
         days={month.days.map((d) => {
           return {
             day: d.day,
