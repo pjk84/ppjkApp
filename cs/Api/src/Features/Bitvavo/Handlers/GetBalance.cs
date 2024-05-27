@@ -39,6 +39,11 @@ public class BitvavoBalanceHandler(IBitvavoClient client, IBitvavoContext databa
         List<BitvavoAssetView> assets = [];
         foreach (var market in balance)
         {
+            if (market.Symbol == "EUR")
+            {
+                // skip euro
+                continue;
+            }
             var m = $"{market.Symbol}-EUR";
             var p = await client.GetMarketPriceAsync(m, ct);
             var p24h = await client.Get24hPriceAsync(m, ct);

@@ -96,13 +96,11 @@ const ProjectMenu = ({ miniaturized }: Props) => {
                 style={{
                   animation: clicked
                     ? i % 2 === 0
-                      ? `0.5s slideOutRight ease-out`
-                      : `0.5s slideOutLeft ease-out`
-                    : isFirstRender
-                    ? `${0.2}s slideDownDiagonal${
+                      ? `0.5s slideOutRight ease-out forwards`
+                      : `0.5s slideOutLeft ease-out forwards`
+                    : `${0.3}s slideDownDiagonal${
                         i % 2 === 0 ? "Left" : "Right"
-                      } ease-out`
-                    : undefined,
+                      } ease-out`,
                 }}
                 onClick={(e) =>
                   selectProject((e.target as HTMLButtonElement).id)
