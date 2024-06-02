@@ -15,7 +15,7 @@ export const ChartBar = styled.div<{
   height: ${(p) => `${p.height}px`};
   z-index: 1;
   width: 50%;
-  animation: ${(p) => `0.2s  ${p.animation} ease-out`};
+  animation: ${(p) => `0.25s  ${p.animation} ease-out forwards`};
 
   &:hover {
     background-color: ${(p) => p.theme.barChart.backgroundColor.active};

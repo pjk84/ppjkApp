@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FlexBox } from "../../../styles/containers";
 import { Header1 } from "../../../styles/header";
 import { ChartBar, ChartLine } from "../../../styles/barGraph";
+import { forEach } from "lodash";
 
 interface DayValue {
   day: number;
@@ -19,6 +20,7 @@ const MIN_WIDTH_X = 20;
 
 const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
   const [viewedDay, setViewedDay] = useState<number | null>(null);
+
   const max = Math.max(...days.map((d) => d.value));
 
   const getInterval = (max: number) => {
@@ -59,7 +61,6 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
     <FlexBox style={{ width: "100%" }} column>
       <FlexBox
         style={{
-          overflow: "hidden",
           paddingTop: LABEL_SIZE,
           justifyContent: "space-around",
           height: CHART_HEIGHT,
@@ -70,13 +71,20 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
           return (
             <FlexBox
               key={`chart-bar-${i}`}
-              style={{ width: "80%", minWidth: MIN_WIDTH_X }}
+              style={{
+                width: "80%",
+                minWidth: MIN_WIDTH_X,
+              }}
               column
               align="center"
               justify="end"
             >
               {d && (
                 <ChartBar
+                  style={{
+                    animationDelay: `${i / 100}s`,
+                    transform: "translateY(100%)",
+                  }}
                   onClick={() => setViewedDay(viewedDay == i ? null : i)}
                   key={`${i}-${d.value}`}
                   labelSize={LABEL_SIZE}
@@ -129,7 +137,7 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
   );
 
   return (
-    <FlexBox style={{ width: "100%", paddingTop: LABEL_SIZE }}>
+    <FlexBox style={{ width: "100%" }} gapSize={10}>
       <FlexBox column gapSize={5}>
         {axisY}
         <div style={{ opacity: 0, borderTop: "1px solid" }}>{maxY}</div>
@@ -142,7 +150,12 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
         }}
       >
         <FlexBox
-          style={{ height: CHART_HEIGHT, width: "100%", position: "relative" }}
+          style={{
+            height: CHART_HEIGHT,
+            overflow: "hidden",
+            width: "100%",
+            position: "relative",
+          }}
         >
           {linesY}
           {main}
