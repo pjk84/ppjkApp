@@ -6,8 +6,12 @@ export const ChartBar = styled.div<{
   labelSize: number;
   text?: string;
   animation?: string;
+  active?: boolean;
 }>`
-  background-color: ${(p) => p.theme.barChart.backgroundColor.inactive};
+  background-color: ${(p) =>
+    p.active
+      ? p.theme.barChart.backgroundColor.active
+      : p.theme.barChart.backgroundColor.inactive};
   height: ${(p) => `${p.height}px`};
   z-index: 1;
   width: 50%;
@@ -32,7 +36,7 @@ export const ChartBar = styled.div<{
     left: 50%;
     transform: translate(-50%, -100%);
     top: 0;
-    visibility: hidden;
+    visibility: ${(p) => (p.active ? "visible" : "hidden")};
   }
   &:after {
     position: absolute;
@@ -45,14 +49,14 @@ export const ChartBar = styled.div<{
     transform: translateX(-50%);
     top: 0;
     background-color: ${(p) => p.theme.barChart.backgroundColor.active};
-    visibility: hidden;
+    visibility: ${(p) => (p.active ? "visible" : "hidden")};
   }
 `;
 
 export const ChartLine = styled.div<{
   height: number;
   position: number;
-  label: number;
+  label?: number;
 }>`
   position: absolute;
   height: ${(p) => `${p.height}px`};
@@ -64,6 +68,7 @@ export const ChartLine = styled.div<{
   &:before {
     content: "${(p) => p.label}";
     position: absolute;
+    transform: translateY(-50%);
     color: ${(p) => p.theme.barChart.label.text};
     font-size: 15px;
   }
