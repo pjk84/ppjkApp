@@ -40,7 +40,6 @@ export const TableHeader = styled.th<{}>`
   background-color: ${(p) => p.theme.table.header};
   padding: 10px;
   font-size: 20px;
-  color: ${(p) => p.theme.color};
 `;
 
 export const Table = styled.table`

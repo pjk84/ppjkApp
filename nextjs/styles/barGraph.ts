@@ -1,9 +1,18 @@
 import styled from "styled-components";
+import devices from "./devices";
 
-export const ChartBar = styled.div<{ height: number; text?: string }>`
+export const ChartBar = styled.div<{
+  height: number;
+  labelSize: number;
+  text?: string;
+  animation?: string;
+}>`
   background-color: ${(p) => p.theme.barChart.backgroundColor.inactive};
   height: ${(p) => `${p.height}px`};
   z-index: 1;
+  width: 50%;
+  animation: ${(p) => `0.2s  ${p.animation} ease-out`};
+
   &:hover {
     background-color: ${(p) => p.theme.barChart.backgroundColor.active};
     &::before {
@@ -18,7 +27,7 @@ export const ChartBar = styled.div<{ height: number; text?: string }>`
     /* height: 100%; */
     position: absolute;
     color: ${(p) => p.theme.barChart.label.text};
-    font-size: 15px;
+    font-size: ${(p) => `${p.labelSize}px`};
     padding: 0px 5px 0px 5px;
     left: 50%;
     transform: translate(-50%, -100%);

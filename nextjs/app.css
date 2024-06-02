@@ -329,6 +329,15 @@ a {
   }
 }
 
+@keyframes popup {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(-0%);
+  }
+}
+
 @keyframes flipOver {
   0% {
     transform: scale(0);

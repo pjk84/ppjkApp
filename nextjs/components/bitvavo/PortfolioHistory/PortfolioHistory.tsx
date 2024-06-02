@@ -53,6 +53,7 @@ const PortfolioHistory = ({ snapshots }: Props) => {
     <FlexBox gapSize={10}>
       {month.days[0].assets.map((a) => (
         <StdButton
+          key={`asset-history-${a.market}`}
           active={market == a.market}
           onClick={() => selectMarket(market == a.market ? null : a.market)}
           size="tiny"

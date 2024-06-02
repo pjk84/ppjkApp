@@ -34,7 +34,7 @@ export const color = {
   lighterGray: "#e6e6e6",
   lighterGray2: "#d8d8d8",
   lightGray: "#a6a6a6",
-  green: "#57b967",
+  green: "#4ea75d",
   darkGreen: "#347940",
   lightGreen: "#cbf1d2",
   blue: "#2fb7e0",
@@ -61,9 +61,9 @@ export const appThemeLight = {
 
   color: color.mediumGray,
   table: {
-    rowLight: color.lighterGray2,
+    rowLight: color.lightestGray,
     rowDark: color.lighterGray,
-    header: color.lightGray,
+    header: color.lighterGray2,
   },
   posts: {
     titleColor: color.darkGray,
@@ -178,9 +178,9 @@ export const appThemeDark = {
 
   color: color.darkTheme.lighterGray,
   table: {
-    rowLight: color.darkTheme.darkGray2,
+    rowLight: color.darkTheme.darkGray,
     rowDark: color.darkTheme.darkGray3,
-    header: color.darkTheme.mediumGray,
+    header: color.darkTheme.darkGray2,
   },
   posts: {
     titleColor: color.darkGray,

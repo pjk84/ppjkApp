@@ -40,7 +40,7 @@ type IBitvavState = {
 const initialBitvavoState: IBitvavState = {
   portfolio: undefined,
   snapshots: undefined,
-  page: "overview",
+  page: "balance",
 };
 
 const appReducer = (state = initialAppState, action: Action): IAppState => {
@@ -96,7 +96,6 @@ const bitvavoReducer = (
       };
     }
     case actions.SET_BITVAVO_SNAPSHOTS: {
-      console.log("action --->", action.snapshots);
       return {
         ...state,
         snapshots: action.snapshots,

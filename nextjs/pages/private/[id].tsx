@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { RootState } from "../../state";
 import { FlexBox } from "../../styles/containers";
-import Bitvavo from "./bitvavo";
+import Bitvavo from "../../components/Bitvavo/Bitvavo";
 
 const Projects = () => {
   const isLoggedIn = useSelector(

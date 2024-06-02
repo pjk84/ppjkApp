@@ -20,7 +20,7 @@ const Overview = ({ portfolio }: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!portfolio) {
+    if (!portfolio && !isLoading) {
       // get portfolio
       getPortfolio();
     }
@@ -73,7 +73,7 @@ const Overview = ({ portfolio }: Props) => {
       returnOnInvestment: roi,
     } = asset;
     return (
-      <tr>
+      <tr key={`asset-row-${asset.market}`}>
         <TableCell index={index}>{market}</TableCell>
         <TableCell index={index}>{available}</TableCell>
         {GetCell(asset.price, index, "price")}
@@ -97,9 +97,13 @@ const Overview = ({ portfolio }: Props) => {
           {showPurchaseHistoryFor == market ? (
             purchaseHistory(transactionHistory)
           ) : (
-            <div style={{ position: "relative" }}>
+            <div
+              key={`spent-${asset.amountSpent}`}
+              style={{ position: "relative" }}
+            >
               {amountSpent}
               <div
+                key={`view-purchase-history-${asset}`}
                 className="IntableButton"
                 onClick={() =>
                   togglePurchaseHistoryFor(
@@ -114,7 +118,7 @@ const Overview = ({ portfolio }: Props) => {
         </TableCell>
         {GetCell(asset.result, index, "result-value")}
         {GetCell(
-          asset.returnOnInvestment,
+          `${asset.returnOnInvestment} %`,
           index,
           "return-on-investment",
           asset.returnOnInvestment > 0
@@ -140,12 +144,12 @@ const Overview = ({ portfolio }: Props) => {
           <tbody>
             <tr>
               {["date", "spent"].map((s) => (
-                <TableHeader>{s}</TableHeader>
+                <TableHeader key={`table-header-${s}`}>{s}</TableHeader>
               ))}
             </tr>
             {transactions.map((d, i) => {
               return (
-                <tr>
+                <tr key={`transaction-${d.date}`}>
                   <TableCell index={i}>{d.date}</TableCell>
                   <TableCell index={i}>{d.amountSpent}</TableCell>
                 </tr>
@@ -202,8 +206,9 @@ const Overview = ({ portfolio }: Props) => {
 
   return (
     <FlexBox column gapSize={10}>
-      <FlexBox style={{ opacity: "0.5" }} gapSize={25}>
-        <div> last updated: {portfolio.fetchedAt}</div>
+      <FlexBox align="center" gapSize={25}>
+        <div style={{ opacity: 0.5 }}> last updated: {portfolio.fetchedAt}</div>
+        <div>{isLoading ? "fetching assets..." : refreshButton}</div>
       </FlexBox>
       <table>
         <tbody>
@@ -219,7 +224,7 @@ const Overview = ({ portfolio }: Props) => {
               "result",
               "Roi",
             ].map((s) => (
-              <TableHeader>{s}</TableHeader>
+              <TableHeader key={`overiew-header-${s}`}>{s}</TableHeader>
             ))}
           </tr>
 
@@ -227,9 +232,6 @@ const Overview = ({ portfolio }: Props) => {
           {total()}
         </tbody>
       </table>
-      <FlexBox color="blue" align="center" gapSize={25}>
-        {isLoading ? "fetching assets..." : refreshButton}
-      </FlexBox>
     </FlexBox>
   );
 };

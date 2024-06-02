@@ -23,7 +23,7 @@ public class BitvavoContext : IBitvavoContext
         await _bitvavoBalanceSnapshots.Find(_ => true).ToListAsync();
     public async Task<bool> HasSnapshotForTodayAsync(DateTime today)
     {
-        var res = await _bitvavoBalanceSnapshots.Find(s => s.Date.Day == today.Day).ToListAsync();
+        var res = await _bitvavoBalanceSnapshots.Find(s => s.Date == DateTime.Today).ToListAsync();
         return res.Any();
     }
 

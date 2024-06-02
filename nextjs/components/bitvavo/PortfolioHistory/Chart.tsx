@@ -14,16 +14,9 @@ interface Snapshot {
 }
 
 const CHART_HEIGHT = 250;
+const LABEL_SIZE = 15;
 
 const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
-  var barHeight = 25;
-  var gapSize = 10;
-  //container height should be roughtly equal to combined barheight
-  // this way intersection threshold is close to chart height
-  const minHeight = days.length * (barHeight + gapSize) + barHeight;
-  const ref = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
   const max = Math.max(...days.map((d) => d.value));
 
   const getInterval = (max: number) => {
@@ -39,21 +32,6 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
 
   const maxY = Math.round(max / intervalY) * intervalY + intervalY;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries[0]?.isIntersecting && setIsVisible(true);
-      },
-      { threshold: 1 }
-    );
-
-    ref.current && !isVisible && observer.observe(ref.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
   const Wrapper = (
     <div
       style={{
@@ -68,6 +46,7 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
     >
       {[...Array(maxY / intervalY)].map((y, i) => (
         <ChartLine
+          key={`axis-y-${i}`}
           label={maxY - i * intervalY}
           height={CHART_HEIGHT}
           position={i * (CHART_HEIGHT / (maxY / intervalY))}
@@ -78,8 +57,9 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
   const main = (
     <FlexBox column>
       <FlexBox
-        gapSize={2}
         style={{
+          overflow: "hidden",
+          paddingTop: LABEL_SIZE,
           justifyContent: "space-around",
           height: CHART_HEIGHT,
         }}
@@ -87,9 +67,18 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
         {[...Array(daysInMonth + 1)].map((_, i) => {
           const d = days.find((d) => d.day == i);
           return (
-            <FlexBox style={{ width: 20 }} column justify="end">
+            <FlexBox
+              key={`chart-bar-${i}`}
+              style={{ width: "80%" }}
+              column
+              align="center"
+              justify="end"
+            >
               {d && (
                 <ChartBar
+                  key={`${i}-${d.value}`}
+                  labelSize={LABEL_SIZE}
+                  animation="popup"
                   text={`${d.value}`}
                   height={(d.value / max) * (CHART_HEIGHT * (max / maxY))}
                 ></ChartBar>
@@ -114,6 +103,7 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
         {[...Array(daysInMonth + 1)].map((_, i) => {
           return (
             <FlexBox
+              key={`axis-x-day-${i}`}
               justify="center"
               style={{ width: 20, visibility: i == 0 ? "hidden" : "visible" }}
             >

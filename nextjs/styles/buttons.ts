@@ -154,7 +154,7 @@ export const SidebarSwitch = styled.button`
   z-index: 10;
 `;
 
-export const NavItem = styled.a<{
+export const NavItem = styled.div<{
   active?: boolean;
 }>`
   position: relative;
