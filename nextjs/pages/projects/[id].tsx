@@ -29,7 +29,7 @@ const Projects = () => {
   if (!projectDetails) return null;
 
   return (
-    <PageWrapper>
+    <PageWrapper center>
       <FlexBoxCentered gap={50}>
         <ProjectButtons miniaturized={true} />
         <ProjectDetails key={`projectDetails-${id}`} project={projectDetails} />

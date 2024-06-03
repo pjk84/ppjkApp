@@ -25,10 +25,16 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
 
   const getInterval = (max: number) => {
     var n = 1;
+    var i = 1;
+    var a = max * 0.1;
     while (true) {
-      if (max < 10 ** n) {
-        return 10 ** (n - 1);
+      while (i < 10) {
+        if (10 ** n * i > a) {
+          return 10 ** n * i;
+        }
+        i++;
       }
+      i = 1;
       n++;
     }
   };
@@ -61,7 +67,6 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
     <FlexBox style={{ width: "100%" }} column>
       <FlexBox
         style={{
-          paddingTop: LABEL_SIZE,
           justifyContent: "space-around",
           height: CHART_HEIGHT,
         }}
@@ -81,13 +86,11 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
             >
               {d && (
                 <ChartBar
-                  style={{
-                    animationDelay: `${i / 100}s`,
-                    transform: "translateY(100%)",
-                  }}
                   onClick={() => setViewedDay(viewedDay == i ? null : i)}
                   key={`${i}-${d.value}`}
-                  labelSize={LABEL_SIZE}
+                  labelPosition={
+                    i === 0 ? "right" : i === daysInMonth - 1 ? "left" : "mid"
+                  }
                   animation="popup"
                   text={`${d.value}`}
                   active={viewedDay == i}
@@ -151,8 +154,8 @@ const BitvavoPortfolioChart = ({ days, daysInMonth }: Snapshot) => {
       >
         <FlexBox
           style={{
-            height: CHART_HEIGHT,
             overflow: "hidden",
+            height: CHART_HEIGHT,
             width: "100%",
             position: "relative",
           }}

@@ -3,7 +3,7 @@ import devices from "./devices";
 
 export const ChartBar = styled.div<{
   height: number;
-  labelSize: number;
+  labelPosition: "left" | "right" | "mid";
   text?: string;
   animation?: string;
   active?: boolean;
@@ -15,7 +15,8 @@ export const ChartBar = styled.div<{
   height: ${(p) => `${p.height}px`};
   z-index: 1;
   width: 50%;
-  animation: ${(p) => `0.25s  ${p.animation} ease-out forwards`};
+  /* transform: translateY(100%); */
+  animation: ${(p) => `0.25s  ${p.animation} ease-out `};
 
   &:hover {
     background-color: ${(p) => p.theme.barChart.backgroundColor.active};
@@ -31,11 +32,18 @@ export const ChartBar = styled.div<{
     /* height: 100%; */
     position: absolute;
     color: ${(p) => p.theme.barChart.label.text};
-    font-size: ${(p) => `${p.labelSize}px`};
+    font-size: 15px;
     padding: 0px 5px 0px 5px;
     left: 50%;
-    transform: translate(-50%, -100%);
-    top: 0;
+    transform: ${(p) =>
+      `translate(${
+        p.labelPosition === "left"
+          ? -100
+          : p.labelPosition === "right"
+          ? 0
+          : -50
+      }%, -100%)`};
+    top: 15px;
     visibility: ${(p) => (p.active ? "visible" : "hidden")};
   }
   &:after {
@@ -43,11 +51,10 @@ export const ChartBar = styled.div<{
     content: "";
     width: 1px;
     height: 100%;
-    top: 0;
     opacity: 0.3;
     left: 50%;
     transform: translateX(-50%);
-    top: 0;
+    top: 0px;
     background-color: ${(p) => p.theme.barChart.backgroundColor.active};
     visibility: ${(p) => (p.active ? "visible" : "hidden")};
   }

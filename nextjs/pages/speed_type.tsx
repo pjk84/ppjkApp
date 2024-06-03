@@ -3,7 +3,7 @@ import Score from "../components/projects/speedType/Score";
 import Timer from "../components/projects/speedType/Timer";
 import { appThemeDark, appThemeLight } from "../styles";
 import { StdButton } from "../styles/buttons";
-import { FlexBox, FlexBoxCentered } from "../styles/containers";
+import { FlexBox, FlexBoxCentered, PageWrapper } from "../styles/containers";
 import { StdInput } from "../styles/input";
 import { RootState } from "../state";
 import { useSelector } from "react-redux";
@@ -16,9 +16,7 @@ const SpeedType = () => {
   const [showCursor, setShowCursor] = useState(
     localStorage.getItem("speedtype_show_cursor") === "true"
   );
-  const [showErrors, setShowErrors] = useState(
-    localStorage.getItem("speedtype_show_errors") === "true"
-  );
+
   const wordsPerLine = 10;
 
   const initialState = {
@@ -108,22 +106,11 @@ const SpeedType = () => {
     padding: 10,
   };
 
-  const handleCursor = () => {
-    localStorage.setItem("speedtype_show_cursor", String(!showCursor));
-    setShowCursor(!showCursor);
-  };
-  const handleShowErrors = () => {
-    localStorage.setItem("speedtype_show_errors", String(!showErrors));
-    setShowErrors(!showErrors);
-  };
-
   const getLetters = (word: string) => {
     const input = gameState.input.toLowerCase().trim().split("");
 
     let w = word.split("");
-    if (showErrors) {
-      w = [...w, ...input.slice(word.length)];
-    }
+    w = [...w, ...input.slice(word.length)];
 
     return (
       <>
@@ -134,16 +121,14 @@ const SpeedType = () => {
               key={`letter_${i}_word`}
               style={{
                 position: "relative",
-                ...(showErrors && {
-                  textDecoration: overFlow ? "line-through" : "normal",
-                  color: overFlow
-                    ? appTheme.red
-                    : i < input.length
-                    ? letter === input[i]
-                      ? appTheme.green
-                      : appTheme.red
-                    : undefined,
-                }),
+                textDecoration: overFlow ? "line-through" : "normal",
+                color: overFlow
+                  ? appTheme.red
+                  : i < input.length
+                  ? letter === input[i]
+                    ? appTheme.green
+                    : appTheme.red
+                  : undefined,
               }}
             >
               {letter}
@@ -221,29 +206,6 @@ const SpeedType = () => {
     });
   };
 
-  const settings = (
-    <FlexBox column gapSize="small" key="show_cursor">
-      <FlexBox>
-        <input
-          key="config_api_dotnet"
-          defaultChecked={showCursor}
-          onChange={handleCursor}
-          type="checkbox"
-        />
-        <label>show cursor</label>
-      </FlexBox>
-      <FlexBox>
-        <input
-          key="config_api_dotnet"
-          defaultChecked={showErrors}
-          onChange={handleShowErrors}
-          type="checkbox"
-        />
-        <label>show errors</label>
-      </FlexBox>
-    </FlexBox>
-  );
-
   const input = (
     <StdInput
       key="speedTypeInp"
@@ -302,14 +264,14 @@ const SpeedType = () => {
   );
 
   const main = gameState.timesUp ? (
-    <>
+    <FlexBox column align="center">
       {getScore()}
       <StdButton size="small" onClick={() => setGameState(initialState)}>
         restart
       </StdButton>
-    </>
+    </FlexBox>
   ) : (
-    <FlexBoxCentered style={{ width: "100%" }}>
+    <FlexBox column>
       <div
         style={{
           position: "relative",
@@ -322,11 +284,11 @@ const SpeedType = () => {
         {words}
       </div>
       {input}
-    </FlexBoxCentered>
+    </FlexBox>
   );
 
   return (
-    <FlexBoxCentered style={{ height: "100%", gap: 50 }}>
+    <PageWrapper center>
       {main}
       {!gameState.timesUp && (
         <Timer
@@ -340,8 +302,7 @@ const SpeedType = () => {
           }
         />
       )}
-      {settings}
-    </FlexBoxCentered>
+    </PageWrapper>
   );
 };
 
