@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
-import bcrypt from "bcryptjs";
 
 export type AuthResponse = { token: string; identity: string };
 

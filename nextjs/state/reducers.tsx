@@ -47,12 +47,14 @@ type IBitvavState = {
   portfolio?: Portfolio;
   snapshots?: PortfolioSnapshot[];
   page?: string;
+  websocket: boolean;
 };
 
 const initialBitvavoState: IBitvavState = {
   portfolio: undefined,
   snapshots: undefined,
   page: "balance",
+  websocket: false,
 };
 
 const appReducer = (state = initialAppState, action: Action): IAppState => {
@@ -128,6 +130,12 @@ const bitvavoReducer = (
       return {
         ...state,
         page: action.page,
+      };
+    }
+    case actions.TOGGLE_WEBSOCKET: {
+      return {
+        ...state,
+        websocket: !state.websocket,
       };
     }
     default:

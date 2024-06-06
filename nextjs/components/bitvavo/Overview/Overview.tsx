@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { actions } from "../../state/actiontypes";
-import apiClient from "../../api/client";
-import { TableCell, TableHeader } from "../../styles/table";
-import { FlexBox } from "../../styles/containers";
-import Loader from "../Loaders";
-import { Control } from "../../styles/buttons";
+import { useDispatch, useSelector } from "react-redux";
+import { actions } from "../../../state/actiontypes";
+import apiClient from "../../../api/client";
+import { TableCell, TableHeader } from "../../../styles/table";
+import { FlexBox } from "../../../styles/containers";
+import Loader from "../../Loaders";
+import { Toggle, Control } from "../../../styles/buttons";
+import Websocket from "./WebSocket";
+import { RootState } from "../../../state";
 
 type Props = {
   portfolio?: Portfolio;
@@ -18,6 +20,7 @@ const Overview = ({ portfolio }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [withFlash, setFlash] = useState(false);
   const dispatch = useDispatch();
+  const websocket = useSelector((state: RootState) => state.bitvavo.websocket);
 
   useEffect(() => {
     if (!portfolio && !isLoading) {
@@ -62,16 +65,7 @@ const Overview = ({ portfolio }: Props) => {
   );
 
   const getAssetComponent = (asset: Asset, index: number) => {
-    var {
-      priceAction24h,
-      available,
-      market,
-      value,
-      amountSpent,
-      result,
-      transactionHistory,
-      returnOnInvestment: roi,
-    } = asset;
+    var { available, market, value, amountSpent, transactionHistory } = asset;
     return (
       <tr key={`asset-row-${asset.market}`}>
         <TableCell index={index}>{market}</TableCell>
@@ -207,8 +201,11 @@ const Overview = ({ portfolio }: Props) => {
   return (
     <FlexBox column gapSize={10}>
       <FlexBox align="center" gapSize={25}>
+        <Websocket />
         <div style={{ opacity: 0.5 }}> last updated: {portfolio.fetchedAt}</div>
-        <div>{isLoading ? "fetching assets..." : refreshButton}</div>
+        <div>
+          {isLoading ? "fetching assets..." : websocket ? null : refreshButton}
+        </div>
       </FlexBox>
       <table>
         <tbody>

@@ -8,7 +8,7 @@ namespace Api.Features.Bitvavo;
 [ApiController]
 // [Authorize]
 [Route("[controller]")]
-public class BitvavoController(IMediator mediator) : ControllerBase
+public class BitvavoController(IMediator mediator, IConfiguration config) : ControllerBase
 {
     [HttpGet("portfolio")]
     public async Task<ActionResult<BitvavoPortfolioView>> GetPortfolio()
@@ -21,6 +21,23 @@ public class BitvavoController(IMediator mediator) : ControllerBase
         }
         return Ok(res.Value);
     }
+
+    [HttpGet("/ws/bitvavo/portfolio")]
+    public async Task Websocket()
+    {
+
+        if (HttpContext.WebSockets.IsWebSocketRequest)
+        {
+            using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+            var client = new WebsocketClient(webSocket, config);
+            await client.OpenConnection();
+        }
+        else
+        {
+            // HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        }
+    }
+
     [HttpGet("snapshots")]
     public async Task<ActionResult<BitvavoPortfolioSnapshotView[]>> GetPortfolioSnapshots()
     {

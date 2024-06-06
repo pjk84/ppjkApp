@@ -137,6 +137,29 @@ export const Control = styled.button<{
   }
 `;
 
+export const Toggle = styled.button<{
+  active?: boolean;
+  color?: "red" | "blue" | "gray";
+  border?: boolean;
+  fontSize?: number;
+}>`
+  padding: 5px;
+  background-color: ${(p) =>
+    p.active ? p.theme.toggle.backgroundColor : "transparent"};
+  text-align: left;
+  transition: all 0.1s;
+  border: 0px;
+  border-radius: 4px;
+  width: max-content;
+  font-size: 15px;
+  color: ${(p) =>
+    p.active ? p.theme.toggle.color.active : p.theme.toggle.color.inactive};
+  cursor: pointer;
+  &:hover {
+    color: ${(p) => p.theme.toggle.color.hover};
+  }
+`;
+
 export const SidebarSwitch = styled.button`
   position: absolute;
   right: -29px;

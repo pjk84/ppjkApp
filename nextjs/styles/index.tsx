@@ -171,6 +171,14 @@ export const appThemeLight = {
     textColor: color.darkGray,
     labelColor: color.darkGray,
   },
+  toggle: {
+    backgroundColor: color.lightGreen,
+    color: {
+      active: color.darkGray,
+      inactive: color.lightGray,
+      hover: color.darkGray,
+    },
+  },
 };
 
 export const appThemeDark = {
@@ -289,5 +297,13 @@ export const appThemeDark = {
     lineColor: color.darkGray,
     textColor: color.lightestGray,
     labelColor: color.darkGray,
+  },
+  toggle: {
+    backgroundColor: color.darkGray,
+    color: {
+      active: color.blue,
+      inactive: color.mediumGray,
+      hover: color.blue,
+    },
   },
 };

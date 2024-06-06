@@ -39,6 +39,7 @@ if (env != "Local")
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
+app.UseWebSockets();
 
 app.MapControllers();
 
