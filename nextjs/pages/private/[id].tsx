@@ -6,9 +6,7 @@ import { FlexBox } from "../../styles/containers";
 import Bitvavo from "../../components/Bitvavo/Bitvavo";
 
 const Projects = () => {
-  const isLoggedIn = useSelector(
-    (state: RootState) => state.main.auth.loggedIn
-  );
+  const isLoggedIn = useSelector((state: RootState) => state.auth.loggedIn);
   const router = useRouter();
   const { id } = router.query;
 

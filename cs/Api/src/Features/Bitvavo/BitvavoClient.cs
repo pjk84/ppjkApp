@@ -26,7 +26,6 @@ public class BitvavoClient : BaseApiClient, IBitvavoClient
         var url = "balance";
         AddAuthHeaders(url);
         var res = await _httpClient.GetAsync(url, ct);
-        Console.WriteLine(await res.Content.ReadAsStringAsync());
         return res.StatusCode == HttpStatusCode.OK ? await HttpResponseMessageExtensions.DeserializeAsync<BitvavoBalance[]>(res) : [];
     }
 

@@ -19,7 +19,7 @@ const LoggedInIdentityBadge = () => {
   useEffect(() => {
     if (!loggedInIdentity && cookie.get(ACCESS_TOKEN_KEY)) {
       dispatch({
-        type: actions.SET_LOGGED_IN,
+        type: actions.LOGIN,
         loggedIn: true,
         error: null,
         identity: cookie.get(ACCESS_IDENTITY_KEY),

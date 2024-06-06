@@ -30,6 +30,18 @@ const initialAppState: IAppState = {
   showSideBar: false,
 };
 
+type IAuthState = {
+  loggedIn?: boolean;
+  loggedInIdentity?: string;
+  error?: string;
+};
+
+const initialAuthState: IAuthState = {
+  loggedIn: false,
+  loggedInIdentity: undefined,
+  error: undefined,
+};
+
 type IBitvavState = {
   timeFetched?: Date;
   portfolio?: Portfolio;
@@ -63,21 +75,32 @@ const appReducer = (state = initialAppState, action: Action): IAppState => {
     case actions.SELECT_PROJECT: {
       return { ...state, project: action.id };
     }
-    case actions.SET_LOGGED_IN: {
-      return {
-        ...state,
-        auth: {
-          loggedIn: action.loggedIn,
-          loggedInIdentity: action.identity,
-          error: action.error,
-        },
-      };
-    }
     case actions.TOGGLE_SIDE_BAR: {
       return { ...state, showSideBar: !state.showSideBar };
     }
     case actions.SET_THEME: {
       return { ...state, theme: action.theme };
+    }
+    default:
+      return state;
+  }
+};
+
+const authReducer = (state = initialAuthState, action: Action): IAuthState => {
+  switch (action.type) {
+    case actions.LOGIN: {
+      return {
+        loggedIn: true,
+        loggedInIdentity: action.identity,
+        error: undefined,
+      };
+    }
+    case actions.LOGOUT: {
+      return {
+        loggedIn: false,
+        loggedInIdentity: undefined,
+        error: action.error,
+      };
     }
     default:
       return state;
@@ -114,4 +137,5 @@ const bitvavoReducer = (
 export default combineReducers({
   bitvavo: bitvavoReducer,
   main: appReducer,
+  auth: authReducer,
 });

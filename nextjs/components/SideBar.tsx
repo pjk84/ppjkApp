@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FlexBox, SideBar, StdList } from "../styles/containers";
 import Theme from "./Theme";
 import { useSelector } from "react-redux";
 import { RootState } from "../state";
 import { useDispatch } from "react-redux";
 import { actions } from "../state/actiontypes";
-import { Control, MenuDot, SidebarSwitch } from "../styles/buttons";
+import { Control, MenuDot } from "../styles/buttons";
 import dynamic from "next/dynamic";
 import ApiPicker from "./ApiControls";
 import { useRouter } from "next/router";
 
 const Login = dynamic(() => import("./login"));
-const smallSizeThreshold = 800;
 
 export const ToggleSmallScreen = () => {
   const dispatch = useDispatch();

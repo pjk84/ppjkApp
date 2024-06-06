@@ -26,11 +26,9 @@ type GoogleLoginPayload = {
 
 const Login = () => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(
-    (state: RootState) => state.main.auth.loggedIn
-  );
+  const isLoggedIn = useSelector((state: RootState) => state.auth.loggedIn);
 
-  const authError = useSelector((state: RootState) => state.main.auth.error);
+  const authError = useSelector((state: RootState) => state.auth.error);
 
   const [active, setIsActive] = useState(false);
   const [attempts, setAttempts] = useState(0);
@@ -50,18 +48,17 @@ const Login = () => {
     }
 
     if (creds) {
-      cookie.set(ACCESS_TOKEN_KEY, creds.token,  { path: "/" });
-      cookie.set(ACCESS_IDENTITY_KEY, creds.identity,  { path: "/" });
+      cookie.set(ACCESS_TOKEN_KEY, creds.token, { path: "/" });
+      cookie.set(ACCESS_IDENTITY_KEY, creds.identity, { path: "/" });
       dispatch({
-        type: actions.SET_LOGGED_IN,
+        type: actions.LOGIN,
         loggedIn: true,
         identity: creds.identity,
         error: null,
       });
     } else {
-      console.log("oops");
       dispatch({
-        type: actions.SET_LOGGED_IN,
+        type: actions.LOGOUT,
         error: "not authorized",
       });
     }
@@ -78,20 +75,11 @@ const Login = () => {
     cookie.remove(ACCESS_TOKEN_KEY, { path: "/" });
     setIsActive(false);
     dispatch({
-      type: actions.SET_LOGGED_IN,
+      type: actions.LOGOUT,
       loggedIn: false,
       identity: null,
     });
   };
-
-  useEffect(() => {
-    return () => {
-      dispatch({
-        type: actions.SET_LOGGED_IN,
-        error: null,
-      });
-    };
-  }, []);
 
   const login = (
     <GoogleLogin
