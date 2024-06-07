@@ -6,7 +6,7 @@ import { TableCell, TableHeader } from "../../../styles/table";
 import { FlexBox } from "../../../styles/containers";
 import Loader from "../../Loaders";
 import { Toggle, Control } from "../../../styles/buttons";
-import Websocket from "./WebSocket";
+import Websocket from "./Websocket";
 import { RootState } from "../../../state";
 
 type Props = {
@@ -18,9 +18,11 @@ const Overview = ({ portfolio }: Props) => {
     string | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [withFlash, setFlash] = useState(false);
   const dispatch = useDispatch();
   const websocket = useSelector((state: RootState) => state.bitvavo.websocket);
+  const lastUpdatedAt = useSelector(
+    (state: RootState) => state.bitvavo.portfolio?.fetchedAt
+  );
 
   useEffect(() => {
     if (!portfolio && !isLoading) {
@@ -46,7 +48,6 @@ const Overview = ({ portfolio }: Props) => {
     <Control
       onClick={() => {
         getPortfolio();
-        setFlash(true);
       }}
     >
       refresh
@@ -56,7 +57,7 @@ const Overview = ({ portfolio }: Props) => {
   const GetCell = (value: any, index: number, key: string, color?: string) => (
     <TableCell
       color={color}
-      animation={withFlash ? "flash" : undefined}
+      animation={"flash"}
       key={`${key}-{${value}}`}
       index={index}
     >
@@ -84,7 +85,7 @@ const Overview = ({ portfolio }: Props) => {
         )}
         {GetCell(value, index, "value")}
         <TableCell
-          animation={withFlash ? "flash" : undefined}
+          animation={"flash"}
           key={`spent-{${amountSpent}}`}
           index={index}
         >
@@ -202,7 +203,7 @@ const Overview = ({ portfolio }: Props) => {
     <FlexBox column gapSize={10}>
       <FlexBox align="center" gapSize={25}>
         <Websocket />
-        <div style={{ opacity: 0.5 }}> last updated: {portfolio.fetchedAt}</div>
+        <div style={{ opacity: 0.5 }}> last updated: {lastUpdatedAt}</div>
         <div>
           {isLoading ? "fetching assets..." : websocket ? null : refreshButton}
         </div>

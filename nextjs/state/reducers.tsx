@@ -43,7 +43,6 @@ const initialAuthState: IAuthState = {
 };
 
 type IBitvavState = {
-  timeFetched?: Date;
   portfolio?: Portfolio;
   snapshots?: PortfolioSnapshot[];
   page?: string;
@@ -114,6 +113,11 @@ const bitvavoReducer = (
   action: Action
 ): IBitvavState => {
   switch (action.type) {
+    case actions.HANDLE_TICKER: {
+      return {
+        ...state,
+      };
+    }
     case actions.SET_BITVAVO_PORTFOLIO: {
       return {
         ...state,

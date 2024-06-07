@@ -30,3 +30,5 @@ public record BitvavoPortfolioSnapshotView(int Year, int Month, int DaysInMonth,
 public record BitvavoPortfolioSnapshotDayView(int Day, double total, BitvavoAssetSnapshotView[] assets);
 
 public record BitvavoAssetSnapshotView(string Market, double Value);
+
+public record WebSocketTickerView<T>(string Type, T Message);

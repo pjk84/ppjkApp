@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
 import PortfolioHistory from "../../components/Bitvavo/PortfolioHistory/PortfolioHistory";
-import WebsocketControl from "./Overview/WebSocket";
 
 const Bitvavo = () => {
   const page = useSelector((state: RootState) => state.bitvavo.page);
