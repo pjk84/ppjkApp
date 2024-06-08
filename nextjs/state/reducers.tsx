@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { actions, blogActions } from "./actiontypes";
+import { actions, bitvavoActions, blogActions } from "./actiontypes";
 import { now } from "lodash";
 
 type Action = {
@@ -43,6 +43,7 @@ const initialAuthState: IAuthState = {
 };
 
 type IBitvavState = {
+  showPurchaseHistoryFor?: string;
   portfolio?: Portfolio;
   snapshots?: PortfolioSnapshot[];
   page?: string;
@@ -140,6 +141,12 @@ const bitvavoReducer = (
       return {
         ...state,
         websocket: !state.websocket,
+      };
+    }
+    case bitvavoActions.TOGGLE_PURCHASE_HISTORY_FOR: {
+      return {
+        ...state,
+        showPurchaseHistoryFor: action.market,
       };
     }
     default:

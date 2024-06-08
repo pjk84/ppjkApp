@@ -27,20 +27,24 @@ const Bitvavo = () => {
     dispatch({ type: actions.SET_BITVAVO_PAGE, page });
   };
 
+  const buttons = (
+    <FlexBox gapSize={10}>
+      {["balance", "history", "trades"].map((p) => (
+        <StdButton
+          key={p}
+          onClick={() => setPage(p)}
+          active={page == p}
+          size="small"
+        >
+          {p}
+        </StdButton>
+      ))}
+    </FlexBox>
+  );
+
   return (
     <PageWrapper maxWidth={1200}>
-      <FlexBox gapSize={10}>
-        {["balance", "history", "trades"].map((p) => (
-          <StdButton
-            key={p}
-            onClick={() => setPage(p)}
-            active={page == p}
-            size="small"
-          >
-            {p}
-          </StdButton>
-        ))}
-      </FlexBox>
+      {portfolio ? buttons : null}
       {view}
     </PageWrapper>
   );

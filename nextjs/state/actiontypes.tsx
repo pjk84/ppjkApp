@@ -38,3 +38,7 @@ export const blogActions = {
   SET_ALL_TAGS: "SET_ALL_TAGS",
   RESET_POST: "RESET_POST",
 };
+
+export const bitvavoActions = {
+  TOGGLE_PURCHASE_HISTORY_FOR: "TOGGLE_PURCHASE_HISTORY_FOR",
+};
