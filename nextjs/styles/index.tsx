@@ -98,8 +98,10 @@ export const appThemeLight = {
     backgroundColor: color.offWhite,
     borderColor: "transparent",
   },
-  componentHeader: {
-    backgroundColor: color.darkGray2,
+  component: {
+    header: {
+      backgroundColor: color.lighterGray,
+    },
   },
   footer: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
@@ -184,6 +186,11 @@ export const appThemeLight = {
       hover: color.darkGray,
     },
   },
+  container: {
+    border: {
+      color: color.lightGray,
+    },
+  },
 };
 
 export const appThemeDark = {
@@ -226,8 +233,10 @@ export const appThemeDark = {
     backgroundColor: color.charcoal,
     borderColor: color.mediumGray,
   },
-  componentHeader: {
-    backgroundColor: color.darkGray,
+  component: {
+    header: {
+      backgroundColor: color.darkGray2,
+    },
   },
   footer: {
     boxShadow: "none",

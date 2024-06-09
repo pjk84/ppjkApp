@@ -133,7 +133,11 @@ const TradingPlan = () => {
   return (
     <FlexBox column gapSize={25}>
       {newPlan}
-      {activePlans}
+      {tradingPlans && tradingPlans.length > 0 ? (
+        activePlans
+      ) : (
+        <div>no plans found...</div>
+      )}
     </FlexBox>
   );
 };

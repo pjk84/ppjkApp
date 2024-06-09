@@ -187,7 +187,6 @@ export const FlexBox = styled.div<{
   wrap?: "true";
   color?: "green" | "blue" | "gray";
   justify?: "center" | "end" | "between";
-  border?: boolean;
 }>`
   position: relative;
   color: ${(p) =>
@@ -197,10 +196,6 @@ export const FlexBox = styled.div<{
       ? appTheme.blue
       : p.theme.color};
   display: Flex;
-  border: ${(props) => (props.border ? "1px solid" : undefined)};
-  border-color: ${(props) => props.theme.container.border.color};
-  padding: ${(props) => (props.border ? "10px" : undefined)};
-  border-radius: 4px;
   gap: ${(props) =>
     props.gapSize === "small"
       ? "10px"
@@ -225,6 +220,31 @@ export const FlexBox = styled.div<{
       : props.justify === "between"
       ? "space-between"
       : "start"};
+`;
+
+export const Component = styled.div<{ name?: string }>`
+  position: relative;
+  display: flex;
+  border: 1px solid;
+  border-color: ${(props) => props.theme.container.border.color};
+  padding: 10px;
+  border-radius: 4px;
+  gap: 25px;
+  padding-top: 50px;
+  &:before {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: max-content;
+    font-size: 25px;
+    padding: 5px 10px 5px 10px;
+    content: "${(props) => (props.name ? props.name : "")}";
+    bottom: 0;
+    position: absolute;
+    background-color: ${(props) =>
+      props.theme.component.header.backgroundColor};
+  }
 `;
 
 export const Box1 = styled.div<{

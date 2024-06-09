@@ -1,19 +1,16 @@
-import { FlexBox } from "../../../styles/containers";
-import { Header1 } from "../../../styles/header";
+import { Component, FlexBox } from "../../../styles/containers";
 import Orders from "./Orders";
 import TradingPlan from "./TradingPlan";
 
 const Trades = () => {
   return (
     <FlexBox column gapSize={50}>
-      <FlexBox column gapSize={25}>
-        <Header1>Trading plans:</Header1>
+      <Component name={"Trading plans:"}>
         <TradingPlan />
-      </FlexBox>
-      <FlexBox column gapSize={25}>
-        <Header1>Orders:</Header1>
+      </Component>
+      <Component name={"Orders:"}>
         <Orders />
-      </FlexBox>
+      </Component>
     </FlexBox>
   );
 };

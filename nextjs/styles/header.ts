@@ -25,14 +25,3 @@ export const Header2 = styled.header<{ withBackground: boolean }>`
 
   /* justify-content: center; */
 `;
-
-export const ComponentHeader = styled.header`
-  margin: 0;
-  padding: 5px;
-  background-color: transparent;
-  font-size: 20px;
-  border: none;
-  font-weight: normal;
-
-  /* justify-content: center; */
-`;
