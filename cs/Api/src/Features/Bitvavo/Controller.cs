@@ -1,5 +1,5 @@
 
-using Microsoft.AspNetCore.Authorization;
+using Api.Features.Bitvavo.Models;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -42,6 +42,18 @@ public class BitvavoController(IMediator mediator, IConfiguration config) : Cont
     public async Task<ActionResult<BitvavoPortfolioSnapshotView[]>> GetPortfolioSnapshots()
     {
         var query = new BitvavoPortfolioSnapshotQuery();
+        var res = await mediator.Send(query);
+        if (!res.Success)
+        {
+            return BadRequest();
+        }
+        return Ok(res.Value);
+    }
+
+    [HttpGet("orders")]
+    public async Task<ActionResult<Order[]>> GetOrders()
+    {
+        var query = new GetOrdersQuery();
         var res = await mediator.Send(query);
         if (!res.Success)
         {

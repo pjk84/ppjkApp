@@ -303,7 +303,7 @@ export const appThemeDark = {
     color: {
       active: color.blue,
       inactive: color.mediumGray,
-      hover: color.blue,
+      hover: color.lighterGray,
     },
   },
 };

@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../../state/actiontypes";
 import apiClient from "../../../api/client";
-import { TableCell, TableHeader } from "../../../styles/table";
+import { TableHeader } from "../../../styles/table";
 import { FlexBox } from "../../../styles/containers";
 import Loader from "../../Loaders";
 import { Control } from "../../../styles/buttons";
 import Websocket from "./Websocket";
 import { RootState } from "../../../state";
 import Total from "./Total";
-import PurchaseHistory from "./PurchaseHistory";
 import AssetRow from "./AssetComponent";
 
 type Props = {
@@ -44,7 +43,7 @@ const Overview = ({ portfolio }: Props) => {
     }
   });
 
-  var getPortfolio = async () => {
+  const getPortfolio = async () => {
     setIsLoading(true);
     apiClient()
       .get<Portfolio>("/bitvavo/portfolio")

@@ -1,4 +1,5 @@
 using System.Globalization;
+using Api.Features.Bitvavo.Models;
 using Api.Common.Result;
 using Api.Database;
 using Api.Database.Models;

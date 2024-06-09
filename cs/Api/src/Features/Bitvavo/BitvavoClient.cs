@@ -4,8 +4,7 @@ using System.Text;
 using Api.Common.ApiClient;
 using Api.Common.RedisCache;
 using Api.Extensions;
-using AutoMapper.Internal.Mappers;
-using Microsoft.AspNetCore.Mvc;
+using Api.Features.Bitvavo.Models;
 
 namespace Api.Features.Bitvavo;
 
@@ -27,6 +26,13 @@ public class BitvavoClient : BaseApiClient, IBitvavoClient
         AddAuthHeaders(url);
         var res = await _httpClient.GetAsync(url, ct);
         return res.StatusCode == HttpStatusCode.OK ? await HttpResponseMessageExtensions.DeserializeAsync<BitvavoBalance[]>(res) : [];
+    }
+    public async Task<Order[]> GetOrdersAsync(CancellationToken ct)
+    {
+        var url = "orders";
+        AddAuthHeaders(url);
+        var res = await _httpClient.GetAsync(url, ct);
+        return res.StatusCode == HttpStatusCode.OK ? await HttpResponseMessageExtensions.DeserializeAsync<Order[]>(res) : [];
     }
 
     public async Task<BitVavoMarketPrice?> GetMarketPriceAsync(string market, CancellationToken ct)

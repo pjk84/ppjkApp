@@ -156,7 +156,8 @@ export const Toggle = styled.button<{
     p.active ? p.theme.toggle.color.active : p.theme.toggle.color.inactive};
   cursor: pointer;
   &:hover {
-    color: ${(p) => p.theme.toggle.color.hover};
+    color: ${(p) =>
+      p.active ? p.theme.toggle.color.active : p.theme.toggle.color.hover};
   }
 `;
 

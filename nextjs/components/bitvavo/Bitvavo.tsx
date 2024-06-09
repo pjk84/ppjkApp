@@ -1,6 +1,6 @@
 import { FlexBox, PageWrapper } from "../../styles/containers";
 import Overview from "./Overview/Overview";
-import Trades from "../../components/Bitvavo/Trades";
+import Trades from "./Trades/Trades";
 import { StdButton } from "../../styles/buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -19,22 +19,22 @@ const Bitvavo = () => {
       <Overview portfolio={portfolio} />
     ) : page == "trades" ? (
       <Trades />
-    ) : (
+    ) : page == "history" ? (
       <PortfolioHistory snapshots={snapshots} />
-    );
+    ) : null;
 
   const setPage = (page: string) => {
     dispatch({ type: actions.SET_BITVAVO_PAGE, page });
   };
 
   const buttons = (
-    <FlexBox gapSize={10}>
+    <FlexBox justify={page ? undefined : "center"} gapSize={10}>
       {["balance", "history", "trades"].map((p) => (
         <StdButton
           key={p}
           onClick={() => setPage(p)}
           active={page == p}
-          size="small"
+          size={page ? "small" : "large"}
         >
           {p}
         </StdButton>
@@ -44,7 +44,7 @@ const Bitvavo = () => {
 
   return (
     <PageWrapper maxWidth={1200}>
-      {portfolio ? buttons : null}
+      {buttons}
       {view}
     </PageWrapper>
   );

@@ -1,4 +1,4 @@
-namespace Api.Features.Bitvavo;
+namespace Api.Features.Bitvavo.Models;
 
 public record BitvavoBalance(string Symbol, string Available);
 
@@ -31,6 +31,8 @@ public record BitvavoTransactionHistory(
 
 public record WebSocketMessage(string Event);
 
+public record AddTickerSubscriptionPayload(string[] Markets);
+
 public record WebSocketAutenticationResponse(bool Authenticated);
 
 public record CandlesSubscriptionPayload(string Action, Channel[] Channels);
@@ -38,4 +40,4 @@ public record CandlesSubscriptionPayload(string Action, Channel[] Channels);
 public record Channel(string Name, string[] Markets);
 
 public record TickerEvent(string Market, string? LastPrice, string Time);
-public record Ticker24hEvent(string Market, BitVavo24hPrice Data);
+public record Ticker24hEvent(BitVavo24hPrice[] Data);

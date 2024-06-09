@@ -1,12 +1,11 @@
 namespace Api.Features.Bitvavo;
 
 using System;
-using System.IdentityModel.Tokens.Jwt;
+using Api.Features.Bitvavo.Models;
 using System.Net.WebSockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 
 public record AuthenticationPayload(
@@ -35,9 +34,6 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
                 await _bitvavoWebSocket.ConnectAsync(serviceUri, cts.Token);
 
                 await Authenticate();
-
-                await AddTickerSubscription(["BTC-EUR"]);
-                await AddTicker24Subscription(["BTC-EUR"]);
 
                 // listen to events on both sockets
                 await Task.WhenAny(ReceiveClientMessages(), ReceiveBitvavoMessages());
@@ -139,23 +135,34 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
     }
     private async Task HandleTicker24hEvent(string @event)
     {
-        // var d = JsonSerializer.Deserialize<Ticker24hEvent>(@event, _serializerOptions);
-        // if (d == null)
-        // {
-        //     return;
-        // }
-        // var view = new WebSocketTickerView<Ticker24hEvent>("ticker24h", d);
-        // await SendMessage(view);
+        var d = JsonSerializer.Deserialize<Ticker24hEvent>(@event, _serializerOptions);
+        if (d == null)
+        {
+            return;
+        }
+        var view = new WebSocketTickerView<BitVavo24hPrice[]>("ticker24h", d.Data);
+        await SendMessage(view);
     }
 
     private async Task ReceiveBitvavoMessages()
     {
-        byte[] buffer = new byte[1024];
+        const int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        var messageBuilder = new StringBuilder();
 
 
         while (_bitvavoWebSocket.State == WebSocketState.Open)
         {
-            WebSocketReceiveResult result = await _bitvavoWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
+            messageBuilder.Clear();
+            WebSocketReceiveResult result;
+            do
+            {
+                // construct string from buffer segments when message length exceeds buffer size
+                result = await _bitvavoWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
+                var messageSegment = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                messageBuilder.Append(messageSegment);
+            } while (!result.EndOfMessage);
+
             if (result.MessageType == WebSocketMessageType.Close)
             {
                 Console.WriteLine("bitvavo initiated close");
@@ -163,9 +170,8 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
             }
             else
             {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                var message = messageBuilder.ToString();
                 var d = JsonSerializer.Deserialize<WebSocketMessage>(message, _serializerOptions);
-                Console.WriteLine(message);
                 switch (d?.Event)
                 {
                     case "authenticated":
@@ -200,7 +206,19 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
             else
             {
                 var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                Console.WriteLine(message);
+                var d = JsonSerializer.Deserialize<WebSocketMessage>(message, _serializerOptions);
+                switch (d?.Event)
+                {
+                    case "add_ticker_subscriptions":
+                        // do nothing
+                        var payload = JsonSerializer.Deserialize<AddTickerSubscriptionPayload>(message, _serializerOptions);
+                        var markets = payload!.Markets.Select(market => $"{market}-EUR").ToArray();
+                        await AddTickerSubscription(markets);
+                        await AddTicker24Subscription(markets);
+                        break;
+                    default:
+                        break;
+                }
                 //
             }
         }

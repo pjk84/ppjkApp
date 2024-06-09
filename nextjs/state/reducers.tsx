@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import { actions, bitvavoActions, blogActions } from "./actiontypes";
 import { now } from "lodash";
+import BitvavoReducer from "./Bitvavo";
 
 type Action = {
   type: string;
@@ -40,21 +41,6 @@ const initialAuthState: IAuthState = {
   loggedIn: false,
   loggedInIdentity: undefined,
   error: undefined,
-};
-
-type IBitvavState = {
-  showPurchaseHistoryFor?: string;
-  portfolio?: Portfolio;
-  snapshots?: PortfolioSnapshot[];
-  page?: string;
-  websocket: boolean;
-};
-
-const initialBitvavoState: IBitvavState = {
-  portfolio: undefined,
-  snapshots: undefined,
-  page: "balance",
-  websocket: false,
 };
 
 const appReducer = (state = initialAppState, action: Action): IAppState => {
@@ -109,52 +95,8 @@ const authReducer = (state = initialAuthState, action: Action): IAuthState => {
   }
 };
 
-const bitvavoReducer = (
-  state = initialBitvavoState,
-  action: Action
-): IBitvavState => {
-  switch (action.type) {
-    case actions.HANDLE_TICKER: {
-      return {
-        ...state,
-      };
-    }
-    case actions.SET_BITVAVO_PORTFOLIO: {
-      return {
-        ...state,
-        portfolio: action.portfolio,
-      };
-    }
-    case actions.SET_BITVAVO_SNAPSHOTS: {
-      return {
-        ...state,
-        snapshots: action.snapshots,
-      };
-    }
-    case actions.SET_BITVAVO_PAGE: {
-      return {
-        ...state,
-        page: action.page,
-      };
-    }
-    case actions.TOGGLE_WEBSOCKET: {
-      return {
-        ...state,
-        websocket: !state.websocket,
-      };
-    }
-    case bitvavoActions.TOGGLE_PURCHASE_HISTORY_FOR: {
-      return {
-        ...state,
-        showPurchaseHistoryFor: action.market,
-      };
-    }
-    default:
-      return state;
-  }
-};
 export default combineReducers({
-  bitvavo: bitvavoReducer,
+  bitvavo: BitvavoReducer,
   main: appReducer,
   auth: authReducer,
 });
