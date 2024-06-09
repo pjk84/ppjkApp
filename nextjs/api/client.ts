@@ -42,10 +42,21 @@ const apiClient = () => {
       console.log(err);
     }
   };
+  const del = async <T>(path: string) => {
+    try {
+      await axios.delete(`${apiPrefix}${path}`, {
+        withCredentials: true,
+        headers: headers,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return {
     get,
     post,
+    del,
   };
 };
 

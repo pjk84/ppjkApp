@@ -10,7 +10,7 @@ export const InputBorderless = styled.input`
 export const StdInput = styled.input`
   -webkit-appearance: none;
   margin: 0;
-  border: none;
+  border: 1px solid;
   width: fit-content;
   color: ${(p) => p.theme.color};
   background-color: ${(p) => p.theme.input.backgroundColor};

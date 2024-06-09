@@ -1,4 +1,5 @@
 import { Order } from "../components/Bitvavo/Trades/Orders";
+import TradingPlan from "../components/Bitvavo/Trades/TradingPlan";
 import { actions, bitvavoActions } from "./actiontypes";
 
 type Action = {
@@ -10,6 +11,7 @@ type IBitvavState = {
   showPurchaseHistoryFor?: string;
   portfolio?: Portfolio;
   orders?: Order[];
+  tradingPlans?: TradingPlan[];
   snapshots?: PortfolioSnapshot[];
   page?: string;
   websocket?: WebSocket;
@@ -19,6 +21,7 @@ const initialBitvavoState: IBitvavState = {
   portfolio: undefined,
   snapshots: undefined,
   websocket: undefined,
+  tradingPlans: undefined,
 };
 
 const BitvavoReducer = (
@@ -35,6 +38,12 @@ const BitvavoReducer = (
       return {
         ...state,
         portfolio: action.portfolio,
+      };
+    }
+    case bitvavoActions.SET_TRADING_PLANS: {
+      return {
+        ...state,
+        tradingPlans: action.plans,
       };
     }
     case bitvavoActions.SET_ORDERS: {

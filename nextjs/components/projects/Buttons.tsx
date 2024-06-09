@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../state";
 import { actions } from "../../state/actiontypes";
 import { useRouter } from "next/router";
+import { random } from "lodash";
 
 interface Props {
   miniaturized?: boolean;
@@ -94,13 +95,12 @@ const ProjectMenu = ({ miniaturized }: Props) => {
                 key={`projectBtn-${p.id}`}
                 //   slideLeft={i % 2 === 0}
                 style={{
+                  opacity: clicked ? 1 : 0,
                   animation: clicked
                     ? i % 2 === 0
                       ? `0.5s slideOutRight ease-out forwards`
                       : `0.5s slideOutLeft ease-out forwards`
-                    : `${0.3}s slideDownDiagonal${
-                        i % 2 === 0 ? "Left" : "Right"
-                      } ease-out`,
+                    : `${0.3}s ${random(0.25, 0)}s PopIn ease-in forwards`,
                 }}
                 onClick={(e) =>
                   selectProject((e.target as HTMLButtonElement).id)

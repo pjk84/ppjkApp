@@ -1,5 +1,6 @@
 
 using Api.Features.Bitvavo.Models;
+using Api.Features.Bitvavo.Views;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -61,4 +62,39 @@ public class BitvavoController(IMediator mediator, IConfiguration config) : Cont
         }
         return Ok(res.Value);
     }
+
+    [HttpPost("trading-plan")]
+    public async Task<ActionResult<Order[]>> CreateTradingPlan(CreateTradingPlanPayload payload)
+    {
+        var query = new CreateTradingPlanCommand(payload.Market, payload.Amount);
+        var res = await mediator.Send(query);
+        if (!res.Success)
+        {
+            return BadRequest();
+        }
+        return Ok();
+    }
+    [HttpGet("trading-plans")]
+    public async Task<ActionResult<tradingPlanView[]>> GetTradingPlans()
+    {
+        var query = new GetTradingPlansQuery();
+        var res = await mediator.Send(query);
+        if (!res.Success)
+        {
+            return BadRequest();
+        }
+        return Ok(res.Value);
+    }
+    [HttpDelete("trading-plan/{planId}")]
+    public async Task<ActionResult<tradingPlanView[]>> GetTradingPlans(string planId)
+    {
+        var query = new DeleteTradinPlanCommand(planId);
+        var res = await mediator.Send(query);
+        if (!res.Success)
+        {
+            return BadRequest();
+        }
+        return Ok();
+    }
 }
+

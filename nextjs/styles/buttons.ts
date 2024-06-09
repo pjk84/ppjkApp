@@ -38,9 +38,10 @@ export const StdButton = styled.button<{
   transition: all 0.1s ease-out;
   animation: ${(p) => p.animation === "slideUp" && "0.2s slideUp ease-in"};
   &:hover {
+    animation: "1s PopIn ease-out";
     border: ${(p) =>
       !p.active && `1px solid ${p.theme.button.hover.borderColor}`};
-    color: ${(p) => !p.active && p.theme.button.hover.color};
+    color: "${(p) => !p.active && p.theme.button.hover.color};";
   }
   &:before {
     animation: ${(props) =>

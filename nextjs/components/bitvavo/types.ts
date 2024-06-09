@@ -44,3 +44,15 @@ interface AssetSnapshot {
   market: string;
   value: number;
 }
+
+type TradingPlan = {
+  id: string;
+  createdAt: string;
+  market: string;
+  amount: number;
+};
+
+type CreateTradingPlanPayload = {
+  market: string;
+  amount: number;
+};

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { StdButton } from "../../../styles/buttons";
 import { FlexBox } from "../../../styles/containers";
 import { Header1 } from "../../../styles/header";
 import { TableCell, TableHeader } from "../../../styles/table";
@@ -21,12 +20,7 @@ const Orders = () => {
     }
   });
   const GetCell = (value: any, index: number, key: string, color?: string) => (
-    <TableCell
-      color={color}
-      animation={"flash"}
-      key={`${key}-{${value}}`}
-      index={index}
-    >
+    <TableCell color={color} key={`${key}-{${value}}`} index={index}>
       {value}
     </TableCell>
   );
@@ -44,17 +38,12 @@ const Orders = () => {
       });
   };
 
-  if (isLoading) {
-    return <Loader text="loading assetes..." type="round" />;
-  }
-
   return (
     <FlexBox gapSize={25}>
       {isLoading ? (
         <Loader text="loading orders..." type="round" />
       ) : (
         <FlexBox column gapSize={10}>
-          <div>Orders: </div>
           <table>
             <tbody>
               <tr>
@@ -69,7 +58,16 @@ const Orders = () => {
                   {[
                     GetCell(order.market, i, "market"),
                     GetCell(order.orderType, i, "order_type"),
-                    GetCell(order.status, i, "status"),
+                    GetCell(
+                      order.status,
+                      i,
+                      "status",
+                      order.status === "Rejected"
+                        ? "red"
+                        : order.status === "Filled"
+                        ? "green"
+                        : undefined
+                    ),
                     GetCell(order.createdAt, i, "created_at"),
                     GetCell(order.price, i, "price"),
                   ]}

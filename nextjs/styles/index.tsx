@@ -30,6 +30,8 @@ export const color = {
     lightGray: "#aca3a3",
     lighterGray: "#cec4c4",
   },
+  darkGray2: "#332d2d",
+  darkGray3: "#2d2727",
   lightestGray: "#f0f0f0",
   lighterGray: "#e6e6e6",
   lighterGray2: "#d8d8d8",
@@ -95,6 +97,9 @@ export const appThemeLight = {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
     backgroundColor: color.offWhite,
     borderColor: "transparent",
+  },
+  componentHeader: {
+    backgroundColor: color.darkGray2,
   },
   footer: {
     boxShadow: `0px 1px 5px 2px ${color.lighterGray} `,
@@ -221,6 +226,9 @@ export const appThemeDark = {
     backgroundColor: color.charcoal,
     borderColor: color.mediumGray,
   },
+  componentHeader: {
+    backgroundColor: color.darkGray,
+  },
   footer: {
     boxShadow: "none",
     backgroundColor: color.darkTheme.darkGray,
@@ -297,6 +305,11 @@ export const appThemeDark = {
     lineColor: color.darkGray,
     textColor: color.lightestGray,
     labelColor: color.darkGray,
+  },
+  container: {
+    border: {
+      color: color.mediumGray,
+    },
   },
   toggle: {
     backgroundColor: color.darkGray,

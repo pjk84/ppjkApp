@@ -1,7 +1,6 @@
 using System.Globalization;
 using Api.Common.Result;
 using Api.Database;
-using Api.Database.Models;
 
 namespace Api.Features.Bitvavo;
 

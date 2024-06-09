@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
-import { FlexBox, PageWrapper } from "../../../styles/containers";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../state";
-import apiClient from "../../../api/client";
-import { bitvavoActions } from "../../../state/actiontypes";
+import { FlexBox } from "../../../styles/containers";
+import { Header1 } from "../../../styles/header";
 import Orders from "./Orders";
+import TradingPlan from "./TradingPlan";
 
 const Trades = () => {
   return (
-    <FlexBox column gapSize={25}>
-      <Orders />
+    <FlexBox column gapSize={50}>
+      <FlexBox column gapSize={25}>
+        <Header1>Trading plans:</Header1>
+        <TradingPlan />
+      </FlexBox>
+      <FlexBox column gapSize={25}>
+        <Header1>Orders:</Header1>
+        <Orders />
+      </FlexBox>
     </FlexBox>
   );
 };

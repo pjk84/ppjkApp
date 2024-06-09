@@ -125,6 +125,7 @@ export const PageWrapper = styled.div<{ maxWidth?: number; center?: boolean }>`
   width: 95%;
   padding: 5px;
   padding-bottom: 25px;
+  color: ${(p) => p.theme.color};
   padding-top: 25px;
   justify-content: ${(props) => (props.center ? "center" : null)};
 
@@ -180,12 +181,13 @@ export const FlexBoxCentered = styled.div<{
 `;
 
 export const FlexBox = styled.div<{
-  align?: "center";
+  align?: "center" | "start";
   gapSize?: "small" | "medium" | "large" | number;
   column?: boolean;
   wrap?: "true";
   color?: "green" | "blue" | "gray";
   justify?: "center" | "end" | "between";
+  border?: boolean;
 }>`
   position: relative;
   color: ${(p) =>
@@ -195,6 +197,10 @@ export const FlexBox = styled.div<{
       ? appTheme.blue
       : p.theme.color};
   display: Flex;
+  border: ${(props) => (props.border ? "1px solid" : undefined)};
+  border-color: ${(props) => props.theme.container.border.color};
+  padding: ${(props) => (props.border ? "10px" : undefined)};
+  border-radius: 4px;
   gap: ${(props) =>
     props.gapSize === "small"
       ? "10px"

@@ -14,7 +14,8 @@ public class GetOrders(IBitvavoClient client) : IRequestHandler<GetOrdersQuery, 
     public async Task<R> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
     {
         var orders = await client.GetOrdersAsync(cancellationToken);
-        orders = [new("adsd", "ADA-EUR", 1717946331, 1717946331, OrderStatus.New, "1100", OrderType.Limit, "1000")];
+        var order = new Order("adsd", "ADA-EUR", 1717946331, 1717946331, OrderStatus.New, "1100", OrderType.Limit, "1000");
+        orders = [order, order with { Status = OrderStatus.Rejected }, order with { Status = OrderStatus.Filled }];
         var views = orders.Select(o => ToView(o)).ToArray();
         return Result.Ok(views);
     }
