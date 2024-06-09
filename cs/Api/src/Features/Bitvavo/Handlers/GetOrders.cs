@@ -22,12 +22,12 @@ public class GetOrders(IBitvavoClient client) : IRequestHandler<GetOrdersQuery, 
     private OrderView ToView(Order order)
     {
         var price = Double.Parse(order.Price);
-        var createdAt = DateTimeOffset.FromUnixTimeMilliseconds(order.Created).DateTime;
+        var createdAt = DateTimeOffset.FromUnixTimeMilliseconds(0).AddSeconds(1717946634).DateTime;
         return new OrderView(
            Status: order.Status.ToString(),
            Price: price,
            Market: order.Market.Replace("-EUR", ""),
-           CreatedAt: createdAt.ToString("hh:mm:ss"),
+           CreatedAt: createdAt.ToString("dd-MM-yyyy"),
            OrderType: order.OrderType.ToString()
         );
     }

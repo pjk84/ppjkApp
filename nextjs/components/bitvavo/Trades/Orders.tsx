@@ -12,7 +12,7 @@ import apiClient from "../../../api/client";
 const Orders = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [markets, setMarkets] = useState();
-  const orders = useSelector((state: RootState) => state.bitvavo.orders) || [];
+  const orders = useSelector((state: RootState) => state.bitvavo.orders);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const Orders = () => {
     setIsLoading(true);
     apiClient()
       .get<Portfolio>("/bitvavo/orders")
-      .then((res) => {
+      .then((res: any) => {
         setIsLoading(false);
         dispatch({
           type: bitvavoActions.SET_ORDERS,
@@ -48,8 +48,6 @@ const Orders = () => {
     return <Loader text="loading assetes..." type="round" />;
   }
 
-  const v = [...orders, ...[dummy2, dummy]];
-
   return (
     <FlexBox gapSize={25}>
       {isLoading ? (
@@ -59,18 +57,20 @@ const Orders = () => {
           <div>Orders: </div>
           <table>
             <tbody>
-              {["market", "order type", "status", "created at", "price"].map(
-                (h) => (
-                  <TableHeader>{h}</TableHeader>
-                )
-              )}
-              {v.map((order, i) => (
-                <tr>
+              <tr>
+                {["market", "order type", "status", "created at", "price"].map(
+                  (h) => (
+                    <TableHeader key={`header-${h}`}>{h}</TableHeader>
+                  )
+                )}
+              </tr>
+              {[...(orders || [])].map((order, i) => (
+                <tr key={`order-row-${i}`}>
                   {[
                     GetCell(order.market, i, "market"),
                     GetCell(order.orderType, i, "order_type"),
                     GetCell(order.status, i, "status"),
-                    GetCell(order.created, i, "created_at"),
+                    GetCell(order.createdAt, i, "created_at"),
                     GetCell(order.price, i, "price"),
                   ]}
                 </tr>
@@ -86,27 +86,9 @@ const Orders = () => {
 export default Orders;
 
 export type Order = {
-  orderId: string;
   market: string;
-  created: number;
+  createdAt: string;
   status: string;
   orderType: string;
-  price: string;
-};
-
-const dummy: Order = {
-  orderId: "abc",
-  price: "1000",
-  orderType: "market",
-  status: "filled",
-  created: 12321312,
-  market: "BTC-EUR",
-};
-const dummy2: Order = {
-  orderId: "abc",
-  price: "1000",
-  orderType: "market",
-  status: "filled",
-  created: 12321312,
-  market: "ADA-EUR",
+  price: number;
 };
