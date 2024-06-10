@@ -3,10 +3,9 @@ namespace Api.Features.Bitvavo.Trades;
 using System;
 using Api.Features.Bitvavo.Models;
 using System.Net.WebSockets;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using Api.Database;
+using Api.Database.Models;
 
 public record AuthenticationPayload(
     string Action,
@@ -15,28 +14,36 @@ public record AuthenticationPayload(
     string Timestamp
 );
 
-class WebsocketClient(IConfiguration config)
+class WebSocketClientTrades : WebsocketClientBase
 {
-    private readonly string _apiKey = config["Bitvavo:Rest:ApiKey"]!;
-    private readonly string _apiSecret = config["Bitvavo:Rest:ApiSecret"]!;
-    private CancellationTokenSource cts = new CancellationTokenSource();
-    private ClientWebSocket _bitvavoWebSocket = new ClientWebSocket();
-    private JsonSerializerOptions _serializerOptions = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    private TradingPlan _plan;
+    private IBitvavoContext _database;
+
+    private ILogger<WebSocketClientTrades> _logger;
+    //
+    public WebSocketClientTrades(IConfiguration config, IBitvavoContext database, TradingPlan plan) : base(config)
+    {
+        _plan = plan;
+        _database = database;
+        _logger = LoggerFactory.Create(loggingBuilder => loggingBuilder.AddConsole()).CreateLogger<WebSocketClientTrades>();
+    }
 
     public async Task OpenConnection()
     {
-        using (_bitvavoWebSocket)
+        using (BitvavoWs)
         {
             Uri serviceUri = new Uri("wss://ws.bitvavo.com/v2/");
 
             try
             {
-                await _bitvavoWebSocket.ConnectAsync(serviceUri, cts.Token);
+                await BitvavoWs.ConnectAsync(serviceUri, Cts.Token);
 
                 await Authenticate();
 
+                await AddTickerSubscription($"{_plan.Market}-EUR");
+
                 // listen to events on both sockets
-                await ReceiveBitvavoMessages();
+                await Task.WhenAny(ReceiveBitvavoMessages());
 
             }
             catch (WebSocketException e)
@@ -45,121 +52,56 @@ class WebsocketClient(IConfiguration config)
             }
             finally
             {
-                if (_bitvavoWebSocket.State == WebSocketState.Open)
+                if (BitvavoWs.State == WebSocketState.Open)
                 {
-                    await _bitvavoWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", cts.Token);
+                    await BitvavoWs.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", Cts.Token);
                     Console.WriteLine("WebSocket connection closed");
                 }
             }
         }
     }
 
-    public async Task CloseConnection()
+    public async Task AddTickerSubscription(string market)
     {
-        try
-        {
-            if (_bitvavoWebSocket.State == WebSocketState.Open || _bitvavoWebSocket.State == WebSocketState.CloseSent)
-            {
-                await _bitvavoWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
-                Console.WriteLine("WebSocket connection closed");
-            }
-        }
-        catch (WebSocketException e)
-        {
-            Console.WriteLine($"WebSocket error: {e.Message}");
-        }
-    }
-
-
-    private async Task SendMessage<T>(T message, bool forward = false)
-    {
-        var buffer = GetBuffer(message);
-        // send message to bitvavo
-        await _bitvavoWebSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cts.Token);
-    }
-
-    private ArraySegment<byte> GetBuffer<T>(T message)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, _serializerOptions));
-        return new ArraySegment<byte>(bytes);
-    }
-
-    private async Task AddTickerSubscription(string[] markets)
-    {
-        var channel = new Channel("ticker", markets);
+        Console.WriteLine($"added ticket for {market}");
+        var channel = new Channel("ticker", [market]);
         var payload = new CandlesSubscriptionPayload("subscribe", [channel]);
-        await SendMessage(payload, true);
+        await SendMessage(payload, BitvavoWs);
     }
 
-
-    private async Task Authenticate()
-    {
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
-        var message = timestamp + $"GET/v2/websocket" + "";
-
-        using (HMACSHA256 hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_apiSecret)))
-        {
-            byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
-            var signature = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            var payload = new AuthenticationPayload("authenticate", _apiKey, signature, timestamp);
-            await SendMessage(payload, true);
-        }
-
-    }
 
     private async Task HandleTickerEvent(string @event)
     {
-        var d = JsonSerializer.Deserialize<TickerEvent>(@event, _serializerOptions);
+        var d = JsonSerializer.Deserialize<TickerEvent>(@event, SerializerOptions);
         if (d?.LastPrice == null)
         {
             // price has not changed. 
             return;
         }
-        var view = new WebSocketTickerView<TickerEvent>(
-            "ticker", new(d.Market, d.LastPrice, DateTime.Now.ToString("hh:mm:ss")));
-        await SendMessage(view);
+        // check if plan is active
+        // if not, stop trading
+        var plan = await _database.GetTradingPlanAsync(_plan.Id, Cts.Token);
+        if (plan?.active == false)
+        {
+            _logger.LogWarning("plan was stopped or deleted. stopping trades");
+            await CloseConnection();
+        }
+
     }
 
-    private async Task ReceiveBitvavoMessages()
+
+    public async override Task HandleMessage(string @event, string message)
     {
-        const int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-        var messageBuilder = new StringBuilder();
-
-
-        while (_bitvavoWebSocket.State == WebSocketState.Open)
+        switch (@event)
         {
-            messageBuilder.Clear();
-            WebSocketReceiveResult result;
-            do
-            {
-                // construct string from buffer segments when message length exceeds buffer size
-                result = await _bitvavoWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
-                var messageSegment = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                messageBuilder.Append(messageSegment);
-            } while (!result.EndOfMessage);
-
-            if (result.MessageType == WebSocketMessageType.Close)
-            {
-                Console.WriteLine("bitvavo initiated close");
-                await _bitvavoWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Server closed connection", cts.Token);
-            }
-            else
-            {
-                var message = messageBuilder.ToString();
-                var d = JsonSerializer.Deserialize<WebSocketMessage>(message, _serializerOptions);
-                switch (d?.Event)
-                {
-                    case "authenticated":
-                        // do nothing
-                        break;
-                    case "ticker":
-                        await HandleTickerEvent(message);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            case "authenticated":
+                // do nothing
+                break;
+            case "ticker":
+                await HandleTickerEvent(message);
+                break;
+            default:
+                break;
         }
     }
 

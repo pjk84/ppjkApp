@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { bitvavoActions } from "../../../state/actiontypes";
 import { RootState } from "../../../state";
 import { TableCell, TableHeader } from "../../../styles/table";
-import { ComponentHeader } from "../../../styles/header";
 
 const markets = ["WIF", "PEPE"];
 
@@ -52,7 +51,6 @@ const TradingPlan = () => {
   };
 
   const deletePlan = (planId: string) => {
-    console.log("!@#@!#@!#!@");
     apiClient()
       .del(`/bitvavo/trading-plan/${planId}`)
       .then(() => {
@@ -60,28 +58,29 @@ const TradingPlan = () => {
       });
   };
 
-  const GetCell = (value: any, index: number, key: string, color?: string) => (
+  const getCell = (value: any, index: number, key: string, color?: string) => (
     <TableCell color={color} key={`${key}-{${value}}`} index={index}>
       {value}
     </TableCell>
   );
 
-  const activePlans = (
+  const createdPlans = (
     <FlexBox>
       <table>
         <tbody>
           <tr>
-            {["market", "amount", "created at"].map((h) => (
+            {["active", "market", "amount", "created at"].map((h) => (
               <TableHeader key={`header-${h}`}>{h}</TableHeader>
             ))}
           </tr>
           {tradingPlans?.map((t, i) => (
             <tr key={`order-row-${i}`}>
               {[
-                GetCell(t.market, i, "market"),
-                GetCell(t.amount, i, "amount"),
-                GetCell(t.createdAt, i, "created_at"),
-                GetCell(
+                getCell(t.active ? "🟢" : "🔴", i, "active"),
+                getCell(t.market, i, "market"),
+                getCell(t.amount, i, "amount"),
+                getCell(t.createdAt, i, "created_at"),
+                getCell(
                   <div
                     style={{ cursor: "pointer" }}
                     onClick={() => deletePlan(t.id)}
@@ -134,7 +133,7 @@ const TradingPlan = () => {
     <FlexBox column gapSize={25}>
       {newPlan}
       {tradingPlans && tradingPlans.length > 0 ? (
-        activePlans
+        createdPlans
       ) : (
         <div>no plans found...</div>
       )}

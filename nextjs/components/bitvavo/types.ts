@@ -50,6 +50,7 @@ type TradingPlan = {
   createdAt: string;
   market: string;
   amount: number;
+  active: boolean;
 };
 
 type CreateTradingPlanPayload = {

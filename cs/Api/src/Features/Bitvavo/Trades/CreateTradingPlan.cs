@@ -6,14 +6,17 @@ namespace Api.Features.Bitvavo.Trades;
 
 public record CreateTradingPlanCommand(string Market, int Amount) : IRequest<Result>;
 
-public class CreateTradingPlan(IBitvavoContext database) : IRequestHandler<CreateTradingPlanCommand, Result>
+public class CreateTradingPlan(IBitvavoContext database, IConfiguration config) : IRequestHandler<CreateTradingPlanCommand, Result>
 {
 
     public async Task<Result> Handle(CreateTradingPlanCommand request, CancellationToken cancellationToken)
     {
-        await database.CreateTradingPlanAsync(request.Market, request.Amount, cancellationToken);
+        var plan = await database.CreateTradingPlanAsync(request.Market, request.Amount, cancellationToken);
 
-        // tar
+        var ws = new WebSocketClientTrades(config, database, plan);
+
+        // synchronously start websocket
+        ws.OpenConnection();
 
         return Result.Ok();
     }

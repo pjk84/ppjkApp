@@ -11,7 +11,6 @@ public class DeleteTradingPlan(IBitvavoContext database) : IRequestHandler<Delet
 {
     public async Task<Result> Handle(DeleteTradinPlanCommand request, CancellationToken cancellationToken)
     {
-        Console.WriteLine(request.PlanId);
         try
         {
             await database.DeleteTradingPlanAsync(request.PlanId, cancellationToken);

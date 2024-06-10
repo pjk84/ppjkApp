@@ -23,8 +23,6 @@ abstract class WebsocketClientBase(IConfiguration config)
     public ClientWebSocket BitvavoWs = new ClientWebSocket();
     public JsonSerializerOptions SerializerOptions = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-    public abstract Task OpenConnection();
-
 
     public async Task CloseConnection()
     {
@@ -46,12 +44,11 @@ abstract class WebsocketClientBase(IConfiguration config)
     public virtual async Task SendMessage<T>(T message, WebSocket ws)
     {
         var buffer = GetBuffer(message);
-
         await ws.SendAsync(buffer, WebSocketMessageType.Text, true, Cts.Token);
 
     }
 
-    private ArraySegment<byte> GetBuffer<T>(T message)
+    public ArraySegment<byte> GetBuffer<T>(T message)
     {
         byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, SerializerOptions));
         return new ArraySegment<byte>(bytes);

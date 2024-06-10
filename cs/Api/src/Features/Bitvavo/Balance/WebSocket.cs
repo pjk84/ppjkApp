@@ -15,15 +15,15 @@ public record AuthenticationPayload(
     string Timestamp
 );
 
-class WebSocketClient : WebsocketClientBase
+class WebSocketClientBalance : WebsocketClientBase
 {
     private WebSocket _ws;
-    public WebSocketClient(WebSocket ws, IConfiguration config) : base(config)
+    public WebSocketClientBalance(WebSocket ws, IConfiguration config) : base(config)
     {
         _ws = ws;
     }
 
-    public async override Task OpenConnection()
+    public async Task OpenConnection()
     {
         using (BitvavoWs)
         {
@@ -68,12 +68,6 @@ class WebSocketClient : WebsocketClientBase
             await _ws.SendAsync(buffer, WebSocketMessageType.Text, true, Cts.Token);
         }
     }
-    private ArraySegment<byte> GetBuffer<T>(T message)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, SerializerOptions));
-        return new ArraySegment<byte>(bytes);
-    }
-
     private async Task AddTickerSubscription(string[] markets)
     {
         var channel = new Channel("ticker", markets);

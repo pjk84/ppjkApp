@@ -14,6 +14,7 @@ using Api.Common.IpApi;
 using Api.Features.WeatherApi;
 using Api.Database;
 using Api.Features.Bitvavo;
+using Api.Features.Bitvavo.Trades;
 
 
 public class Startup
@@ -42,6 +43,10 @@ public class Startup
         services.AddSingleton<IOpenWeatherApi, OpenWeatherApi>();
         services.AddSingleton<IGeoCoding, GeoCoding>();
         services.AddSingleton<IBitvavoClient, BitvavoClient>();
+
+        // logging
+        services.AddLogging();
+        services.AddTransient<WebSocketClientTrades>();
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
 

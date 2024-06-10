@@ -6,7 +6,8 @@ namespace Api.Database.Models;
 public record TradingPlan(
     DateTime CreatedAt,
     string Market,
-    int Amount
+    int Amount,
+    bool active
 )
 {
     [BsonId]

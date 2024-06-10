@@ -32,7 +32,7 @@ public class BitvavoController(IMediator mediator, IConfiguration config) : Cont
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
             using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            var client = new WebSocketClient(webSocket, config);
+            var client = new WebSocketClientBalance(webSocket, config);
             await client.OpenConnection();
         }
         else

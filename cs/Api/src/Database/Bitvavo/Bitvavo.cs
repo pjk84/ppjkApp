@@ -28,10 +28,11 @@ public class BitvavoContext : IBitvavoContext
         var res = await _bitvavoBalanceSnapshots.Find(s => s.Date == DateTime.Today).ToListAsync();
         return res.Any();
     }
-    public async Task CreateTradingPlanAsync(string market, int amount, CancellationToken ct)
+    public async Task<TradingPlan> CreateTradingPlanAsync(string market, int amount, CancellationToken ct)
     {
-        var plan = new TradingPlan(Market: market, Amount: amount, CreatedAt: DateTime.Now);
+        var plan = new TradingPlan(Market: market, Amount: amount, CreatedAt: DateTime.Now, active: true);
         await _tradingPlans.InsertOneAsync(plan, cancellationToken: ct);
+        return plan;
     }
 
     public async Task CreateSnapshotAsync(BitvavoPortfolioSnapshot snapshot) =>
@@ -41,6 +42,8 @@ public class BitvavoContext : IBitvavoContext
 
     public async Task<List<TradingPlan>> GetTradingPlansAsync(CancellationToken ct) =>
         await _tradingPlans.Find(_ => true).ToListAsync(ct);
+    public async Task<TradingPlan?> GetTradingPlanAsync(string planId, CancellationToken ct) =>
+        await _tradingPlans.Find(p => p.Id == planId).FirstOrDefaultAsync();
 
 
 }
