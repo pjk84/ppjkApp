@@ -222,7 +222,7 @@ export const FlexBox = styled.div<{
       : "start"};
 `;
 
-export const Component = styled.div<{ name?: string }>`
+export const Component = styled.div<{ name: string }>`
   position: relative;
   display: flex;
   border: 1px solid;

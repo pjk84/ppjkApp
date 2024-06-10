@@ -4,7 +4,7 @@ using Api.Common.Result;
 using Api.Database;
 using Api.Database.Models;
 
-namespace Api.Features.Bitvavo;
+namespace Api.Features.Bitvavo.Balance;
 
 using R = Result<BitvavoPortfolioView>;
 

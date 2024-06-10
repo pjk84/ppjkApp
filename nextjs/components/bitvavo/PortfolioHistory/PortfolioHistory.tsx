@@ -65,7 +65,7 @@ const PortfolioHistory = ({ snapshots }: Props) => {
   );
 
   return (
-    <FlexBox column align="center" gapSize={50}>
+    <FlexBox column align="center" gapSize={25}>
       <Header1>
         <FlexBox gapSize={10}>
           {month.monthName}

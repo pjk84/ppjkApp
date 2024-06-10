@@ -10,6 +10,7 @@ export const Header1 = styled.header`
   cursor: pointer;
   width: 100%;
   display: flex;
+  justify-content: center;
 `;
 
 export const Header2 = styled.header<{ withBackground: boolean }>`

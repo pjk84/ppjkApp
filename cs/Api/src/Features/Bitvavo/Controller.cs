@@ -2,6 +2,8 @@
 using Api.Features.Bitvavo.Models;
 using Api.Features.Bitvavo.Views;
 using Microsoft.AspNetCore.Mvc;
+using Api.Features.Bitvavo.Balance;
+using Api.Features.Bitvavo.Trades;
 
 
 namespace Api.Features.Bitvavo;
@@ -30,7 +32,7 @@ public class BitvavoController(IMediator mediator, IConfiguration config) : Cont
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
             using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            var client = new WebsocketClient(webSocket, config);
+            var client = new WebSocketClient(webSocket, config);
             await client.OpenConnection();
         }
         else

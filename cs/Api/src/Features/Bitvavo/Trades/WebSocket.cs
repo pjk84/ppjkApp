@@ -1,4 +1,4 @@
-namespace Api.Features.Bitvavo;
+namespace Api.Features.Bitvavo.Trades;
 
 using System;
 using Api.Features.Bitvavo.Models;
@@ -15,7 +15,7 @@ public record AuthenticationPayload(
     string Timestamp
 );
 
-class WebsocketClient(WebSocket websocket, IConfiguration config)
+class WebsocketClient(IConfiguration config)
 {
     private readonly string _apiKey = config["Bitvavo:Rest:ApiKey"]!;
     private readonly string _apiSecret = config["Bitvavo:Rest:ApiSecret"]!;
@@ -36,7 +36,7 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
                 await Authenticate();
 
                 // listen to events on both sockets
-                await Task.WhenAny(ReceiveClientMessages(), ReceiveBitvavoMessages());
+                await ReceiveBitvavoMessages();
 
             }
             catch (WebSocketException e)
@@ -74,17 +74,10 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
     private async Task SendMessage<T>(T message, bool forward = false)
     {
         var buffer = GetBuffer(message);
-        if (forward)
-        {
-            // send message to bitvavo
-            await _bitvavoWebSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cts.Token);
-        }
-        else
-        {
-            // send message back to client
-            await websocket.SendAsync(buffer, WebSocketMessageType.Text, true, cts.Token);
-        }
+        // send message to bitvavo
+        await _bitvavoWebSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cts.Token);
     }
+
     private ArraySegment<byte> GetBuffer<T>(T message)
     {
         byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, _serializerOptions));
@@ -94,13 +87,6 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
     private async Task AddTickerSubscription(string[] markets)
     {
         var channel = new Channel("ticker", markets);
-        var payload = new CandlesSubscriptionPayload("subscribe", [channel]);
-        await SendMessage(payload, true);
-    }
-
-    private async Task AddTicker24Subscription(string[] markets)
-    {
-        var channel = new Channel("ticker24h", markets);
         var payload = new CandlesSubscriptionPayload("subscribe", [channel]);
         await SendMessage(payload, true);
     }
@@ -131,16 +117,6 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
         }
         var view = new WebSocketTickerView<TickerEvent>(
             "ticker", new(d.Market, d.LastPrice, DateTime.Now.ToString("hh:mm:ss")));
-        await SendMessage(view);
-    }
-    private async Task HandleTicker24hEvent(string @event)
-    {
-        var d = JsonSerializer.Deserialize<Ticker24hEvent>(@event, _serializerOptions);
-        if (d == null)
-        {
-            return;
-        }
-        var view = new WebSocketTickerView<BitVavo24hPrice[]>("ticker24h", d.Data);
         await SendMessage(view);
     }
 
@@ -180,9 +156,6 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
                     case "ticker":
                         await HandleTickerEvent(message);
                         break;
-                    case "ticker24h":
-                        await HandleTicker24hEvent(message);
-                        break;
                     default:
                         break;
                 }
@@ -190,38 +163,5 @@ class WebsocketClient(WebSocket websocket, IConfiguration config)
         }
     }
 
-
-    private async Task ReceiveClientMessages()
-    {
-        byte[] buffer = new byte[1024];
-
-        while (websocket.State == WebSocketState.Open)
-        {
-            WebSocketReceiveResult result = await websocket.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
-            if (result.MessageType == WebSocketMessageType.Close)
-            {
-                Console.WriteLine("client initiated close");
-                await websocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Server closed connection", cts.Token);
-            }
-            else
-            {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                var d = JsonSerializer.Deserialize<WebSocketMessage>(message, _serializerOptions);
-                switch (d?.Event)
-                {
-                    case "add_ticker_subscriptions":
-                        // do nothing
-                        var payload = JsonSerializer.Deserialize<AddTickerSubscriptionPayload>(message, _serializerOptions);
-                        var markets = payload!.Markets.Select(market => $"{market}-EUR").ToArray();
-                        await AddTickerSubscription(markets);
-                        await AddTicker24Subscription(markets);
-                        break;
-                    default:
-                        break;
-                }
-                //
-            }
-        }
-    }
 }
 
