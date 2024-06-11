@@ -6,7 +6,6 @@ import { useState } from "react";
 
 const WebsocketControl = () => {
   const dispatch = useDispatch();
-  const active = useSelector((state: RootState) => state.bitvavo.websocket);
   const portfolio = useSelector((state: RootState) => state.bitvavo.portfolio);
   const ws = useSelector((state: RootState) => state.bitvavo.websocket);
   const endpoint = "bitvavo/portfolio";
@@ -57,11 +56,11 @@ const WebsocketControl = () => {
   };
 
   const toggleWebsocket = async () => {
-    if (active) {
+    if (ws) {
       ws?.close();
       setWebsocket();
     } else {
-      const ws = new WebSocket(`ws://localhost:5002/ws/bitvavo/portfolio`);
+      const ws = new WebSocket(`ws://localhost:5002/bitvavo/ws/portfolio`);
       ws.onopen = () => {
         ws.send(
           JSON.stringify({
@@ -102,7 +101,7 @@ const WebsocketControl = () => {
 
   return (
     <Toggle border={true} color="blue" active={!!ws} onClick={toggleWebsocket}>
-      {`websocket: ${active ? "on" : "off"}`}
+      {`websocket: ${ws ? "on" : "off"}`}
     </Toggle>
   );
 };

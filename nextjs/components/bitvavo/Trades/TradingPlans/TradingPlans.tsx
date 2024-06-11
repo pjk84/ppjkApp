@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { StdButton } from "../../../styles/buttons";
-import { FlexBox } from "../../../styles/containers";
-import { StdInput } from "../../../styles/input";
-import apiClient from "../../../api/client";
+import { StdButton } from "../../../../styles/buttons";
+import { FlexBox } from "../../../../styles/containers";
+import { StdInput } from "../../../../styles/input";
+import apiClient from "../../../../api/client";
 import { useDispatch, useSelector } from "react-redux";
-import { bitvavoActions } from "../../../state/actiontypes";
-import { RootState } from "../../../state";
-import { TableCell, TableHeader } from "../../../styles/table";
+import { bitvavoActions } from "../../../../state/actiontypes";
+import { RootState } from "../../../../state";
+import { TableCell, TableHeader } from "../../../../styles/table";
+import TradingPlan from "./Plan";
 
 const markets = ["WIF", "PEPE"];
 
-const TradingPlan = () => {
+const TradingPlans = () => {
   const [market, setMarket] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("0");
   const tradingPlans = useSelector(
@@ -50,47 +51,22 @@ const TradingPlan = () => {
       });
   };
 
-  const deletePlan = (planId: string) => {
-    apiClient()
-      .del(`/bitvavo/trading-plan/${planId}`)
-      .then(() => {
-        getTradingPlans();
-      });
-  };
-
-  const getCell = (value: any, index: number, key: string, color?: string) => (
-    <TableCell color={color} key={`${key}-{${value}}`} index={index}>
-      {value}
-    </TableCell>
-  );
-
   const createdPlans = (
     <FlexBox>
       <table>
         <tbody>
           <tr>
-            {["active", "market", "amount", "created at"].map((h) => (
+            {["listening", "market", "amount", "created at"].map((h) => (
               <TableHeader key={`header-${h}`}>{h}</TableHeader>
             ))}
           </tr>
           {tradingPlans?.map((t, i) => (
             <tr key={`order-row-${i}`}>
-              {[
-                getCell(t.active ? "🟢" : "🔴", i, "active"),
-                getCell(t.market, i, "market"),
-                getCell(t.amount, i, "amount"),
-                getCell(t.createdAt, i, "created_at"),
-                getCell(
-                  <div
-                    style={{ cursor: "pointer" }}
-                    onClick={() => deletePlan(t.id)}
-                  >
-                    ❌
-                  </div>,
-                  i,
-                  "delete"
-                ),
-              ]}
+              <TradingPlan
+                details={t}
+                index={i}
+                getTradingPlans={getTradingPlans}
+              />
             </tr>
           ))}
         </tbody>
@@ -141,4 +117,4 @@ const TradingPlan = () => {
   );
 };
 
-export default TradingPlan;
+export default TradingPlans;

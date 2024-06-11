@@ -18,12 +18,13 @@ class WebSocketClientTrades : WebsocketClientBase
 {
     private TradingPlan _plan;
     private IBitvavoContext _database;
-
+    private WebSocket? _ws;
     private ILogger<WebSocketClientTrades> _logger;
     //
-    public WebSocketClientTrades(IConfiguration config, IBitvavoContext database, TradingPlan plan) : base(config)
+    public WebSocketClientTrades(IConfiguration config, IBitvavoContext database, TradingPlan plan, WebSocket? ws = null) : base(config)
     {
         _plan = plan;
+        _ws = ws;
         _database = database;
         _logger = LoggerFactory.Create(loggingBuilder => loggingBuilder.AddConsole()).CreateLogger<WebSocketClientTrades>();
     }
@@ -70,23 +71,28 @@ class WebSocketClientTrades : WebsocketClientBase
     }
 
 
-    private async Task HandleTickerEvent(string @event)
+    private async Task HandleTickerEvent(string message)
     {
-        var d = JsonSerializer.Deserialize<TickerEvent>(@event, SerializerOptions);
+        var d = JsonSerializer.Deserialize<TickerEvent>(message, SerializerOptions);
         if (d?.LastPrice == null)
         {
             // price has not changed. 
             return;
         }
+        Console.WriteLine(message);
         // check if plan is active
         // if not, stop trading
         var plan = await _database.GetTradingPlanAsync(_plan.Id, Cts.Token);
-        if (plan?.active == false)
+        if (plan == null)
         {
             _logger.LogWarning("plan was stopped or deleted. stopping trades");
             await CloseConnection();
+            return;
         }
-
+        if (plan.Listening && _ws == null)
+        {
+            _logger.LogWarning("closing websocket because ");
+        }
     }
 
 

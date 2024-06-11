@@ -30,16 +30,17 @@ public class BitvavoContext : IBitvavoContext
     }
     public async Task<TradingPlan> CreateTradingPlanAsync(string market, int amount, CancellationToken ct)
     {
-        var plan = new TradingPlan(Market: market, Amount: amount, CreatedAt: DateTime.Now, active: true);
+        var plan = new TradingPlan(Market: market, Amount: amount, CreatedAt: DateTime.Now, Listening: false);
         await _tradingPlans.InsertOneAsync(plan, cancellationToken: ct);
         return plan;
     }
+    public async Task UpdateTradingPlanAsync(TradingPlan plan, CancellationToken ct) =>
+        await _tradingPlans.ReplaceOneAsync(p => p.Id == plan.Id, plan, cancellationToken: ct);
 
     public async Task CreateSnapshotAsync(BitvavoPortfolioSnapshot snapshot) =>
         await _bitvavoBalanceSnapshots.InsertOneAsync(snapshot);
     public async Task DeleteTradingPlanAsync(string planId, CancellationToken ct) =>
         await _tradingPlans.DeleteOneAsync(plan => plan.Id == planId, ct);
-
     public async Task<List<TradingPlan>> GetTradingPlansAsync(CancellationToken ct) =>
         await _tradingPlans.Find(_ => true).ToListAsync(ct);
     public async Task<TradingPlan?> GetTradingPlanAsync(string planId, CancellationToken ct) =>

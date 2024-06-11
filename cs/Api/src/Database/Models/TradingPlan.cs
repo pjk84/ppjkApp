@@ -7,7 +7,7 @@ public record TradingPlan(
     DateTime CreatedAt,
     string Market,
     int Amount,
-    bool active
+    bool Listening
 )
 {
     [BsonId]
