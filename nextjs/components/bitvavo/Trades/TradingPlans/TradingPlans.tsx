@@ -6,12 +6,15 @@ import apiClient from "../../../../api/client";
 import { useDispatch, useSelector } from "react-redux";
 import { bitvavoActions } from "../../../../state/actiontypes";
 import { RootState } from "../../../../state";
-import { TableCell, TableHeader } from "../../../../styles/table";
+import { TableHeader } from "../../../../styles/table";
 import TradingPlan from "./Plan";
 
 const markets = ["WIF", "PEPE"];
 
 const TradingPlans = () => {
+  const tradingLogs = useSelector(
+    (state: RootState) => state.bitvavo.tradingLogs
+  );
   const [market, setMarket] = useState<string | null>(null);
   const [amount, setAmount] = useState<string>("0");
   const tradingPlans = useSelector(
@@ -56,7 +59,7 @@ const TradingPlans = () => {
       <table>
         <tbody>
           <tr>
-            {["listening", "market", "amount", "created at"].map((h) => (
+            {["listening", "market", "amount", "created at", ""].map((h) => (
               <TableHeader key={`header-${h}`}>{h}</TableHeader>
             ))}
           </tr>
@@ -83,9 +86,8 @@ const TradingPlans = () => {
               style={{ width: "max-content" }}
               onChange={(e) => setMarket(e.target.value)}
             >
-              <option disabled selected></option>
               {markets.map((m) => (
-                <option>{m}</option>
+                <option key={`market-option-${m}`}>{m}</option>
               ))}
             </select>
           </FlexBox>

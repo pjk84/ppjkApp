@@ -15,7 +15,7 @@ public record AuthenticationPayload(
     string Timestamp
 );
 
-abstract class WebsocketClientBase(IConfiguration config)
+abstract class WebsocketClientBase(IConfiguration config, WebSocket? clientWs)
 {
     private readonly string _apiKey = config["Bitvavo:Rest:ApiKey"]!;
     private readonly string _apiSecret = config["Bitvavo:Rest:ApiSecret"]!;
@@ -23,8 +23,7 @@ abstract class WebsocketClientBase(IConfiguration config)
     public ClientWebSocket BitvavoWs = new ClientWebSocket();
     public JsonSerializerOptions SerializerOptions = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-
-    public async Task CloseConnection()
+    internal async Task CloseConnection()
     {
         try
         {
@@ -41,20 +40,20 @@ abstract class WebsocketClientBase(IConfiguration config)
     }
 
 
-    public virtual async Task SendMessage<T>(T message, WebSocket ws)
+    internal virtual async Task SendMessage<T>(T message, WebSocket ws)
     {
         var buffer = GetBuffer(message);
         await ws.SendAsync(buffer, WebSocketMessageType.Text, true, Cts.Token);
 
     }
 
-    public ArraySegment<byte> GetBuffer<T>(T message)
+    internal ArraySegment<byte> GetBuffer<T>(T message)
     {
         byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, SerializerOptions));
         return new ArraySegment<byte>(bytes);
     }
 
-    public async Task Authenticate()
+    internal async Task Authenticate()
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
         var message = timestamp + $"GET/v2/websocket" + "";
@@ -71,7 +70,7 @@ abstract class WebsocketClientBase(IConfiguration config)
 
     public abstract Task HandleMessage(string @event, string message);
 
-    public async Task ReceiveBitvavoMessages()
+    internal async Task ReceiveBitvavoMessages()
     {
         const int bufferSize = 1024;
         byte[] buffer = new byte[bufferSize];
@@ -98,6 +97,27 @@ abstract class WebsocketClientBase(IConfiguration config)
             else
             {
                 var message = messageBuilder.ToString();
+                var d = JsonSerializer.Deserialize<WebSocketMessage>(message, SerializerOptions);
+                await HandleMessage(d!.Event, message);
+            }
+        }
+    }
+
+    internal async Task ReceiveClientMessages()
+    {
+        byte[] buffer = new byte[1024];
+
+        while (clientWs?.State == WebSocketState.Open)
+        {
+            WebSocketReceiveResult result = await clientWs.ReceiveAsync(new ArraySegment<byte>(buffer), Cts.Token);
+            if (result.MessageType == WebSocketMessageType.Close)
+            {
+                Console.WriteLine("client initiated close");
+                await clientWs.CloseAsync(WebSocketCloseStatus.NormalClosure, "Server closed connection", Cts.Token);
+            }
+            else
+            {
+                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                 var d = JsonSerializer.Deserialize<WebSocketMessage>(message, SerializerOptions);
                 await HandleMessage(d!.Event, message);
             }

@@ -22,7 +22,14 @@ public class ToggleListener(IBitvavoContext database, IConfiguration config) : I
 
         var ws = new WebSocketClientTrades(config, database, plan, request.Ws);
 
-        ws.OpenConnection();
+        if (request.Ws != null)
+        {
+            await ws.OpenConnection();
+        }
+        else
+        {
+            ws.OpenConnection();
+        }
 
         return Result.Ok();
     }

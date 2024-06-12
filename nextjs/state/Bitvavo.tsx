@@ -12,6 +12,7 @@ type IBitvavState = {
   portfolio?: Portfolio;
   orders?: Order[];
   tradingPlans?: TradingPlan[];
+  tradingLogs: TradingLog[];
   snapshots?: PortfolioSnapshot[];
   page?: string;
   websocket?: WebSocket;
@@ -21,6 +22,7 @@ const initialBitvavoState: IBitvavState = {
   portfolio: undefined,
   snapshots: undefined,
   websocket: undefined,
+  tradingLogs: [],
   tradingPlans: undefined,
 };
 
@@ -38,6 +40,12 @@ const BitvavoReducer = (
       return {
         ...state,
         portfolio: action.portfolio,
+      };
+    }
+    case bitvavoActions.ADD_TRADING_LOG: {
+      return {
+        ...state,
+        tradingLogs: [...[action.log], ...state.tradingLogs],
       };
     }
     case bitvavoActions.SET_TRADING_PLANS: {

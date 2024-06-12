@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { TableCell } from "../../../../styles/table";
 import apiClient from "../../../../api/client";
+import { useDispatch } from "react-redux";
+import { bitvavoActions } from "../../../../state/actiontypes";
 
 const TradingPlan = (props: {
   details: TradingPlan;
   index: number;
   getTradingPlans: Function;
 }) => {
+  const dispatch = useDispatch();
   const [ws, setWebSocket] = useState<WebSocket | null>(null);
   const getCell = (value: any, index: number, key: string, color?: string) => (
     <TableCell color={color} key={`${key}-{${value}}`} index={index}>
@@ -24,60 +27,25 @@ const TradingPlan = (props: {
 
   const toggleWebsocket = async (planId: string) => {
     if (ws) {
-      apiClient()
-        .get(`/bitvavo/ws/trading-plan/${planId}/listen`)
-        .then(() => {
-          props.getTradingPlans();
-        });
+      console.log("closing!!!!");
       ws?.close();
       setWebSocket(null);
     } else {
-      console.log("dingdong!!!!");
       const ws = new WebSocket(
         `ws://localhost:5002/bitvavo/ws/trading-plan/${planId}/listen`
       );
-      ws.onopen = () => {
-        console.log("bingbong");
-        // ws.send(
-        //   JSON.stringify({
-        //     event: "add_ticker_subscriptions",
-        //     markets: portfolio?.assets.map((a) => a.market),
-        //   })
-        // );
-      };
-      ws.onclose = () => {
-        console.log("closing!!!!");
-        // apiClient()
-        //   .get(`/bitvavo/ws/trading-plan/${planId}/listen`)
-        //   .then(() => {
-        //     props.getTradingPlans();
-        //   });
-      };
-      ws.onmessage = (event) => {
-        console.log("closing!!!!");
-        // const { type, message } = JSON.parse(event.data);
-        // if (type == "ticker") {
-        //   const m = message as TickerMessage;
-        //   var p = GetUpdatedPortfolio(m);
-        //   p!.fetchedAt = m.time;
-        //   dispatch({
-        //     type: actions.SET_BITVAVO_PORTFOLIO,
-        //     portfolio: p,
-        //   });
-        // }
-        // if (type == "ticker24h") {
-        //   const m = message as Ticker24hMessage[];
-        //   var p = GetUpdatedPortfolio24h(m);
-        //   dispatch({
-        //     type: actions.SET_BITVAVO_PORTFOLIO,
-        //     portfolio: p,
-        //   });
-        // }
+
+      ws.onmessage = (message) => {
+        const d = JSON.parse(message.data) as TradingLog;
+        console.log(d);
+        dispatch({
+          type: bitvavoActions.ADD_TRADING_LOG,
+          log: d,
+        });
       };
       setWebSocket(ws);
     }
   };
-
   return (
     <>
       {[

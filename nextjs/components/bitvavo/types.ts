@@ -53,6 +53,14 @@ type TradingPlan = {
   active: boolean;
 };
 
+type TradingLog = {
+  id: string;
+  market: string;
+  time: string;
+  action: string;
+  price: string;
+};
+
 type CreateTradingPlanPayload = {
   market: string;
   amount: number;

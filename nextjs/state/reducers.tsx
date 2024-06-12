@@ -69,6 +69,7 @@ const appReducer = (state = initialAppState, action: Action): IAppState => {
     case actions.SET_THEME: {
       return { ...state, theme: action.theme };
     }
+
     default:
       return state;
   }

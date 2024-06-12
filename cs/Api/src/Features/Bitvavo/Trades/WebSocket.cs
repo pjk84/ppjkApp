@@ -6,6 +6,7 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Api.Database;
 using Api.Database.Models;
+using Api.Features.Bitvavo.Views;
 
 public record AuthenticationPayload(
     string Action,
@@ -21,7 +22,7 @@ class WebSocketClientTrades : WebsocketClientBase
     private WebSocket? _ws;
     private ILogger<WebSocketClientTrades> _logger;
     //
-    public WebSocketClientTrades(IConfiguration config, IBitvavoContext database, TradingPlan plan, WebSocket? ws = null) : base(config)
+    public WebSocketClientTrades(IConfiguration config, IBitvavoContext database, TradingPlan plan, WebSocket? ws = null) : base(config, ws)
     {
         _plan = plan;
         _ws = ws;
@@ -44,7 +45,7 @@ class WebSocketClientTrades : WebsocketClientBase
                 await AddTickerSubscription($"{_plan.Market}-EUR");
 
                 // listen to events on both sockets
-                await Task.WhenAny(ReceiveBitvavoMessages());
+                await Task.WhenAny(ReceiveBitvavoMessages(), ReceiveClientMessages());
 
             }
             catch (WebSocketException e)
@@ -92,6 +93,16 @@ class WebSocketClientTrades : WebsocketClientBase
         if (plan.Listening && _ws == null)
         {
             _logger.LogWarning("closing websocket because ");
+            await CloseConnection();
+            return;
+        }
+        // feed price to trading stratagy
+
+        if (plan.Listening)
+        {
+            var time = DateTime.UtcNow.ToString("hh:mm:ss");
+            var view = new TradingActionView(new Guid().ToString(), plan.Market, d.LastPrice, "did  nothing", time);
+            SendMessage(view, _ws);
         }
     }
 
@@ -112,4 +123,6 @@ class WebSocketClientTrades : WebsocketClientBase
     }
 
 }
+
+
 

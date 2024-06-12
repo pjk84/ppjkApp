@@ -18,7 +18,7 @@ public record AuthenticationPayload(
 class WebSocketClientBalance : WebsocketClientBase
 {
     private WebSocket _ws;
-    public WebSocketClientBalance(WebSocket ws, IConfiguration config) : base(config)
+    public WebSocketClientBalance(WebSocket ws, IConfiguration config) : base(config, ws)
     {
         _ws = ws;
     }
@@ -127,27 +127,6 @@ class WebSocketClientBalance : WebsocketClientBase
                 break;
             default:
                 break;
-        }
-    }
-
-    private async Task ReceiveClientMessages()
-    {
-        byte[] buffer = new byte[1024];
-
-        while (_ws.State == WebSocketState.Open)
-        {
-            WebSocketReceiveResult result = await _ws.ReceiveAsync(new ArraySegment<byte>(buffer), Cts.Token);
-            if (result.MessageType == WebSocketMessageType.Close)
-            {
-                Console.WriteLine("client initiated close");
-                await _ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Server closed connection", Cts.Token);
-            }
-            else
-            {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                var d = JsonSerializer.Deserialize<WebSocketMessage>(message, SerializerOptions);
-                await HandleMessage(d!.Event, message);
-            }
         }
     }
 }

@@ -222,29 +222,31 @@ export const FlexBox = styled.div<{
       : "start"};
 `;
 
-export const Component = styled.div<{ name: string }>`
+export const Component = styled.div<{ maxHeight?: number }>`
   position: relative;
   display: flex;
   border: 1px solid;
+  border-top: none;
   border-color: ${(props) => props.theme.container.border.color};
   padding: 10px;
   border-radius: 4px;
   gap: 25px;
-  padding-top: 50px;
-  &:before {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: max-content;
-    font-size: 25px;
-    padding: 5px 10px 5px 10px;
-    content: "${(props) => (props.name ? props.name : "")}";
-    bottom: 0;
-    position: absolute;
-    background-color: ${(props) =>
-      props.theme.component.header.backgroundColor};
-  }
+  padding-top: 20px;
+  max-height: ${(props) => (props.maxHeight ? `${props.maxHeight}px` : null)};
+  overflow-y: auto;
+`;
+
+export const ComponentHeader = styled.div`
+  border: 1px solid;
+  z-index: 1;
+  border-bottom: none;
+  transform: translateY(2px);
+  border-color: ${(props) => props.theme.container.border.color};
+  height: 25px;
+  font-size: 25px;
+  padding: 5px 10px 5px 10px;
+  /* bottom: 0; */
+  background-color: ${(props) => props.theme.component.header.backgroundColor};
 `;
 
 export const Box1 = styled.div<{
