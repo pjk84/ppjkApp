@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { StdButton } from "../../../../styles/buttons";
-import { FlexBox } from "../../../../styles/containers";
+import {
+  Component,
+  ComponentHeader,
+  FlexBox,
+} from "../../../../styles/containers";
 import { StdInput } from "../../../../styles/input";
 import apiClient from "../../../../api/client";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,15 +12,10 @@ import { bitvavoActions } from "../../../../state/actiontypes";
 import { RootState } from "../../../../state";
 import { TableHeader } from "../../../../styles/table";
 import TradingPlan from "./Plan";
-
-const markets = ["WIF", "PEPE"];
+import CreatePlan from "./CreatePlan";
+import TradingLogs from "../TradingLogs";
 
 const TradingPlans = () => {
-  const tradingLogs = useSelector(
-    (state: RootState) => state.bitvavo.tradingLogs
-  );
-  const [market, setMarket] = useState<string | null>(null);
-  const [amount, setAmount] = useState<string>("0");
   const tradingPlans = useSelector(
     (state: RootState) => state.bitvavo.tradingPlans
   );
@@ -27,21 +26,6 @@ const TradingPlans = () => {
       getTradingPlans();
     }
   });
-
-  const createPlan = () => {
-    if (!market) {
-      return;
-    }
-    const plan: CreateTradingPlanPayload = {
-      market,
-      amount: parseFloat(amount),
-    };
-    apiClient()
-      .post("/bitvavo/trading-plan", plan)
-      .then(() => {
-        getTradingPlans();
-      });
-  };
 
   const getTradingPlans = () => {
     apiClient()
@@ -59,7 +43,7 @@ const TradingPlans = () => {
       <table>
         <tbody>
           <tr>
-            {["listening", "market", "amount", "created at", ""].map((h) => (
+            {["logs", "market", "amount", "created at"].map((h) => (
               <TableHeader key={`header-${h}`}>{h}</TableHeader>
             ))}
           </tr>
@@ -76,46 +60,19 @@ const TradingPlans = () => {
       </table>
     </FlexBox>
   );
-  const newPlan = (
-    <FlexBox column gapSize={5} wrap="true" style={{ width: "max-content" }}>
-      <FlexBox align="center" gapSize={20}>
-        <FlexBox gapSize={10}>
-          <FlexBox column>
-            <label>market</label>
-            <select
-              style={{ width: "max-content" }}
-              onChange={(e) => setMarket(e.target.value)}
-            >
-              {markets.map((m) => (
-                <option key={`market-option-${m}`}>{m}</option>
-              ))}
-            </select>
-          </FlexBox>
-          <FlexBox column>
-            <label>amount</label>
-            <StdInput
-              type="text"
-              placeholder="fill in..."
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </FlexBox>
-        </FlexBox>
-        <StdButton onClick={() => createPlan()} size="small">
-          create plan
-        </StdButton>
-      </FlexBox>
-    </FlexBox>
-  );
 
   return (
-    <FlexBox column gapSize={25}>
-      {newPlan}
-      {tradingPlans && tradingPlans.length > 0 ? (
-        createdPlans
-      ) : (
-        <div>no plans found...</div>
-      )}
-    </FlexBox>
+    <div>
+      <ComponentHeader>Trading plans</ComponentHeader>
+      <Component>
+        {tradingPlans && tradingPlans.length > 0 ? (
+          createdPlans
+        ) : (
+          <div>no plans found...</div>
+        )}
+        <CreatePlan getTradingPlans={getTradingPlans} />
+      </Component>
+    </div>
   );
 };
 

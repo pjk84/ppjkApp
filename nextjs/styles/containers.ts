@@ -222,7 +222,7 @@ export const FlexBox = styled.div<{
       : "start"};
 `;
 
-export const Component = styled.div<{ maxHeight?: number }>`
+export const Component = styled.div<{ maxHeight?: number; column?: boolean }>`
   position: relative;
   display: flex;
   border: 1px solid;
@@ -234,9 +234,13 @@ export const Component = styled.div<{ maxHeight?: number }>`
   padding-top: 20px;
   max-height: ${(props) => (props.maxHeight ? `${props.maxHeight}px` : null)};
   overflow-y: auto;
+  flex-direction: ${(props) => (props.column ? "column" : null)};
 `;
 
 export const ComponentHeader = styled.div`
+  display: flex;
+  gap: 25px;
+  align-items: center;
   border: 1px solid;
   z-index: 1;
   border-bottom: none;
@@ -244,7 +248,9 @@ export const ComponentHeader = styled.div`
   border-color: ${(props) => props.theme.container.border.color};
   height: 25px;
   font-size: 25px;
-  padding: 5px 10px 5px 10px;
+  padding: 10px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   /* bottom: 0; */
   background-color: ${(props) => props.theme.component.header.backgroundColor};
 `;

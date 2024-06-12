@@ -181,7 +181,12 @@ a {
 @keyframes slideInRight {
   0% {
     opacity: 0;
-    transform: translateX(-80px);
+    transform: translateX(-100%);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateX(10%);
   }
 
   100% {

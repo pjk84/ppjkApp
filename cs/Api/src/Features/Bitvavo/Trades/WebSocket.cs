@@ -80,7 +80,7 @@ class WebSocketClientTrades : WebsocketClientBase
             // price has not changed. 
             return;
         }
-        Console.WriteLine(message);
+
         // check if plan is active
         // if not, stop trading
         var plan = await _database.GetTradingPlanAsync(_plan.Id, Cts.Token);
@@ -101,7 +101,8 @@ class WebSocketClientTrades : WebsocketClientBase
         if (plan.Listening)
         {
             var time = DateTime.UtcNow.ToString("hh:mm:ss");
-            var view = new TradingActionView(new Guid().ToString(), plan.Market, d.LastPrice, "did  nothing", time);
+            var view = new TradingActionView(Guid.NewGuid().ToString(), plan.Market, d.LastPrice, "did  nothing", time);
+            Console.WriteLine(view.Id);
             SendMessage(view, _ws);
         }
     }

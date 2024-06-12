@@ -3,6 +3,7 @@ import { TableCell } from "../../../../styles/table";
 import apiClient from "../../../../api/client";
 import { useDispatch } from "react-redux";
 import { bitvavoActions } from "../../../../state/actiontypes";
+import { FlexBox } from "../../../../styles/containers";
 
 const TradingPlan = (props: {
   details: TradingPlan;
@@ -27,7 +28,6 @@ const TradingPlan = (props: {
 
   const toggleWebsocket = async (planId: string) => {
     if (ws) {
-      console.log("closing!!!!");
       ws?.close();
       setWebSocket(null);
     } else {
@@ -37,7 +37,6 @@ const TradingPlan = (props: {
 
       ws.onmessage = (message) => {
         const d = JSON.parse(message.data) as TradingLog;
-        console.log(d);
         dispatch({
           type: bitvavoActions.ADD_TRADING_LOG,
           log: d,

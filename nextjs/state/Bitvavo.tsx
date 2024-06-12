@@ -48,6 +48,12 @@ const BitvavoReducer = (
         tradingLogs: [...[action.log], ...state.tradingLogs],
       };
     }
+    case bitvavoActions.CLEAR_LOGS: {
+      return {
+        ...state,
+        tradingLogs: [],
+      };
+    }
     case bitvavoActions.SET_TRADING_PLANS: {
       return {
         ...state,

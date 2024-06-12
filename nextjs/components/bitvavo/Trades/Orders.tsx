@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { FlexBox } from "../../../styles/containers";
+import {
+  Component,
+  ComponentHeader,
+  FlexBox,
+} from "../../../styles/containers";
 import { Header1 } from "../../../styles/header";
 import { TableCell, TableHeader } from "../../../styles/table";
 import Loader from "../../Loaders";
@@ -38,7 +42,7 @@ const Orders = () => {
       });
   };
 
-  return (
+  const main = (
     <FlexBox gapSize={25}>
       {isLoading ? (
         <Loader text="loading orders..." type="round" />
@@ -77,6 +81,13 @@ const Orders = () => {
           </table>
         </FlexBox>
       )}
+    </FlexBox>
+  );
+
+  return (
+    <FlexBox column>
+      <ComponentHeader>Trading orders</ComponentHeader>
+      <Component>{main}</Component>
     </FlexBox>
   );
 };

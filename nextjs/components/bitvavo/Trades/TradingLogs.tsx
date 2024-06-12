@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { FlexBox } from "../../../styles/containers";
+import {
+  Component,
+  ComponentHeader,
+  FlexBox,
+} from "../../../styles/containers";
 import { Header1 } from "../../../styles/header";
 import { TableCell, TableHeader } from "../../../styles/table";
 import Loader from "../../Loaders";
@@ -8,21 +12,28 @@ import { RootState } from "../../../state";
 import { bitvavoActions } from "../../../state/actiontypes";
 import apiClient from "../../../api/client";
 import { log } from "console";
+import { StdButton } from "../../../styles/buttons";
 
 const TradingLogs = () => {
   const logs = useSelector((state: RootState) => state.bitvavo.tradingLogs);
-
+  const dispatch = useDispatch();
   const GetCell = (value: any, index: number, id: string) => (
-    <TableCell animation="flash" key={`trading-log-${id}`} index={index}>
+    <TableCell key={`trading-log-${id}`} index={index}>
       {value}
     </TableCell>
   );
 
-  if (logs?.length === 0) {
+  const clearLogs = () => {
+    dispatch({
+      type: bitvavoActions.CLEAR_LOGS,
+    });
+  };
+
+  if (logs.length === 0) {
     return null;
   }
 
-  return (
+  const main = (
     <table>
       <tbody>
         <tr>
@@ -31,17 +42,32 @@ const TradingLogs = () => {
           ))}
         </tr>
         {logs?.map((l, i) => (
-          <tr>
+          <tr
+            key={`log-${l.id}`}
+            style={{ animation: "0.5s slideInRight ease-in" }}
+          >
             {[
-              GetCell(l.market, i, l.id),
-              GetCell(l.price, i, l.id),
-              GetCell(l.time, i, l.id),
-              GetCell(l.action, i, l.id),
+              GetCell(l.market, i, `market-${l.id}`),
+              GetCell(l.price, i, `price-${l.id}`),
+              GetCell(l.time, i, `time-${l.id}`),
+              GetCell(l.action, i, `action-${l.id}`),
             ]}
           </tr>
         ))}
       </tbody>
     </table>
+  );
+
+  return (
+    <FlexBox column>
+      <ComponentHeader>
+        <div>Trading logs</div>
+        <StdButton onClick={clearLogs} size="small">
+          flush
+        </StdButton>
+      </ComponentHeader>
+      <Component maxHeight={400}>{main}</Component>
+    </FlexBox>
   );
 };
 
