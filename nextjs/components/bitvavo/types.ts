@@ -50,7 +50,8 @@ type TradingPlan = {
   createdAt: string;
   market: string;
   amount: number;
-  active: boolean;
+  buyAt: number;
+  sellAt: number;
 };
 
 type TradingLog = {
@@ -64,4 +65,6 @@ type TradingLog = {
 type CreateTradingPlanPayload = {
   market: string;
   amount: number;
+  buyAt: number;
+  sellAt: number;
 };

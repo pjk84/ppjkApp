@@ -18,7 +18,12 @@ public class GetTradingPlans(IBitvavoContext database) : IRequestHandler<GetTrad
     }
 
     private static tradingPlanView ToView(TradingPlan plan) =>
-        new tradingPlanView(Id: plan.Id, Market: plan.Market, CreatedAt: plan.CreatedAt.ToString("dd-MM-yyyy"), Amount: plan.Amount);
+        new tradingPlanView(
+            Id: plan.Id,
+            Market: plan.Market,
+            BuyAt: plan.BuyAt,
+            SellAt: plan.SellAt,
+            CreatedAt: plan.CreatedAt.ToString("dd-MM-yyyy"), Amount: plan.Amount);
 
 }
 

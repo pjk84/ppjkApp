@@ -60,6 +60,8 @@ const TradingPlan = (props: {
         ),
         getCell(props.details.market, props.index, "market"),
         getCell(props.details.amount, props.index, "amount"),
+        getCell(props.details.buyAt, props.index, "buyAt"),
+        getCell(props.details.sellAt, props.index, "sellAt"),
         getCell(props.details.createdAt, props.index, "created_at"),
         getCell(
           <div

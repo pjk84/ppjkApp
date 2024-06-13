@@ -6,6 +6,7 @@ using Api.Features.Bitvavo.Balance;
 using Api.Features.Bitvavo.Trades;
 using Api.Database;
 using Api.Common.Result;
+using Api.Features.Bitvavo.Markets;
 
 
 namespace Api.Features.Bitvavo;
@@ -70,7 +71,7 @@ public class BitvavoController(IMediator mediator, IConfiguration config) : Cont
     [HttpPost("trading-plan")]
     public async Task<ActionResult<Order[]>> CreateTradingPlan(CreateTradingPlanPayload payload)
     {
-        var query = new CreateTradingPlanCommand(payload.Market, payload.Amount);
+        var query = new CreateTradingPlanCommand(payload);
         var res = await mediator.Send(query);
         if (!res.Success)
         {
@@ -99,6 +100,18 @@ public class BitvavoController(IMediator mediator, IConfiguration config) : Cont
             return BadRequest();
         }
         return Ok();
+    }
+
+    [HttpGet("market/price")]
+    public async Task<ActionResult<MarketPriceView>> GetMarketPrice([FromQuery] string market)
+    {
+        var query = new GetMarketPriceQuery(market);
+        var res = await mediator.Send(query);
+        if (!res.Success)
+        {
+            return BadRequest();
+        }
+        return Ok(res.Value);
     }
 
     [HttpGet("ws/trading-plan/{planId}/listen")]

@@ -28,9 +28,17 @@ public class BitvavoContext : IBitvavoContext
         var res = await _bitvavoBalanceSnapshots.Find(s => s.Date == DateTime.Today).ToListAsync();
         return res.Any();
     }
-    public async Task<TradingPlan> CreateTradingPlanAsync(string market, int amount, CancellationToken ct)
+    public async Task<TradingPlan> CreateTradingPlanAsync(string market, int amount, double buyAt, double sellAt, CancellationToken ct)
     {
-        var plan = new TradingPlan(Market: market, Amount: amount, CreatedAt: DateTime.Now, Listening: false);
+        var plan = new TradingPlan(
+            Market: market,
+            Amount: amount,
+            BuyAt: buyAt,
+            SellAt: sellAt,
+            CreatedAt: DateTime.Now,
+            Listening: false
+        );
+
         await _tradingPlans.InsertOneAsync(plan, cancellationToken: ct);
         return plan;
     }

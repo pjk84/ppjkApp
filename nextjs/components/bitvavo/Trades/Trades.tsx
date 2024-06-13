@@ -5,6 +5,7 @@ import {
 } from "../../../styles/containers";
 import Orders from "./Orders";
 import TradingLogs from "./TradingLogs";
+import CreatePlan from "./TradingPlans/CreatePlan";
 import TradingPlans from "./TradingPlans/TradingPlans";
 
 const Trades = () => {

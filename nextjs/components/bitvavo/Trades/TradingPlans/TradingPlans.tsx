@@ -43,7 +43,14 @@ const TradingPlans = () => {
       <table>
         <tbody>
           <tr>
-            {["logs", "market", "amount", "created at"].map((h) => (
+            {[
+              "logs",
+              "market",
+              "amount",
+              "buy at",
+              "sell at",
+              "created at",
+            ].map((h) => (
               <TableHeader key={`header-${h}`}>{h}</TableHeader>
             ))}
           </tr>
@@ -64,11 +71,11 @@ const TradingPlans = () => {
   return (
     <div>
       <ComponentHeader>Trading plans</ComponentHeader>
-      <Component>
+      <Component column>
         {tradingPlans && tradingPlans.length > 0 ? (
           createdPlans
         ) : (
-          <div>no plans found...</div>
+          <div>no plans found..</div>
         )}
         <CreatePlan getTradingPlans={getTradingPlans} />
       </Component>

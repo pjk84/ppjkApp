@@ -227,6 +227,8 @@ export const Component = styled.div<{ maxHeight?: number; column?: boolean }>`
   display: flex;
   border: 1px solid;
   border-top: none;
+  flex-wrap: wrap;
+  align-items: start;
   border-color: ${(props) => props.theme.container.border.color};
   padding: 10px;
   border-radius: 4px;
@@ -234,6 +236,7 @@ export const Component = styled.div<{ maxHeight?: number; column?: boolean }>`
   padding-top: 20px;
   max-height: ${(props) => (props.maxHeight ? `${props.maxHeight}px` : null)};
   overflow-y: auto;
+  overflow-x: hidden;
   flex-direction: ${(props) => (props.column ? "column" : null)};
 `;
 
