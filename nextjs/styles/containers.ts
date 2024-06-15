@@ -181,7 +181,7 @@ export const FlexBoxCentered = styled.div<{
 `;
 
 export const FlexBox = styled.div<{
-  align?: "center" | "start";
+  align?: "center" | "start" | "end";
   gapSize?: "small" | "medium" | "large" | number;
   column?: boolean;
   wrap?: "true";
@@ -209,6 +209,8 @@ export const FlexBox = styled.div<{
       ? "center"
       : props.align === "start"
       ? "start"
+      : props.align === "end"
+      ? "end"
       : null};
   flex-direction: ${(props) => (props.column ? "column" : "row")};
   flex-wrap: ${(props) => props.wrap && "wrap"};
@@ -240,22 +242,23 @@ export const Component = styled.div<{ maxHeight?: number; column?: boolean }>`
   flex-direction: ${(props) => (props.column ? "column" : null)};
 `;
 
-export const ComponentHeader = styled.div`
+export const ComponentHeader = styled.div<{ inner?: boolean }>`
   display: flex;
-  gap: 25px;
   align-items: center;
   border: 1px solid;
   z-index: 1;
+  gap: 10px;
   border-bottom: none;
   transform: translateY(2px);
-  border-color: ${(props) => props.theme.container.border.color};
-  height: 25px;
-  font-size: 25px;
+  border-color: ${(p) => p.theme.container.border.color};
+  height: ${(p) => (p.inner ? "15px" : "25px")};
+  font-size: ${(p) => (p.inner ? "15px" : "25px")};
   padding: 10px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   /* bottom: 0; */
-  background-color: ${(props) => props.theme.component.header.backgroundColor};
+  background-color: ${(p) =>
+    p.inner ? "transparent" : p.theme.component.header.backgroundColor};
 `;
 
 export const Box1 = styled.div<{

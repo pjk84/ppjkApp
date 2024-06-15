@@ -14,7 +14,7 @@ public class GetOrders(IBitvavoClient client) : IRequestHandler<GetOrdersQuery, 
     public async Task<R> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
     {
         var orders = await client.GetOrdersAsync(cancellationToken);
-        var order = new Order("adsd", "ADA-EUR", 1717946331, 1717946331, OrderStatus.New, "1100", OrderType.Limit, "1000");
+        var order = new Order("adsd", "ADA-EUR", 1717946331, 1717946331, [new("1000")], OrderStatus.New, OrderType.Limit, OrderSide.Sell, "1000");
         orders = [order, order with { Status = OrderStatus.Rejected }, order with { Status = OrderStatus.Filled }];
         var views = orders.Select(o => ToView(o)).ToArray();
         return Result.Ok(views);
@@ -22,7 +22,7 @@ public class GetOrders(IBitvavoClient client) : IRequestHandler<GetOrdersQuery, 
 
     private OrderView ToView(Order order)
     {
-        var price = Double.Parse(order.Price);
+        var price = double.Parse(order.Fills.First().Price);
         var createdAt = DateTimeOffset.FromUnixTimeMilliseconds(0).AddSeconds(1717946634).DateTime;
         return new OrderView(
            Status: order.Status.ToString(),

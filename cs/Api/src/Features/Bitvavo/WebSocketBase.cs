@@ -44,7 +44,6 @@ abstract class WebsocketClientBase(IConfiguration config, WebSocket? clientWs)
     {
         var buffer = GetBuffer(message);
         await ws.SendAsync(buffer, WebSocketMessageType.Text, true, Cts.Token);
-
     }
 
     internal ArraySegment<byte> GetBuffer<T>(T message)
@@ -98,7 +97,12 @@ abstract class WebsocketClientBase(IConfiguration config, WebSocket? clientWs)
             {
                 var message = messageBuilder.ToString();
                 var d = JsonSerializer.Deserialize<WebSocketMessage>(message, SerializerOptions);
-                await HandleMessage(d!.Event, message);
+                var messageType = d?.Event ?? d?.Action;
+                if (messageType == null)
+                {
+                    return;
+                }
+                await HandleMessage(messageType, message);
             }
         }
     }

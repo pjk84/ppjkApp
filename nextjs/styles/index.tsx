@@ -155,6 +155,7 @@ export const appThemeLight = {
   input: {
     placeholderColor: color.mediumGray,
     backgroundColor: color.offWhite,
+    borderColor: color.lightGray,
   },
   speedType: {
     focus: {
@@ -290,7 +291,8 @@ export const appThemeDark = {
   },
   input: {
     placeholderColor: color.lighterGray,
-    backgroundColor: "transparent",
+    backgroundColor: color.darkGray3,
+    borderColor: color.mediumGray,
   },
   speedType: {
     focus: {

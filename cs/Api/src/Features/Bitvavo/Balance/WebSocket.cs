@@ -71,14 +71,14 @@ class WebSocketClientBalance : WebsocketClientBase
     private async Task AddTickerSubscription(string[] markets)
     {
         var channel = new Channel("ticker", markets);
-        var payload = new CandlesSubscriptionPayload("subscribe", [channel]);
+        var payload = new CandlesSubscriptionAction("subscribe", [channel]);
         await SendMessage(payload, true);
     }
 
     private async Task AddTicker24Subscription(string[] markets)
     {
         var channel = new Channel("ticker24h", markets);
-        var payload = new CandlesSubscriptionPayload("subscribe", [channel]);
+        var payload = new CandlesSubscriptionAction("subscribe", [channel]);
         await SendMessage(payload, true);
     }
 

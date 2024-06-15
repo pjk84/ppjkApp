@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Api.Database;
 using Api.Database.Models;
 using Api.Features.Bitvavo.Views;
+using System.Numerics;
+using System.Globalization;
 
 public record AuthenticationPayload(
     string Action,
@@ -21,8 +23,14 @@ class WebSocketClientTrades : WebsocketClientBase
     private IBitvavoContext _database;
     private WebSocket? _ws;
     private ILogger<WebSocketClientTrades> _logger;
+
+    private Order[] _orders = [];
     //
-    public WebSocketClientTrades(IConfiguration config, IBitvavoContext database, TradingPlan plan, WebSocket? ws = null) : base(config, ws)
+    public WebSocketClientTrades(
+        IConfiguration config,
+        IBitvavoContext database,
+        TradingPlan plan,
+        WebSocket? ws = null) : base(config, ws)
     {
         _plan = plan;
         _ws = ws;
@@ -42,7 +50,7 @@ class WebSocketClientTrades : WebsocketClientBase
 
                 await Authenticate();
 
-                await AddTickerSubscription($"{_plan.Market}-EUR");
+                await AddTickerSubscription();
 
                 // listen to events on both sockets
                 await Task.WhenAny(ReceiveBitvavoMessages(), ReceiveClientMessages());
@@ -63,12 +71,30 @@ class WebSocketClientTrades : WebsocketClientBase
         }
     }
 
-    public async Task AddTickerSubscription(string market)
+    public async Task AddTickerSubscription()
     {
-        Console.WriteLine($"added ticket for {market}");
+        var market = $"{_plan.Market}-EUR";
         var channel = new Channel("ticker", [market]);
-        var payload = new CandlesSubscriptionPayload("subscribe", [channel]);
+        var payload = new CandlesSubscriptionAction("subscribe", [channel]);
         await SendMessage(payload, BitvavoWs);
+    }
+
+    private async Task GetOrders()
+    {
+        var market = $"{_plan.Market}-EUR";
+        var payload = new GetOrdersAction("privateGetOrders", market);
+        await SendMessage(payload, BitvavoWs);
+    }
+
+    private void SetOrders(string message)
+    {
+        Console.WriteLine(message);
+        var d = JsonSerializer.Deserialize<GetOrdersResponse>(message, SerializerOptions);
+        if (d == null)
+        {
+            return;
+        }
+        _orders = d.Response;
     }
 
 
@@ -101,10 +127,52 @@ class WebSocketClientTrades : WebsocketClientBase
         if (plan.Listening)
         {
             var time = DateTime.UtcNow.ToString("hh:mm:ss");
-            var view = new TradingActionView(Guid.NewGuid().ToString(), plan.Market, d.LastPrice, "did  nothing", time);
-            Console.WriteLine(view.Id);
-            SendMessage(view, _ws);
+            var action = await HandlePrice(double.Parse(d.LastPrice, CultureInfo.InvariantCulture));
+            var view = new TradingActionView(
+                Guid.NewGuid().ToString(),
+                plan.Market,
+                d.LastPrice,
+                time,
+                action
+            );
+
+            if (_ws != null)
+            {
+                // send action message to client for logging
+                await SendMessage(view, _ws);
+            }
         }
+    }
+
+    private async Task CreateOrder(OrderSide side)
+    {
+        _logger.LogInformation("$creating new order of type {Side} for market {Market} at price", side, _plan.Market);
+
+        // flip planaction
+        await _database.UpdateTradingPlanAsync(
+            _plan with { Action = side == OrderSide.Buy ? "sell" : "buy" },
+             Cts.Token
+        );
+    }
+
+    private async Task<string> HandlePrice(double price)
+    {
+        var lastOrder = _orders.OrderBy(o => o.Updated).Last();
+        // var lastOrder = BitvavoWs.SendAsync
+        if (price > _plan.SellAt && _plan.Action is "buy" or null)
+        {
+            // sell if the last order was buy
+            await CreateOrder(OrderSide.Sell);
+            return $"createdd new sell order at {price}";
+        }
+        if (price < _plan.BuyAt && _plan.Action is "sell" or null)
+        {
+            // buy if last order was sell
+            await CreateOrder(OrderSide.Buy);
+            return $"ccreated new buy order at {price}";
+        }
+        // do nothing
+        return "did nothing";
     }
 
 
@@ -112,9 +180,15 @@ class WebSocketClientTrades : WebsocketClientBase
     {
         switch (@event)
         {
-            case "authenticated":
-                // do nothing
+            case "authenticate":
+                // once authenticated, start by getting current orders
+                await GetOrders();
                 break;
+            case "privateGetOrders":
+                SetOrders(message);
+                break;
+            case "privateCreateOrder":
+
             case "ticker":
                 await HandleTickerEvent(message);
                 break;

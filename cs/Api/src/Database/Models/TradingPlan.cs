@@ -10,17 +10,10 @@ public record TradingPlan(
     double SellAt,
     int Amount,
     bool Listening,
-    TradingAction? Action = null
+    string? Action = null
 )
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;
 };
-
-
-public enum TradingAction
-{
-    Buy,
-    Sell
-}

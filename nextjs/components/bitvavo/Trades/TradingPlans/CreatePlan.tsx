@@ -5,7 +5,7 @@ import {
 } from "../../../../styles/containers";
 import { StdInput } from "../../../../styles/input";
 import { StdButton } from "../../../../styles/buttons";
-import { ChangeEvent, ReactElement, useState } from "react";
+import { useState } from "react";
 import apiClient from "../../../../api/client";
 
 const markets = ["WIF", "PEPE"];
@@ -16,6 +16,8 @@ const CreatePlan = (props: { getTradingPlans: Function }) => {
     amount?: string;
     sellAt?: string;
     buyAt?: string;
+    action?: string;
+    balance?: string;
     marketPrice?: string;
   };
   const [state, setState] = useState<state>({});
@@ -23,7 +25,7 @@ const CreatePlan = (props: { getTradingPlans: Function }) => {
   const inputComplete = () =>
     state.market && state.amount && state.sellAt && state.buyAt;
 
-  const selectMaker = (market: string) => {
+  const selectMaket = (market: string) => {
     if (market === "") {
       return setState({ ...state, market: undefined });
     }
@@ -34,6 +36,13 @@ const CreatePlan = (props: { getTradingPlans: Function }) => {
         setState({ ...state, marketPrice: d.price, market });
       });
   };
+
+  const marketPrice = (
+    <FlexBox column gapSize={5} color="green">
+      <div>{state.market ? "market price:" : ""}</div>
+      <div>{state.marketPrice}</div>
+    </FlexBox>
+  );
 
   const create = () => {
     if (!state.market) {
@@ -54,53 +63,78 @@ const CreatePlan = (props: { getTradingPlans: Function }) => {
   };
   return (
     <FlexBox column>
-      <ComponentHeader>new plan</ComponentHeader>
-
+      <ComponentHeader inner>creaate new plan</ComponentHeader>
       <Component>
-        <FlexBox gapSize={20}>
-          <FlexBox gapSize={10}>
-            <FlexBox gapSize={10} column justify="center">
-              <label>market</label>
-              {state.marketPrice ? <label>price</label> : null}
-              <label>amount</label>
-              <label>buy at</label>
-              <label>sell at</label>
+        <FlexBox>
+          <FlexBox gapSize={20} align="end" justify="between">
+            <FlexBox gapSize={10}>
+              <FlexBox gapSize={5} column justify="center">
+                <FlexBox column>
+                  <label>market</label>
+                  <select
+                    defaultValue={""}
+                    style={{ width: "max-content" }}
+                    onChange={(e) => selectMaket(e.target.value)}
+                  >
+                    <option key={`market-option-blank`}></option>
+                    {markets.map((m) => (
+                      <option key={`market-option-${m}`}>{m}</option>
+                    ))}
+                  </select>
+                </FlexBox>
+                <FlexBox column>
+                  <label>action</label>
+                  <select
+                    defaultValue={""}
+                    style={{ width: "max-content" }}
+                    onChange={(e) =>
+                      setState({ ...state, action: e.target.value })
+                    }
+                  >
+                    <option key={`market-option-buy`}>buy</option>
+                    <option key={`market-option-sell`}>sell</option>
+                  </select>
+                </FlexBox>
+                <FlexBox column>
+                  <label>amount</label>
+                  <StdInput
+                    type="text"
+                    placeholder="fill in..."
+                    value={state.amount}
+                    onChange={(e) =>
+                      setState({ ...state, amount: e.target.value })
+                    }
+                  />
+                </FlexBox>
+                <FlexBox column>
+                  <label>buy at</label>
+                  <StdInput
+                    type="text"
+                    placeholder="fill in..."
+                    onChange={(e) =>
+                      setState({ ...state, buyAt: e.target.value })
+                    }
+                  />
+                </FlexBox>
+                <FlexBox column>
+                  <label>sell at</label>
+                  <StdInput
+                    type="text"
+                    placeholder="fill in..."
+                    onChange={(e) =>
+                      setState({ ...state, sellAt: e.target.value })
+                    }
+                  />
+                </FlexBox>
+              </FlexBox>
             </FlexBox>
-            <FlexBox gapSize={10} column>
-              <select
-                defaultValue={""}
-                style={{ width: "max-content" }}
-                onChange={(e) => selectMaker(e.target.value)}
-              >
-                <option key={`market-option-blank`}></option>
-                {markets.map((m) => (
-                  <option key={`market-option-${m}`}>{m}</option>
-                ))}
-              </select>
-              {state.marketPrice ?? <div>{state.marketPrice}</div>}
-              <StdInput
-                type="text"
-                placeholder="fill in..."
-                value={state.amount}
-                onChange={(e) => setState({ ...state, amount: e.target.value })}
-              />
-              <StdInput
-                type="text"
-                placeholder="fill in..."
-                onChange={(e) => setState({ ...state, buyAt: e.target.value })}
-              />
-              <StdInput
-                type="text"
-                placeholder="fill in..."
-                onChange={(e) => setState({ ...state, sellAt: e.target.value })}
-              />
+            <FlexBox column justify="between" style={{ height: "100%" }}>
+              {marketPrice}
+              <StdButton onClick={() => create()} size="medium">
+                create
+              </StdButton>
             </FlexBox>
           </FlexBox>
-          {inputComplete() ? (
-            <StdButton onClick={() => create()} size="medium">
-              create
-            </StdButton>
-          ) : null}
         </FlexBox>
       </Component>
     </FlexBox>

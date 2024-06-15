@@ -1,5 +1,4 @@
 import { Order } from "../components/Bitvavo/Trades/Orders";
-import TradingPlan from "../components/Bitvavo/Trades/TradingPlans/TradingPlans";
 import { actions, bitvavoActions } from "./actiontypes";
 
 type Action = {

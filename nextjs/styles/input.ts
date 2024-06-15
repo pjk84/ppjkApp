@@ -11,7 +11,9 @@ export const StdInput = styled.input`
   -webkit-appearance: none;
   margin: 0;
   border: 1px solid;
+  padding: 5px;
   width: fit-content;
   color: ${(p) => p.theme.color};
   background-color: ${(p) => p.theme.input.backgroundColor};
+  border-color: ${(p) => p.theme.input.borderColor};
 `;

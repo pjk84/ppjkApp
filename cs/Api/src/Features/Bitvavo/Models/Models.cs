@@ -28,16 +28,27 @@ public record BitvavoTransactionHistory(
 );
 
 
+public record AuthenticationDetails(
+    string Action,
+    string Key,
+    string Signature,
+    string Timestamp
+);
 
-public record WebSocketMessage(string Event);
+
+public record WebSocketMessage(string? Event, string? Action);
 
 public record AddTickerSubscriptionPayload(string[] Markets);
 
 public record WebSocketAutenticationResponse(bool Authenticated);
 
-public record CandlesSubscriptionPayload(string Action, Channel[] Channels);
+public record CandlesSubscriptionAction(string Action, Channel[] Channels);
 
 public record Channel(string Name, string[] Markets);
 
 public record TickerEvent(string Market, string? LastPrice, string Time);
 public record Ticker24hEvent(BitVavo24hPrice[] Data);
+
+public record GetOrdersAction(string Action, string Market);
+
+public record GetOrdersResponse(Order[] Response);
